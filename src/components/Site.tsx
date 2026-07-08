@@ -1,5 +1,5 @@
 import { Link, useRouterState } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
+import { useEffect, useId, useState } from "react";
 import { ArrowUpRight, Menu, X } from "lucide-react";
 import { Logo } from "./Logo";
 
@@ -189,6 +189,9 @@ export function GrowthLine({
   className?: string;
   variant?: "hero" | "full";
 }) {
+  // Gradient som tonar ut linjen till vänster så den aldrig stör texten,
+  // och låter den framträda till höger där ytan är fri.
+  const gradientId = useId();
   if (variant === "hero") {
     return (
       <svg
@@ -198,15 +201,22 @@ export function GrowthLine({
         preserveAspectRatio="none"
         fill="none"
       >
+        <defs>
+          <linearGradient id={gradientId} x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0" stopColor="#1F8A5C" stopOpacity="0" />
+            <stop offset="0.45" stopColor="#1F8A5C" stopOpacity="0.08" />
+            <stop offset="0.72" stopColor="#1F8A5C" stopOpacity="0.4" />
+            <stop offset="1" stopColor="#1F8A5C" stopOpacity="0.75" />
+          </linearGradient>
+        </defs>
         <path
           className="growth-line-path"
           style={{ ["--growth-line-length" as string]: "1600" }}
           d="M0,520 C220,510 320,480 460,420 C600,360 700,300 820,220 C940,140 1060,90 1200,60"
-          stroke="#1F8A5C"
+          stroke={`url(#${gradientId})`}
           strokeWidth="1.25"
           strokeLinecap="round"
           vectorEffect="non-scaling-stroke"
-          opacity="0.55"
         />
         <circle className="growth-line-dot" cx="1200" cy="60" r="3.5" fill="#1F8A5C" />
       </svg>
@@ -220,14 +230,20 @@ export function GrowthLine({
       preserveAspectRatio="none"
       fill="none"
     >
+      <defs>
+        <linearGradient id={gradientId} x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0" stopColor="#1F8A5C" stopOpacity="0" />
+          <stop offset="0.5" stopColor="#1F8A5C" stopOpacity="0.06" />
+          <stop offset="1" stopColor="#1F8A5C" stopOpacity="0.45" />
+        </linearGradient>
+      </defs>
       <path
         className="growth-line-path"
         style={{ ["--growth-line-length" as string]: "180" }}
         d="M0,90 C15,88 25,82 40,70 C55,58 70,44 85,28 C92,20 96,14 100,10"
-        stroke="#1F8A5C"
+        stroke={`url(#${gradientId})`}
         strokeWidth="1"
         vectorEffect="non-scaling-stroke"
-        opacity="0.35"
       />
     </svg>
   );

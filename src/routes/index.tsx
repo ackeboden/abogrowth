@@ -142,7 +142,7 @@ function Hero() {
       <div className="relative mx-auto max-w-6xl px-6 pt-20 pb-24 md:pt-32 md:pb-40 grid md:grid-cols-12 gap-12 items-end">
         <div className="md:col-span-8">
           <div className="eyebrow mb-8">ABO Growth — Stockholm</div>
-          <h1 className="display-heading text-[44px] leading-[1.02] md:text-[76px]">
+          <h1 className="display-heading text-[44px] leading-[1.02] md:text-[clamp(44px,5.8vw,76px)]">
             Vi bygger <RotatingWord />
             <br />för ert företag.
           </h1>
@@ -191,7 +191,7 @@ function Services() {
           </p>
         </div>
 
-        <div className="mt-16 grid gap-6 md:grid-cols-3">
+        <div className="mt-16 grid gap-6 lg:grid-cols-3">
           {services.map((s) => {
             const inner = (
               <>
@@ -203,12 +203,12 @@ function Services() {
                     </span>
                   )}
                 </div>
-                <h3 className="display-heading text-xl md:text-2xl mb-4 group-hover:text-brand-green transition-colors">
+                <h3 className="display-heading text-xl lg:text-2xl mb-4 group-hover:text-brand-green transition-colors">
                   {s.title}
                 </h3>
-                <p className="text-sm text-ink/70 leading-relaxed">{s.body}</p>
+                <p className="text-sm text-ink/70 leading-relaxed mb-8">{s.body}</p>
                 {s.href && (
-                  <div className="mt-8 pt-6 border-t border-line inline-flex items-center gap-1.5 text-sm font-semibold text-brand-green">
+                  <div className="mt-auto pt-6 border-t border-line inline-flex items-center gap-1.5 text-sm font-semibold text-brand-green">
                     Läs mer <ArrowUpRight className="h-4 w-4" strokeWidth={2.5} />
                   </div>
                 )}
@@ -228,12 +228,6 @@ function Services() {
           })}
         </div>
 
-        <div className="mt-8 flex items-start gap-3 text-sm text-subtle max-w-3xl">
-          <div className="h-px w-8 bg-subtle mt-2.5 shrink-0" />
-          <span>
-            Marknadsföring och kampanjer är verktyg vi använder inom allt ovan — inte en egen produkt.
-          </span>
-        </div>
       </div>
     </section>
   );
@@ -283,7 +277,7 @@ function Trends() {
           </div>
         </div>
 
-        <div className="mt-14 grid gap-6 md:grid-cols-3">
+        <div className="mt-14 grid gap-6 lg:grid-cols-3">
           {points.map((p) => (
             <div
               key={p.title}
@@ -330,7 +324,7 @@ function Process() {
             { step: "01", title: "Kartlägg", body: "Vi förstår affären, marknaden och vad som faktiskt bromsar tillväxten." },
             { step: "02", title: "Prioritera", body: "Vi väljer de initiativ som ger störst effekt inom rimlig tid." },
             { step: "03", title: "Leverera", body: "Vi driver arbetet — med tidslinjer, ägarskap och konkreta leverabler." },
-            { step: "04", title: "Följa upp", body: "Vi mäter, justerar och skalar det som fungerar." },
+            { step: "04", title: "Följ upp", body: "Vi mäter, justerar och skalar det som fungerar." },
           ].map((p) => (
             <div key={p.step} className="bg-ink p-8">
               <div className="tracked text-xs text-brand-green mb-6">{p.step}</div>

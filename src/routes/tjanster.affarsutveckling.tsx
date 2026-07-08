@@ -32,7 +32,7 @@ const deliverables = [
 ];
 
 const steps = [
-  { n: "01", t: "Diskovery", b: "1–2 veckor. Intervjuer, datainsamling, hypoteser." },
+  { n: "01", t: "Kartläggning", b: "1–2 veckor. Intervjuer, datainsamling, hypoteser." },
   { n: "02", t: "Analys & strategi", b: "2–4 veckor. Ramverk, positionering, prioriterad plan." },
   { n: "03", t: "Genomförande", b: "Löpande. Vi driver eller stöttar exekveringen." },
 ];
@@ -52,7 +52,7 @@ function Page() {
           <div className="mx-auto max-w-6xl px-6 py-20 md:py-28">
             <div className="eyebrow mb-5">Vad ni får</div>
             <h2 className="display-heading text-3xl md:text-4xl mb-12">Leverabler</h2>
-            <div className="grid gap-6 md:grid-cols-3">
+            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
               {deliverables.map((d) => (
                 <div
                   key={d.t}
