@@ -378,7 +378,7 @@ function Contact() {
             </div>
             <div>
               <div className="tracked text-[10px] text-subtle mb-1">Webb</div>
-              <div>aboconsult.se</div>
+              <div>abogrowth.se</div>
             </div>
             <div>
               <div className="tracked text-[10px] text-subtle mb-1">Ort</div>

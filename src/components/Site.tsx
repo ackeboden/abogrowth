@@ -1,5 +1,6 @@
-import { Link } from "@tanstack/react-router";
-import { ArrowUpRight } from "lucide-react";
+import { Link, useRouterState } from "@tanstack/react-router";
+import { useEffect, useState } from "react";
+import { ArrowUpRight, Menu, X } from "lucide-react";
 import { Logo } from "./Logo";
 
 export const CONTACT_EMAIL = "alexander@aboconsult.se";
@@ -7,16 +8,42 @@ export const CONTACT_EMAIL = "alexander@aboconsult.se";
 export const BOOKING_HREF =
   `mailto:${CONTACT_EMAIL}?subject=Boka%20ett%20samtal%20med%20ABO%20Growth&body=Hej%20Alexander%2C%0A%0AVi%20vill%20g%C3%A4rna%20boka%20ett%20f%C3%B6rsta%20samtal.%0A%0AKort%20om%20oss%3A%0AVad%20vi%20vill%20uppn%C3%A5%3A%0AF%C3%B6rslag%20p%C3%A5%20tider%3A%0A%0ATack%21`;
 
+const NAV_LINKS = [
+  { label: "Tjänster", to: "/", hash: "tjanster" },
+  { label: "Case", to: "/case" },
+  { label: "Arbetssätt", to: "/", hash: "arbetssatt" },
+  { label: "Om", to: "/om" },
+] as const;
+
 export function Header() {
+  const [open, setOpen] = useState(false);
+  const { location } = useRouterState();
+
+  // Stäng mobilmenyn vid navigering och lås bakgrundsscroll när den är öppen.
+  useEffect(() => setOpen(false), [location.href]);
+  useEffect(() => {
+    document.body.style.overflow = open ? "hidden" : "";
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [open]);
+
   return (
     <header className="sticky top-0 z-40 bg-paper/85 backdrop-blur border-b border-line">
       <div className="mx-auto max-w-6xl px-6 h-16 flex items-center justify-between">
         <Link to="/"><Logo /></Link>
         <nav className="hidden md:flex items-center gap-8 text-sm">
-          <Link to="/" hash="tjanster" className="hover:text-brand-green transition-colors">Tjänster</Link>
-          <Link to="/case" className="hover:text-brand-green transition-colors" activeProps={{ className: "text-brand-green" }}>Case</Link>
-          <Link to="/" hash="arbetssatt" className="hover:text-brand-green transition-colors">Arbetssätt</Link>
-          <Link to="/om" className="hover:text-brand-green transition-colors" activeProps={{ className: "text-brand-green" }}>Om</Link>
+          {NAV_LINKS.map((l) => (
+            <Link
+              key={l.label}
+              to={l.to}
+              hash={"hash" in l ? l.hash : undefined}
+              className="hover:text-brand-green transition-colors"
+              activeProps={l.to !== "/" ? { className: "text-brand-green" } : undefined}
+            >
+              {l.label}
+            </Link>
+          ))}
           <a
             href={BOOKING_HREF}
             className="inline-flex items-center gap-1.5 bg-ink text-paper px-4 py-2 hover:bg-brand-green transition-colors font-semibold"
@@ -24,10 +51,43 @@ export function Header() {
             Boka ett samtal <ArrowUpRight className="h-3.5 w-3.5" strokeWidth={2.5} />
           </a>
         </nav>
-        <a href={BOOKING_HREF} className="md:hidden inline-flex items-center gap-1.5 text-sm bg-ink text-paper px-3 py-2 font-semibold">
-          Boka samtal <ArrowUpRight className="h-3.5 w-3.5" strokeWidth={2.5} />
-        </a>
+        <button
+          type="button"
+          onClick={() => setOpen((o) => !o)}
+          aria-expanded={open}
+          aria-controls="mobilmeny"
+          aria-label={open ? "Stäng menyn" : "Öppna menyn"}
+          className="md:hidden inline-flex items-center justify-center h-10 w-10 -mr-2 text-ink hover:text-brand-green transition-colors"
+        >
+          {open ? <X className="h-6 w-6" strokeWidth={2} /> : <Menu className="h-6 w-6" strokeWidth={2} />}
+        </button>
       </div>
+
+      {open && (
+        <nav
+          id="mobilmeny"
+          className="md:hidden absolute inset-x-0 top-16 h-[calc(100vh-4rem)] bg-paper border-t border-line px-6 py-8 flex flex-col gap-1 overflow-y-auto"
+        >
+          {NAV_LINKS.map((l) => (
+            <Link
+              key={l.label}
+              to={l.to}
+              hash={"hash" in l ? l.hash : undefined}
+              onClick={() => setOpen(false)}
+              className="py-4 text-lg font-semibold border-b border-line hover:text-brand-green transition-colors"
+            >
+              {l.label}
+            </Link>
+          ))}
+          <a
+            href={BOOKING_HREF}
+            onClick={() => setOpen(false)}
+            className="mt-8 inline-flex items-center justify-center gap-2 bg-ink text-paper px-6 py-4 text-sm font-semibold hover:bg-brand-green transition-colors"
+          >
+            Boka ett samtal <ArrowUpRight className="h-4 w-4" strokeWidth={2.5} />
+          </a>
+        </nav>
+      )}
     </header>
   );
 }
