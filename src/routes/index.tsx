@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { ArrowUpRight, Sparkles, Workflow, Cpu } from "lucide-react";
-import { Header, Footer, BookingCTA, GrowthLine, BOOKING_HREF, CONTACT_EMAIL } from "@/components/Site";
+import { Header, Footer, GrowthLine, Reveal, BOOKING_HREF, CONTACT_EMAIL } from "@/components/Site";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -10,7 +10,7 @@ export const Route = createFileRoute("/")({
       {
         name: "description",
         content:
-          "ABO Growth driver affärsutveckling och tillväxt — strukturerat, konkret och med marknadsföring och digitala verktyg som medel, inte målet. Baserade i Stockholm.",
+          "ABO Growth driver affärsutveckling och tillväxt — strukturerat, konkret och med digitala system och AI-verktyg som gör arbetet snabbare. Baserade i Stockholm.",
       },
       { name: "keywords", content: "affärsutveckling, tillväxtstrategi, kampanjer, AI-verktyg, digitala system, Stockholm, konsult, projektledning" },
       { property: "og:title", content: "ABO Growth — Affärsutveckling & tillväxt" },
@@ -30,7 +30,7 @@ export const Route = createFileRoute("/")({
           "@type": "ProfessionalService",
           name: "ABO Growth",
           description:
-            "Affärsutveckling, tillväxtstrategi, optimerade kampanjer och digitala system för växande företag.",
+            "Digitala system, AI-verktyg, affärsutveckling, tillväxtstrategi och optimerade kampanjer för växande företag.",
           areaServed: "Sverige",
           address: { "@type": "PostalAddress", addressLocality: "Stockholm", addressCountry: "SE" },
           email: CONTACT_EMAIL,
@@ -53,22 +53,22 @@ type Service = {
 const services: Service[] = [
   {
     num: "01",
+    title: "Digitala system & AI-verktyg",
+    tag: "Ny tjänst",
+    body: "Vi hjälper er välja och införa system och AI-verktyg som faktiskt sparar tid — utan att fastna i teknik för teknikens skull.",
+    href: "/tjanster/digitala-system-ai",
+  },
+  {
+    num: "02",
     title: "Affärsutveckling & tillväxtstrategi",
     body: "Vi kartlägger var tillväxten faktiskt finns — och bygger en plan som går att genomföra. 4P, Porters fem krafter, SWOT och buyer personas som verktyg, inte som självändamål.",
     href: "/tjanster/affarsutveckling",
   },
   {
-    num: "02",
+    num: "03",
     title: "Optimerade kampanjer",
     body: "Rätt budskap, i rätt kanal, till rätt målgrupp. Vi bygger, mäter och skruvar löpande — så budgeten jobbar för er, inte tvärtom.",
     href: "/tjanster/optimerade-kampanjer",
-  },
-  {
-    num: "03",
-    title: "Digitala system & AI-verktyg",
-    tag: "Ny tjänst",
-    body: "Vi hjälper er välja och införa system och AI-verktyg som faktiskt sparar tid — utan att fastna i teknik för teknikens skull.",
-    href: "/tjanster/digitala-system-ai",
   },
 ];
 
@@ -82,10 +82,9 @@ function Index() {
       <Header />
       <main>
         <Hero />
+        <AiFocus />
         <Services />
-        <Trends />
         <Process />
-        <BookingCTA />
         <Contact />
       </main>
       <Footer />
@@ -141,17 +140,17 @@ function Hero() {
       <GrowthLine />
       <div className="relative mx-auto max-w-6xl px-6 pt-20 pb-24 md:pt-32 md:pb-40 grid md:grid-cols-12 gap-12 items-end">
         <div className="md:col-span-8">
-          <div className="eyebrow mb-8">ABO Growth — Stockholm</div>
-          <h1 className="display-heading text-[44px] leading-[1.02] md:text-[clamp(44px,5.8vw,76px)]">
+          <div className="eyebrow mb-8 hero-rise">ABO Growth — Stockholm</div>
+          <h1 className="display-heading text-[44px] leading-[1.02] md:text-[clamp(44px,5.8vw,76px)] hero-rise [animation-delay:120ms]">
             Vi bygger <RotatingWord />
             <br />för ert företag.
           </h1>
-          <p className="mt-8 max-w-xl text-lg text-ink/75 leading-relaxed">
-            Strategi som blir till handling. Vi driver affärsutveckling och
-            projekt hela vägen — marknadsföring och digitala verktyg är medel,
-            inte mål.
+          <p className="mt-8 max-w-xl text-lg text-ink/75 leading-relaxed hero-rise [animation-delay:260ms]">
+            Strategi som blir till handling. Vi driver affärsutveckling hela
+            vägen — och rustar er med de digitala system och AI-verktyg som
+            gör jobbet snabbare.
           </p>
-          <div className="mt-10 flex flex-wrap items-center gap-4">
+          <div className="mt-10 flex flex-wrap items-center gap-4 hero-rise [animation-delay:400ms]">
             <a
               href={BOOKING_HREF}
               className="inline-flex items-center gap-2 bg-ink text-paper px-6 py-3.5 text-sm font-semibold hover:bg-brand-green transition-colors"
@@ -163,12 +162,12 @@ function Hero() {
             </a>
           </div>
         </div>
-        <div className="md:col-span-4 md:pb-2">
+        <div className="md:col-span-4 md:pb-2 hero-rise [animation-delay:540ms]">
           <div className="border-l-2 border-brand-green pl-5 space-y-3 text-sm text-ink/70 bg-paper/70 backdrop-blur-sm py-2">
             <div className="flex justify-between"><span className="tracked text-xs text-subtle">Bas</span><span>Stockholm</span></div>
             <div className="flex justify-between"><span className="tracked text-xs text-subtle">Form</span><span>Enskild firma</span></div>
             <div className="flex justify-between"><span className="tracked text-xs text-subtle">Fokus</span><span>Tillväxt</span></div>
-            <div className="flex justify-between"><span className="tracked text-xs text-subtle">Metod</span><span>Projektledning</span></div>
+            <div className="flex justify-between"><span className="tracked text-xs text-subtle">Spets</span><span>Digitala system & AI</span></div>
           </div>
         </div>
       </div>
@@ -176,64 +175,7 @@ function Hero() {
   );
 }
 
-function Services() {
-  return (
-    <section id="tjanster" className="border-b border-line">
-      <div className="mx-auto max-w-6xl px-6 py-24 md:py-32">
-        <div className="max-w-3xl">
-          <div className="eyebrow mb-5">Vad vi gör</div>
-          <h2 className="display-heading text-3xl md:text-5xl">
-            Tre områden. <span className="text-brand-green">En riktning.</span>
-          </h2>
-          <p className="mt-6 text-ink/70 leading-relaxed max-w-2xl">
-            Vi tar er från oklar riktning till konkret plan — och sedan hela vägen
-            till leverans. Här är de tre områdena vi driver.
-          </p>
-        </div>
-
-        <div className="mt-16 grid gap-6 lg:grid-cols-3">
-          {services.map((s) => {
-            const inner = (
-              <>
-                <div className="flex items-start justify-between mb-8">
-                  <span className="tracked text-xs text-subtle">{s.num}</span>
-                  {s.tag && (
-                    <span className="text-[10px] tracked px-2 py-1 bg-brand-green/10 text-brand-green border border-brand-green/30">
-                      {s.tag}
-                    </span>
-                  )}
-                </div>
-                <h3 className="display-heading text-xl lg:text-2xl mb-4 group-hover:text-brand-green transition-colors">
-                  {s.title}
-                </h3>
-                <p className="text-sm text-ink/70 leading-relaxed mb-8">{s.body}</p>
-                {s.href && (
-                  <div className="mt-auto pt-6 border-t border-line inline-flex items-center gap-1.5 text-sm font-semibold text-brand-green">
-                    Läs mer <ArrowUpRight className="h-4 w-4" strokeWidth={2.5} />
-                  </div>
-                )}
-              </>
-            );
-            const shared =
-              "group bg-white border border-line p-8 md:p-10 flex flex-col shadow-sm hover:shadow-md hover:border-brand-green/40 transition-all";
-            return s.href ? (
-              <Link key={s.num} to={s.href} className={shared}>
-                {inner}
-              </Link>
-            ) : (
-              <div key={s.num} className={shared}>
-                {inner}
-              </div>
-            );
-          })}
-        </div>
-
-      </div>
-    </section>
-  );
-}
-
-function Trends() {
+function AiFocus() {
   const points = [
     {
       icon: Sparkles,
@@ -253,43 +195,115 @@ function Trends() {
   ];
 
   return (
-    <section className="border-b border-line bg-paper">
-      <div className="mx-auto max-w-6xl px-6 py-24 md:py-32">
-        <div className="grid md:grid-cols-12 gap-12 items-end">
-          <div className="md:col-span-7">
-            <div className="eyebrow mb-5">Håll er i framkant</div>
-            <h2 className="display-heading text-3xl md:text-5xl">
-              Häng med i <span className="text-brand-green">de nya trenderna</span>.
-            </h2>
-            <p className="mt-6 text-ink/75 leading-relaxed max-w-2xl">
-              Nya system och AI-verktyg dyker upp varje månad. Vi hjälper er
-              sortera bruset och införa det som faktiskt optimerar arbetet —
-              utan att förvandla vardagen till ett teknikprojekt.
-            </p>
+    <section className="relative bg-ink text-paper overflow-hidden">
+      <div className="ai-glow" aria-hidden="true" />
+      <div className="relative mx-auto max-w-6xl px-6 py-24 md:py-32">
+        <Reveal>
+          <div className="grid md:grid-cols-12 gap-10 items-end">
+            <div className="md:col-span-8">
+              <div className="eyebrow mb-5">Vår spets — Digitala system & AI</div>
+              <h2 className="display-heading text-3xl md:text-5xl text-paper">
+                Häng med i <span className="text-brand-green">de nya trenderna</span>.
+              </h2>
+              <p className="mt-6 text-paper/70 leading-relaxed max-w-2xl">
+                Nya system och AI-verktyg dyker upp varje månad. Vi hjälper er
+                sortera bruset och införa det som faktiskt optimerar arbetet —
+                utan att förvandla vardagen till ett teknikprojekt.
+              </p>
+            </div>
+            <div className="md:col-span-4 md:text-right">
+              <Link
+                to="/tjanster/digitala-system-ai"
+                className="inline-flex items-center gap-2 bg-brand-green text-paper px-6 py-3.5 text-sm font-semibold hover:bg-paper hover:text-ink transition-colors"
+              >
+                Utforska tjänsten <ArrowUpRight className="h-4 w-4" strokeWidth={2.5} />
+              </Link>
+            </div>
           </div>
-          <div className="md:col-span-5 md:text-right">
-            <Link
-              to="/tjanster/digitala-system-ai"
-              className="inline-flex items-center gap-2 text-sm font-semibold border-b-2 border-brand-green pb-1 hover:text-brand-green"
-            >
-              Läs om digitala system & AI <ArrowUpRight className="h-4 w-4" strokeWidth={2.5} />
-            </Link>
-          </div>
-        </div>
+        </Reveal>
 
         <div className="mt-14 grid gap-6 lg:grid-cols-3">
-          {points.map((p) => (
-            <div
-              key={p.title}
-              className="bg-white border border-line p-8 shadow-sm hover:shadow-md hover:border-brand-green/40 transition-all"
-            >
-              <div className="w-10 h-10 flex items-center justify-center bg-brand-green/10 text-brand-green mb-6">
-                <p.icon className="h-5 w-5" strokeWidth={2} />
+          {points.map((p, i) => (
+            <Reveal key={p.title} delay={i * 130}>
+              <div className="h-full border border-paper/15 bg-white/5 p-8 transition-all duration-300 hover:border-brand-green/50 hover:bg-white/[0.08] hover:-translate-y-1">
+                <div className="w-10 h-10 flex items-center justify-center bg-brand-green/15 text-brand-green mb-6">
+                  <p.icon className="h-5 w-5" strokeWidth={2} />
+                </div>
+                <h3 className="display-heading text-lg mb-3 text-paper">{p.title}</h3>
+                <p className="text-sm text-paper/65 leading-relaxed">{p.body}</p>
               </div>
-              <h3 className="display-heading text-lg mb-3">{p.title}</h3>
-              <p className="text-sm text-ink/70 leading-relaxed">{p.body}</p>
-            </div>
+            </Reveal>
           ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function Services() {
+  return (
+    <section id="tjanster" className="border-b border-line">
+      <div className="mx-auto max-w-6xl px-6 py-24 md:py-32">
+        <Reveal>
+          <div className="max-w-3xl">
+            <div className="eyebrow mb-5">Vad vi gör</div>
+            <h2 className="display-heading text-3xl md:text-5xl">
+              Tre områden. <span className="text-brand-green">En riktning.</span>
+            </h2>
+            <p className="mt-6 text-ink/70 leading-relaxed max-w-2xl">
+              Vi tar er från oklar riktning till konkret plan — och sedan hela vägen
+              till leverans. Här är de tre områdena vi driver.
+            </p>
+          </div>
+        </Reveal>
+
+        <div className="mt-16 grid gap-6 lg:grid-cols-3">
+          {services.map((s, i) => {
+            const inner = (
+              <>
+                <span
+                  aria-hidden="true"
+                  className="pointer-events-none select-none absolute -bottom-5 right-3 display-heading text-[110px] leading-none text-ink/[0.04]"
+                >
+                  {s.num}
+                </span>
+                <div className="flex items-start justify-between mb-8 min-h-6">
+                  <span className="tracked text-xs text-subtle">{s.num}</span>
+                  {s.tag && (
+                    <span className="text-[10px] tracked px-2 py-1 bg-brand-green/10 text-brand-green border border-brand-green/30">
+                      {s.tag}
+                    </span>
+                  )}
+                </div>
+                <h3 className="display-heading text-xl lg:text-2xl lg:min-h-16 mb-4 group-hover:text-brand-green transition-colors">
+                  {s.title}
+                </h3>
+                <p className="text-sm text-ink/70 leading-relaxed mb-8">{s.body}</p>
+                {s.href && (
+                  <div className="mt-auto pt-6 border-t border-line inline-flex items-center gap-1.5 text-sm font-semibold text-brand-green">
+                    Läs mer{" "}
+                    <ArrowUpRight
+                      className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-0.5"
+                      strokeWidth={2.5}
+                    />
+                  </div>
+                )}
+              </>
+            );
+            const shared =
+              "group relative overflow-hidden h-full bg-white border border-line p-8 md:p-10 flex flex-col shadow-sm transition-all duration-300 hover:shadow-md hover:border-brand-green/40 hover:-translate-y-1";
+            return (
+              <Reveal key={s.num} delay={i * 130}>
+                {s.href ? (
+                  <Link to={s.href} className={shared}>
+                    {inner}
+                  </Link>
+                ) : (
+                  <div className={shared}>{inner}</div>
+                )}
+              </Reveal>
+            );
+          })}
         </div>
       </div>
     </section>
@@ -301,23 +315,25 @@ function Process() {
     <section id="arbetssatt" className="relative bg-ink text-paper overflow-hidden">
       <GrowthLine className="opacity-40" />
       <div className="relative mx-auto max-w-6xl px-6 py-24 md:py-32">
-        <div className="max-w-3xl">
-          <div className="eyebrow mb-5 text-brand-green">Hur vi jobbar</div>
-          <h2 className="display-heading text-3xl md:text-5xl text-paper">
-            Struktur som syns <span className="text-brand-green">i resultatet.</span>
-          </h2>
-          <p className="mt-6 text-paper/70 max-w-2xl leading-relaxed">
-            Vi jobbar med etablerade ramverk och tydliga leverabler — trackers,
-            faser, deadlines. Strategin är inget värd utan en plan för hur den
-            ska genomföras.
-          </p>
-        </div>
+        <Reveal>
+          <div className="max-w-3xl">
+            <div className="eyebrow mb-5 text-brand-green">Hur vi jobbar</div>
+            <h2 className="display-heading text-3xl md:text-5xl text-paper">
+              Struktur som syns <span className="text-brand-green">i resultatet.</span>
+            </h2>
+            <p className="mt-6 text-paper/70 max-w-2xl leading-relaxed">
+              Vi jobbar med etablerade ramverk och tydliga leverabler — trackers,
+              faser, deadlines. Strategin är inget värd utan en plan för hur den
+              ska genomföras.
+            </p>
+          </div>
 
-        <div className="mt-12 flex flex-wrap gap-2">
-          {frameworks.map((f) => (
-            <span key={f} className="text-xs tracked-tight border border-paper/25 px-3 py-2">{f}</span>
-          ))}
-        </div>
+          <div className="mt-12 flex flex-wrap gap-2">
+            {frameworks.map((f) => (
+              <span key={f} className="text-xs tracked-tight border border-paper/25 px-3 py-2">{f}</span>
+            ))}
+          </div>
+        </Reveal>
 
         <div className="mt-16 grid gap-px bg-paper/10 md:grid-cols-4 border border-paper/10">
           {[
@@ -325,12 +341,14 @@ function Process() {
             { step: "02", title: "Prioritera", body: "Vi väljer de initiativ som ger störst effekt inom rimlig tid." },
             { step: "03", title: "Leverera", body: "Vi driver arbetet — med tidslinjer, ägarskap och konkreta leverabler." },
             { step: "04", title: "Följ upp", body: "Vi mäter, justerar och skalar det som fungerar." },
-          ].map((p) => (
-            <div key={p.step} className="bg-ink p-8">
-              <div className="tracked text-xs text-brand-green mb-6">{p.step}</div>
-              <h3 className="display-heading text-lg mb-3 text-paper">{p.title}</h3>
-              <p className="text-sm text-paper/65 leading-relaxed">{p.body}</p>
-            </div>
+          ].map((p, i) => (
+            <Reveal key={p.step} delay={i * 110} className="bg-ink">
+              <div className="h-full p-8 transition-colors duration-300 hover:bg-white/5">
+                <div className="tracked text-xs text-brand-green mb-6">{p.step}</div>
+                <h3 className="display-heading text-lg mb-3 text-paper">{p.title}</h3>
+                <p className="text-sm text-paper/65 leading-relaxed">{p.body}</p>
+              </div>
+            </Reveal>
           ))}
         </div>
       </div>
@@ -354,7 +372,7 @@ function Contact() {
   return (
     <section id="kontakt">
       <div className="mx-auto max-w-6xl px-6 py-24 md:py-32 grid md:grid-cols-12 gap-12">
-        <div className="md:col-span-5">
+        <Reveal className="md:col-span-5">
           <div className="eyebrow mb-5">Kontakt</div>
           <h2 className="display-heading text-3xl md:text-5xl">
             Berätta vad ni <span className="text-brand-green">vill uppnå</span>.
@@ -379,52 +397,54 @@ function Contact() {
               <div>Stockholm, Sverige</div>
             </div>
           </div>
-        </div>
+        </Reveal>
 
-        <form
-          className="md:col-span-7 bg-white border border-line p-8 md:p-10 space-y-5"
-          onSubmit={submit}
-        >
-          {sent ? (
-            <div className="py-10 text-center">
-              <div className="eyebrow mb-3">Tack</div>
-              <p className="display-heading text-2xl">Din mejlklient öppnades — skicka så hörs vi.</p>
-              <p className="mt-4 text-sm text-ink/60">
-                Öppnades inget? Mejla direkt till{" "}
-                <a href={`mailto:${CONTACT_EMAIL}`} className="font-semibold border-b-2 border-brand-green">
-                  {CONTACT_EMAIL}
-                </a>
-              </p>
-            </div>
-          ) : (
-            <>
-              <Field label="Namn" name="name" value={form.name} onChange={(v) => setForm({ ...form, name: v })} required />
-              <Field label="E-post" name="email" type="email" value={form.email} onChange={(v) => setForm({ ...form, email: v })} required />
-              <div>
-                <label htmlFor="message" className="tracked text-[10px] text-subtle block mb-2">Meddelande *</label>
-                <textarea
-                  id="message"
-                  name="message"
-                  required
-                  rows={5}
-                  value={form.message}
-                  onChange={(e) => setForm({ ...form, message: e.target.value })}
-                  className="w-full bg-paper border border-line px-4 py-3 text-sm focus:outline-none focus:border-brand-green"
-                  placeholder="Vad vill ni uppnå?"
-                />
+        <Reveal className="md:col-span-7" delay={130}>
+          <form
+            className="h-full bg-white border border-line p-8 md:p-10 space-y-5"
+            onSubmit={submit}
+          >
+            {sent ? (
+              <div className="py-10 text-center">
+                <div className="eyebrow mb-3">Tack</div>
+                <p className="display-heading text-2xl">Din mejlklient öppnades — skicka så hörs vi.</p>
+                <p className="mt-4 text-sm text-ink/60">
+                  Öppnades inget? Mejla direkt till{" "}
+                  <a href={`mailto:${CONTACT_EMAIL}`} className="font-semibold border-b-2 border-brand-green">
+                    {CONTACT_EMAIL}
+                  </a>
+                </p>
               </div>
-              <button
-                type="submit"
-                className="inline-flex items-center gap-2 bg-ink text-paper px-6 py-3.5 text-sm font-semibold hover:bg-brand-green transition-colors"
-              >
-                Skicka <ArrowUpRight className="h-4 w-4" strokeWidth={2.5} />
-              </button>
-              <p className="text-xs text-subtle">
-                Formuläret öppnar din mejlklient. Går även bra att mejla direkt till {CONTACT_EMAIL}.
-              </p>
-            </>
-          )}
-        </form>
+            ) : (
+              <>
+                <Field label="Namn" name="name" value={form.name} onChange={(v) => setForm({ ...form, name: v })} required />
+                <Field label="E-post" name="email" type="email" value={form.email} onChange={(v) => setForm({ ...form, email: v })} required />
+                <div>
+                  <label htmlFor="message" className="tracked text-[10px] text-subtle block mb-2">Meddelande *</label>
+                  <textarea
+                    id="message"
+                    name="message"
+                    required
+                    rows={5}
+                    value={form.message}
+                    onChange={(e) => setForm({ ...form, message: e.target.value })}
+                    className="w-full bg-paper border border-line px-4 py-3 text-sm focus:outline-none focus:border-brand-green"
+                    placeholder="Vad vill ni uppnå?"
+                  />
+                </div>
+                <button
+                  type="submit"
+                  className="inline-flex items-center gap-2 bg-ink text-paper px-6 py-3.5 text-sm font-semibold hover:bg-brand-green transition-colors"
+                >
+                  Skicka <ArrowUpRight className="h-4 w-4" strokeWidth={2.5} />
+                </button>
+                <p className="text-xs text-subtle">
+                  Formuläret öppnar din mejlklient. Går även bra att mejla direkt till {CONTACT_EMAIL}.
+                </p>
+              </>
+            )}
+          </form>
+        </Reveal>
       </div>
     </section>
   );

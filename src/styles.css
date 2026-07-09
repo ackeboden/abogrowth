@@ -199,6 +199,46 @@
   animation: word-in 0.55s ease-out;
 }
 
+/* Entrésteg i heron — spelas vid sidladdning */
+@keyframes rise-in {
+  from { opacity: 0; transform: translateY(22px); }
+  to { opacity: 1; transform: none; }
+}
+
+.hero-rise {
+  animation: rise-in 0.8s cubic-bezier(0.2, 0.7, 0.3, 1) both;
+}
+
+/* Scroll-reveal — styrs av IntersectionObserver i Reveal-komponenten */
+.reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition:
+    opacity 0.7s cubic-bezier(0.2, 0.7, 0.3, 1),
+    transform 0.7s cubic-bezier(0.2, 0.7, 0.3, 1);
+}
+
+.reveal-visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* Pulserande glöd i AI-sektionen */
+@keyframes ai-glow-pulse {
+  0%, 100% { opacity: 0.55; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.07); }
+}
+
+.ai-glow {
+  position: absolute;
+  inset: -20%;
+  pointer-events: none;
+  background:
+    radial-gradient(45% 55% at 78% 25%, rgba(31, 138, 92, 0.16), transparent 70%),
+    radial-gradient(35% 45% at 15% 85%, rgba(91, 123, 154, 0.1), transparent 70%);
+  animation: ai-glow-pulse 10s ease-in-out infinite;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .growth-line-path {
     animation: none;
@@ -212,6 +252,17 @@
     animation: none;
   }
   .word-rotate {
+    animation: none;
+  }
+  .hero-rise {
+    animation: none;
+  }
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+  .ai-glow {
     animation: none;
   }
 }

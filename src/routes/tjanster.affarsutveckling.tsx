@@ -43,7 +43,7 @@ function Page() {
       <Header />
       <main>
         <PageHero
-          eyebrow="Tjänst 01 — Affärsutveckling"
+          eyebrow="Tjänst 02 — Affärsutveckling"
           title={<>Analys, strategi och en <span className="text-brand-green">plan som håller</span>.</>}
           intro="Vi hjälper er förstå var affären står idag, var potentialen finns och hur ni tar er dit. Etablerade ramverk, tydliga leverabler, ingen konsultjargong."
         />

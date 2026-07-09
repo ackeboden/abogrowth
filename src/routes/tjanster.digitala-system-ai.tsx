@@ -43,7 +43,7 @@ function Page() {
       <Header />
       <main>
         <PageHero
-          eyebrow="Tjänst 03 — Digitala system & AI"
+          eyebrow="Tjänst 01 — Digitala system & AI"
           title={<>Rätt verktyg. <span className="text-brand-green">Rätt införda.</span></>}
           intro="Vi hjälper er identifiera och införa digitala system och AI-verktyg som faktiskt gör arbetet enklare. Från kartläggning till löpande uppföljning."
         />
@@ -106,9 +106,9 @@ function Page() {
 
         <section className="border-b border-line">
           <div className="mx-auto max-w-6xl px-6 py-16 flex flex-wrap items-center justify-between gap-6">
-            <Link to="/tjanster/optimerade-kampanjer" className="group inline-flex items-center gap-3 text-sm font-semibold">
-              <span className="tracked text-xs text-subtle">Föregående tjänst</span>
-              <span className="border-b-2 border-brand-green pb-0.5 group-hover:text-brand-green">Optimerade kampanjer</span>
+            <Link to="/tjanster/affarsutveckling" className="group inline-flex items-center gap-3 text-sm font-semibold">
+              <span className="tracked text-xs text-subtle">Nästa tjänst</span>
+              <span className="border-b-2 border-brand-green pb-0.5 group-hover:text-brand-green">Affärsutveckling & tillväxtstrategi</span>
               <ArrowUpRight className="h-4 w-4 text-brand-green" strokeWidth={2.5} />
             </Link>
             <Link to="/" className="text-sm text-subtle hover:text-ink">← Tillbaka till startsidan</Link>

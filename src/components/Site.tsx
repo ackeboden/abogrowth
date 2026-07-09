@@ -1,5 +1,5 @@
 import { Link, useRouterState } from "@tanstack/react-router";
-import { useEffect, useId, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import { ArrowUpRight, Menu, X } from "lucide-react";
 import { Logo } from "./Logo";
 
@@ -105,9 +105,9 @@ export function Footer() {
         <div>
           <div className="tracked text-[10px] text-brand-green mb-3">Sidor</div>
           <ul className="space-y-2 text-sm">
+            <li><Link to="/tjanster/digitala-system-ai" className="hover:text-paper">Digitala system & AI</Link></li>
             <li><Link to="/tjanster/affarsutveckling" className="hover:text-paper">Affärsutveckling</Link></li>
             <li><Link to="/tjanster/optimerade-kampanjer" className="hover:text-paper">Optimerade kampanjer</Link></li>
-            <li><Link to="/tjanster/digitala-system-ai" className="hover:text-paper">Digitala system & AI</Link></li>
             <li><Link to="/case" className="hover:text-paper">Case</Link></li>
             <li><Link to="/om" className="hover:text-paper">Om</Link></li>
             <li><Link to="/" hash="kontakt" className="hover:text-paper">Kontakt</Link></li>
@@ -173,6 +173,53 @@ export function PageHero({
         <p className="mt-8 max-w-2xl text-lg text-ink/75 leading-relaxed">{intro}</p>
       </div>
     </section>
+  );
+}
+
+/**
+ * Reveal — tonar/glider in innehåll när det scrollas in i bild.
+ * Respekterar prefers-reduced-motion (visas då direkt, utan animation).
+ */
+export function Reveal({
+  children,
+  delay = 0,
+  className = "",
+}: {
+  children: React.ReactNode;
+  delay?: number;
+  className?: string;
+}) {
+  const ref = useRef<HTMLDivElement>(null);
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      setVisible(true);
+      return;
+    }
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setVisible(true);
+          io.disconnect();
+        }
+      },
+      { threshold: 0.15, rootMargin: "0px 0px -40px 0px" },
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
+
+  return (
+    <div
+      ref={ref}
+      className={`reveal ${visible ? "reveal-visible" : ""} ${className}`}
+      style={delay ? { transitionDelay: `${delay}ms` } : undefined}
+    >
+      {children}
+    </div>
   );
 }
 
