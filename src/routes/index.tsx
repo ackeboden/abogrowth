@@ -81,7 +81,7 @@ const services: Service[] = [
     body: "Rätt budskap, i rätt kanal, till rätt målgrupp. Vi bygger, mäter och skruvar löpande — så budgeten jobbar för er, inte tvärtom.",
     href: "/tjanster/optimerade-kampanjer",
     deliverables: [
-      "Kampanjstruktur för Meta & Google",
+      "Kampanjstruktur för passande kanaler",
       "Annonser, målgrupper & spårning på plats",
       "Månadsrapport med resultat & nästa steg",
     ],
@@ -100,10 +100,12 @@ const heroChips = [
   { label: "Optimerade kampanjer", to: "/tjanster/optimerade-kampanjer" },
 ] as const;
 
-// Rullande band med konkreta kompetenser — rörelse + tydlighet i ett.
+// Rullande band med det vi erbjuder — tjänster, inte enskilda annonsplattformar.
 const marqueeItems = [
-  "Meta Ads", "Google Ads", "SEO", "Nyhetsbrev", "CRM", "AI-agenter",
-  "Automationer", "Analys & uppföljning", "Landningssidor", "Innehållsproduktion", "Årshjul & innehållsplan",
+  "AI-verktyg", "AI-agenter", "Automatiserade flöden", "Digitala system",
+  "Optimerade kampanjer", "Tillväxtstrategi", "Affärsutveckling",
+  "SEO", "Nyhetsbrev", "CRM", "Analys & uppföljning",
+  "Landningssidor", "Innehållsproduktion", "Årshjul & innehållsplan",
 ] as const;
 
 function Index() {
