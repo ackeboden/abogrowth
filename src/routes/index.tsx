@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { ArrowUpRight, Sparkles, Workflow, Cpu } from "lucide-react";
+import { ArrowUpRight, Check, Sparkles, Workflow, Cpu } from "lucide-react";
 import { Header, Footer, GrowthLine, Reveal, BOOKING_HREF, CONTACT_EMAIL } from "@/components/Site";
 
 export const Route = createFileRoute("/")({
@@ -48,6 +48,7 @@ type Service = {
   body: string;
   href?: string;
   tag?: string;
+  deliverables: string[];
 };
 
 const services: Service[] = [
@@ -57,24 +58,53 @@ const services: Service[] = [
     tag: "Ny tjänst",
     body: "Vi hjälper er välja och införa system och AI-verktyg som faktiskt sparar tid — utan att fastna i teknik för teknikens skull.",
     href: "/tjanster/digitala-system-ai",
+    deliverables: [
+      "Kartläggning av era flöden & verktygsval",
+      "Införande och utbildning av teamet",
+      "Automationer som sparar timmar varje vecka",
+    ],
   },
   {
     num: "02",
     title: "Affärsutveckling & tillväxtstrategi",
     body: "Vi kartlägger var tillväxten faktiskt finns — och bygger en plan som går att genomföra. 4P, Porters fem krafter, SWOT och buyer personas som verktyg, inte som självändamål.",
     href: "/tjanster/affarsutveckling",
+    deliverables: [
+      "Tillväxtanalys av marknad & konkurrens",
+      "Prioriterad handlingsplan med tidslinje",
+      "Löpande uppföljning mot tydliga mål",
+    ],
   },
   {
     num: "03",
     title: "Optimerade kampanjer",
     body: "Rätt budskap, i rätt kanal, till rätt målgrupp. Vi bygger, mäter och skruvar löpande — så budgeten jobbar för er, inte tvärtom.",
     href: "/tjanster/optimerade-kampanjer",
+    deliverables: [
+      "Kampanjstruktur för Meta & Google",
+      "Annonser, målgrupper & spårning på plats",
+      "Månadsrapport med resultat & nästa steg",
+    ],
   },
 ];
 
 const frameworks = ["4P", "Porters fem krafter", "SWOT", "Buyer personas"];
 
-const rotatingWords = ["tillväxt", "struktur", "nya vägar"] as const;
+// Orden roterar själva erbjudandet — besökaren ska inom sekunder se VAD vi levererar.
+const rotatingWords = ["tillväxt", "kampanjer", "AI-flöden", "struktur"] as const;
+
+// Snabb-länkar i heron till de tre tjänsterna
+const heroChips = [
+  { label: "Digitala system & AI", to: "/tjanster/digitala-system-ai" },
+  { label: "Affärsutveckling", to: "/tjanster/affarsutveckling" },
+  { label: "Optimerade kampanjer", to: "/tjanster/optimerade-kampanjer" },
+] as const;
+
+// Rullande band med konkreta kompetenser — rörelse + tydlighet i ett.
+const marqueeItems = [
+  "Meta Ads", "Google Ads", "SEO", "Nyhetsbrev", "CRM", "AI-agenter",
+  "Automationer", "Analys & uppföljning", "Landningssidor", "Innehållsproduktion", "Årshjul & innehållsplan",
+] as const;
 
 function Index() {
   return (
@@ -82,6 +112,7 @@ function Index() {
       <Header />
       <main>
         <Hero />
+        <Marquee />
         <AiFocus />
         <Services />
         <Process />
@@ -121,7 +152,7 @@ function RotatingWord() {
     >
       {/* Sizer: reserverar plats för det längsta ordet så rubriken inte hoppar */}
       <span aria-hidden="true" className="invisible col-start-1 row-start-1 whitespace-nowrap">
-        nya vägar
+        kampanjer
       </span>
       <span
         key={current}
@@ -146,9 +177,9 @@ function Hero() {
             <br />för ert företag.
           </h1>
           <p className="mt-8 max-w-xl text-lg text-ink/75 leading-relaxed hero-rise [animation-delay:260ms]">
-            Strategi som blir till handling. Vi driver affärsutveckling hela
-            vägen — och rustar er med de digitala system och AI-verktyg som
-            gör jobbet snabbare.
+            Strategi som blir till handling. Vi driver er affärsutveckling,
+            bygger kampanjer som mäts på riktigt — och rustar er med AI-verktyg
+            som gör jobbet snabbare.
           </p>
           <div className="mt-10 flex flex-wrap items-center gap-4 hero-rise [animation-delay:400ms]">
             <a
@@ -161,6 +192,21 @@ function Hero() {
               Se vad vi gör
             </a>
           </div>
+          <div className="mt-8 flex flex-wrap gap-2 hero-rise [animation-delay:500ms]">
+            {heroChips.map((c) => (
+              <Link
+                key={c.to}
+                to={c.to}
+                className="group inline-flex items-center gap-1.5 border border-line bg-white/70 px-3.5 py-2 text-xs font-semibold tracked-tight hover:border-brand-green hover:text-brand-green transition-colors"
+              >
+                {c.label}
+                <ArrowUpRight
+                  className="h-3 w-3 opacity-40 transition-all duration-200 group-hover:opacity-100 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+                  strokeWidth={2.5}
+                />
+              </Link>
+            ))}
+          </div>
         </div>
         <div className="md:col-span-4 md:pb-2 hero-rise [animation-delay:540ms]">
           <div className="border-l-2 border-brand-green pl-5 space-y-3 text-sm text-ink/70 bg-paper/70 backdrop-blur-sm py-2">
@@ -170,6 +216,33 @@ function Hero() {
             <div className="flex justify-between"><span className="tracked text-xs text-subtle">Spets</span><span>Digitala system & AI</span></div>
           </div>
         </div>
+      </div>
+    </section>
+  );
+}
+
+/**
+ * Marquee — rullande band med konkreta kompetenser.
+ * Gör startsidan levande OCH svarar direkt på "vad gör ni?".
+ * Listan dubbleras för sömlös loop; pausar vid hover och står
+ * still vid prefers-reduced-motion (styrs i CSS).
+ */
+function Marquee() {
+  const row = (hidden: boolean) => (
+    <div className="flex shrink-0 items-center" aria-hidden={hidden || undefined}>
+      {marqueeItems.map((item) => (
+        <span key={item} className="flex items-center">
+          <span className="tracked text-xs text-ink/60 whitespace-nowrap px-5 py-4">{item}</span>
+          <span className="h-1.5 w-1.5 bg-brand-green/60 rounded-full shrink-0" />
+        </span>
+      ))}
+    </div>
+  );
+  return (
+    <section aria-label="Kompetenser och kanaler" className="marquee border-b border-line bg-white/60 overflow-hidden">
+      <div className="marquee-track">
+        {row(false)}
+        {row(true)}
       </div>
     </section>
   );
@@ -278,7 +351,18 @@ function Services() {
                 <h3 className="display-heading text-xl lg:text-2xl lg:min-h-16 mb-4 group-hover:text-brand-green transition-colors">
                   {s.title}
                 </h3>
-                <p className="text-sm text-ink/70 leading-relaxed mb-8">{s.body}</p>
+                <p className="text-sm text-ink/70 leading-relaxed mb-6">{s.body}</p>
+                <div className="mb-8">
+                  <div className="tracked text-[10px] text-subtle mb-3">Ni får</div>
+                  <ul className="space-y-2.5">
+                    {s.deliverables.map((d) => (
+                      <li key={d} className="flex items-start gap-2.5 text-sm text-ink/80">
+                        <Check className="h-4 w-4 mt-0.5 shrink-0 text-brand-green" strokeWidth={2.5} />
+                        {d}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
                 {s.href && (
                   <div className="mt-auto pt-6 border-t border-line inline-flex items-center gap-1.5 text-sm font-semibold text-brand-green">
                     Läs mer{" "}

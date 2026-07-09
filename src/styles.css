@@ -223,6 +223,23 @@
   transform: none;
 }
 
+/* Marquee — rullande kompetensband. Spåret innehåller listan två gånger;
+   att flytta -50% ger därför en sömlös loop. Pausar vid hover. */
+@keyframes marquee-scroll {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+.marquee-track {
+  display: flex;
+  width: max-content;
+  animation: marquee-scroll 32s linear infinite;
+}
+
+.marquee:hover .marquee-track {
+  animation-play-state: paused;
+}
+
 /* Pulserande glöd i AI-sektionen */
 @keyframes ai-glow-pulse {
   0%, 100% { opacity: 0.55; transform: scale(1); }
@@ -264,5 +281,10 @@
   }
   .ai-glow {
     animation: none;
+  }
+  .marquee-track {
+    animation: none;
+    flex-wrap: wrap;
+    width: 100%;
   }
 }

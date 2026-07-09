@@ -99,7 +99,8 @@ export function Footer() {
         <div>
           <Logo inverted />
           <p className="mt-4 text-sm text-paper/60 max-w-xs">
-            Affärsutveckling och tillväxt — levererat strukturerat från Stockholm.
+            Affärsutveckling, optimerade kampanjer och AI-verktyg som gör
+            jobbet snabbare — levererat strukturerat från Stockholm.
           </p>
         </div>
         <div>
