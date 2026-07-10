@@ -9,10 +9,10 @@ export const Route = createFileRoute("/tjanster/affarsutveckling")({
       {
         name: "description",
         content:
-          "Nulägesanalys, positionering och tillväxtstrategi. Vi bygger en konkret plan för hur ert företag växer — med SWOT, Porters fem krafter och 4P.",
+          "Nulägesanalys, positionering och tillväxtstrategi. Vi bygger en konkret plan för hur ert företag växer — analys, prioritering och genomförande.",
       },
       { property: "og:title", content: "Affärsutveckling & tillväxtstrategi — ABO Growth" },
-      { property: "og:description", content: "Konkret tillväxtstrategi byggd på etablerade ramverk." },
+      { property: "og:description", content: "Konkret tillväxtstrategi som går att genomföra." },
       { property: "og:type", content: "website" },
       { property: "og:url", content: "https://abogrowth.se/tjanster/affarsutveckling" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -23,17 +23,17 @@ export const Route = createFileRoute("/tjanster/affarsutveckling")({
 });
 
 const deliverables = [
-  { t: "Nulägesanalys", b: "SWOT, Porters fem krafter och en ärlig bild av marknad, konkurrens och interna hävstänger." },
+  { t: "Nulägesanalys", b: "En ärlig bild av marknad, konkurrens och era interna hävstänger — var står ni idag och var finns potentialen." },
   { t: "Positionering", b: "Vem ni är för, vad ni står för och varför någon ska välja er framför alternativen." },
   { t: "Erbjudandearkitektur", b: "Paketering, prissättning och struktur som gör det enkelt att sälja och köpa." },
-  { t: "Buyer personas", b: "Konkreta målgrupper som styr budskap, kanaler och säljprocess." },
+  { t: "Målgrupper", b: "Konkreta målgrupper som styr budskap, kanaler och säljprocess." },
   { t: "Tillväxtplan", b: "Prioriterade initiativ med tidslinjer, ägarskap och mätpunkter." },
   { t: "Uppföljning", b: "Löpande avstämning, justering och skalning av det som fungerar." },
 ];
 
 const steps = [
   { n: "01", t: "Kartläggning", b: "1–2 veckor. Intervjuer, datainsamling, hypoteser." },
-  { n: "02", t: "Analys & strategi", b: "2–4 veckor. Ramverk, positionering, prioriterad plan." },
+  { n: "02", t: "Analys & strategi", b: "2–4 veckor. Analys, positionering, prioriterad plan." },
   { n: "03", t: "Genomförande", b: "Löpande. Vi driver eller stöttar exekveringen." },
 ];
 
@@ -45,7 +45,7 @@ function Page() {
         <PageHero
           eyebrow="Tjänst 02 — Affärsutveckling"
           title={<>Analys, strategi och en <span className="text-brand-green">plan som håller</span>.</>}
-          intro="Vi hjälper er förstå var affären står idag, var potentialen finns och hur ni tar er dit. Etablerade ramverk, tydliga leverabler, ingen konsultjargong."
+          intro="Vi hjälper er förstå var affären står idag, var potentialen finns och hur ni tar er dit. Tydlig metod, konkreta leverabler, ingen konsultjargong."
         />
 
         <section className="border-b border-line">

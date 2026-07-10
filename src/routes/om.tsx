@@ -57,10 +57,9 @@ function Page() {
                 självändamål.
               </p>
               <p>
-                Vi jobbar med etablerade ramverk — 4P, Porters fem krafter, SWOT,
-                buyer personas — för att undvika lösa antaganden. Och vi jobbar med
-                projektledning som metod, för att strategin ska bli till leverabler
-                och inte fastna i ett dokument.
+                Vi jobbar strukturerat och faktabaserat för att undvika lösa
+                antaganden. Och vi jobbar med projektledning som metod, för att
+                strategin ska bli till leverabler och inte fastna i ett dokument.
               </p>
               <div className="pt-6 border-t border-line grid grid-cols-3 gap-6">
                 <Stat label="Bas" value="Stockholm" />

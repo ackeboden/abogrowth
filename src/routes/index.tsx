@@ -67,7 +67,7 @@ const services: Service[] = [
   {
     num: "02",
     title: "Affärsutveckling & tillväxtstrategi",
-    body: "Vi kartlägger var tillväxten faktiskt finns — och bygger en plan som går att genomföra. 4P, Porters fem krafter, SWOT och buyer personas som verktyg, inte som självändamål.",
+    body: "Vi kartlägger var tillväxten faktiskt finns — och bygger en plan som går att genomföra. Analys, positionering och prioriterade initiativ, med fokus på vad som faktiskt flyttar affären framåt.",
     href: "/tjanster/affarsutveckling",
     deliverables: [
       "Tillväxtanalys av marknad & konkurrens",
@@ -88,7 +88,7 @@ const services: Service[] = [
   },
 ];
 
-const frameworks = ["4P", "Porters fem krafter", "SWOT", "Buyer personas"];
+const frameworks = ["Trackers", "Faser & milstolpar", "Deadlines", "Löpande uppföljning"];
 
 // Orden roterar själva erbjudandet — besökaren ska inom sekunder se VAD vi levererar.
 const rotatingWords = ["tillväxt", "kampanjer", "AI-flöden", "struktur"] as const;
@@ -408,7 +408,7 @@ function Process() {
               Struktur som syns <span className="text-brand-green">i resultatet.</span>
             </h2>
             <p className="mt-6 text-paper/70 max-w-2xl leading-relaxed">
-              Vi jobbar med etablerade ramverk och tydliga leverabler — trackers,
+              Vi jobbar med en tydlig metod och konkreta leverabler — trackers,
               faser, deadlines. Strategin är inget värd utan en plan för hur den
               ska genomföras.
             </p>

@@ -24,7 +24,7 @@ export const Route = createFileRoute("/tjanster/optimerade-kampanjer")({
 
 const deliverables = [
   { t: "Kanalstrategi", b: "Vi väljer kanaler där er målgrupp faktiskt finns — inte där det låter modernt." },
-  { t: "Målgrupp & personas", b: "Konkreta segment som styr budskap, format och budget." },
+  { t: "Målgrupp & segment", b: "Konkreta segment som styr budskap, format och budget." },
   { t: "Kampanjstruktur & uppsättning", b: "Konton, spårning, kampanjer och målgrupper riggade rätt från start." },
   { t: "Annonsmaterial & budskap", b: "Bilder, video och copy anpassade per kanal och steg i kundresan." },
   { t: "Löpande optimering", b: "A/B-tester på budskap, målgrupper och format — vi skalar det som fungerar." },
