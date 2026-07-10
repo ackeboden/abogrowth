@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { ArrowUpRight, Check, Sparkles, Workflow, Cpu } from "lucide-react";
+import { ArrowUpRight, Check, Compass, Workflow, Cpu } from "lucide-react";
 import { Header, Footer, GrowthLine, Reveal, BOOKING_HREF, CONTACT_EMAIL } from "@/components/Site";
 
 export const Route = createFileRoute("/")({
@@ -56,18 +56,18 @@ const services: Service[] = [
     num: "01",
     title: "Digitala system & AI-verktyg",
     tag: "Ny tjänst",
-    body: "Vi hjälper er välja och införa system och AI-verktyg som faktiskt sparar tid — utan att fastna i teknik för teknikens skull.",
+    body: "Först strategin, sedan tekniken. Vi kartlägger vad ni faktiskt behöver — vilka system som ska hänga ihop och var AI gör verklig nytta.",
     href: "/tjanster/digitala-system-ai",
     deliverables: [
-      "Kartläggning av era flöden & verktygsval",
-      "Införande och utbildning av teamet",
-      "Automationer som sparar timmar varje vecka",
+      "Strategi för vilka system och verktyg ni behöver",
+      "Införande, integration och utbildning av teamet",
+      "Automationer där de sparar mest tid",
     ],
   },
   {
     num: "02",
     title: "Affärsutveckling & tillväxtstrategi",
-    body: "Vi kartlägger var tillväxten faktiskt finns — och bygger en plan som går att genomföra. Analys, positionering och prioriterade initiativ, med fokus på vad som faktiskt flyttar affären framåt.",
+    body: "Vi kartlägger var tillväxten faktiskt finns och bygger en plan som går att genomföra — med prioriterade initiativ som flyttar affären framåt.",
     href: "/tjanster/affarsutveckling",
     deliverables: [
       "Tillväxtanalys av marknad & konkurrens",
@@ -253,19 +253,19 @@ function Marquee() {
 function AiFocus() {
   const points = [
     {
-      icon: Sparkles,
-      title: "AI-verktyg",
-      body: "Rätt verktyg på rätt ställe — snabbare research, tydligare underlag, bättre beslut.",
-    },
-    {
-      icon: Workflow,
-      title: "Automatiserade flöden",
-      body: "Kapa manuellt klickande. Låt system prata med varandra så teamet slipper mellanleden.",
+      icon: Compass,
+      title: "Strategi & verktygsval",
+      body: "Vi utgår från affärsmålet, inte från tekniken. Vilka system och verktyg ni behöver — och varför.",
     },
     {
       icon: Cpu,
-      title: "Moderna system",
-      body: "CRM, analys och innehåll som faktiskt hänger ihop — inte fyra silos som ingen underhåller.",
+      title: "System som hänger ihop",
+      body: "CRM, analys och innehåll som faktiskt pratar med varandra — inte fyra silos som ingen underhåller.",
+    },
+    {
+      icon: Workflow,
+      title: "Automation & AI där det ger nytta",
+      body: "Kapa manuellt klickande och låt AI göra tunga lyft — men bara där det faktiskt sparar tid.",
     },
   ];
 
@@ -278,12 +278,12 @@ function AiFocus() {
             <div className="md:col-span-8">
               <div className="eyebrow mb-5">Vår spets — Digitala system & AI</div>
               <h2 className="display-heading text-3xl md:text-5xl text-paper">
-                Häng med i <span className="text-brand-green">de nya trenderna</span>.
+                Strategin först — <span className="text-brand-green">tekniken sedan</span>.
               </h2>
               <p className="mt-6 text-paper/70 leading-relaxed max-w-2xl">
-                Nya system och AI-verktyg dyker upp varje månad. Vi hjälper er
-                sortera bruset och införa det som faktiskt optimerar arbetet —
-                utan att förvandla vardagen till ett teknikprojekt.
+                Nya system och AI-verktyg dyker upp varje månad. Vi börjar i era
+                mål och flöden, sorterar bruset och sätter ihop en helhet som
+                hänger samman — utan att förvandla vardagen till ett teknikprojekt.
               </p>
             </div>
             <div className="md:col-span-4 md:text-right">
@@ -353,7 +353,8 @@ function Services() {
                 <h3 className="display-heading text-xl lg:text-2xl lg:min-h-16 mb-4 group-hover:text-brand-green transition-colors">
                   {s.title}
                 </h3>
-                <p className="text-sm text-ink/70 leading-relaxed mb-6">{s.body}</p>
+                {/* min-höjd på lg så "Ni får" börjar på samma rad i alla korten */}
+                <p className="text-sm text-ink/70 leading-relaxed mb-6 lg:min-h-[7.5rem]">{s.body}</p>
                 <div className="mb-8">
                   <div className="tracked text-[10px] text-subtle mb-3">Ni får</div>
                   <ul className="space-y-2.5">
