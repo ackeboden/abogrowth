@@ -10,7 +10,7 @@ export const Route = createFileRoute("/")({
       {
         name: "description",
         content:
-          "ABO Growth driver affärsutveckling och tillväxt — strukturerat, konkret och med digitala system och AI-verktyg som gör arbetet snabbare. Baserade i Stockholm.",
+          "ABO Growth driver affärsutveckling och tillväxt — strukturerat och konkret. Strategin först, tekniken sedan: vi hjälper er välja rätt system och AI-verktyg. Baserade i Stockholm.",
       },
       { name: "keywords", content: "affärsutveckling, tillväxtstrategi, kampanjer, AI-verktyg, digitala system, Stockholm, konsult, projektledning" },
       { property: "og:title", content: "ABO Growth — Affärsutveckling & tillväxt" },
@@ -30,7 +30,7 @@ export const Route = createFileRoute("/")({
           "@type": "ProfessionalService",
           name: "ABO Growth",
           description:
-            "Digitala system, AI-verktyg, affärsutveckling, tillväxtstrategi och optimerade kampanjer för växande företag.",
+            "Affärsutveckling, tillväxtstrategi och optimerade kampanjer för växande företag — samt strategin bakom vilka digitala system och AI-verktyg ni faktiskt behöver.",
           areaServed: "Sverige",
           address: { "@type": "PostalAddress", addressLocality: "Stockholm", addressCountry: "SE" },
           email: CONTACT_EMAIL,
@@ -91,7 +91,8 @@ const services: Service[] = [
 const frameworks = ["Trackers", "Faser & milstolpar", "Deadlines", "Löpande uppföljning"];
 
 // Orden roterar själva erbjudandet — besökaren ska inom sekunder se VAD vi levererar.
-const rotatingWords = ["tillväxt", "kampanjer", "AI-flöden", "struktur"] as const;
+// "helhet" före "AI-flöden": tekniken är ett medel, inte huvudnumret.
+const rotatingWords = ["tillväxt", "kampanjer", "helhet", "struktur"] as const;
 
 // Snabb-länkar i heron till de tre tjänsterna
 const heroChips = [
@@ -101,11 +102,13 @@ const heroChips = [
 ] as const;
 
 // Rullande band med det vi erbjuder — tjänster, inte enskilda annonsplattformar.
+// Strategi och helhet först, verktygen sedan (samma ordning som resten av sajten).
 const marqueeItems = [
-  "AI-verktyg", "AI-agenter", "Automatiserade flöden", "Digitala system",
-  "Optimerade kampanjer", "Tillväxtstrategi", "Affärsutveckling",
-  "SEO", "Nyhetsbrev", "CRM", "Analys & uppföljning",
-  "Landningssidor", "Innehållsproduktion", "Årshjul & innehållsplan",
+  "Tillväxtstrategi", "Affärsutveckling", "Systemstrategi", "Digitala system",
+  "Optimerade kampanjer", "Analys & uppföljning", "CRM",
+  "Automatiserade flöden", "AI-verktyg", "AI-agenter",
+  "SEO", "Nyhetsbrev", "Landningssidor", "Innehållsproduktion",
+  "Årshjul & innehållsplan",
 ] as const;
 
 function Index() {
@@ -180,8 +183,8 @@ function Hero() {
           </h1>
           <p className="mt-8 max-w-xl text-lg text-ink/75 leading-relaxed hero-rise [animation-delay:260ms]">
             Strategi som blir till handling. Vi driver er affärsutveckling,
-            bygger kampanjer som mäts på riktigt — och rustar er med AI-verktyg
-            som gör jobbet snabbare.
+            bygger kampanjer som mäts på riktigt — och hjälper er välja rätt
+            system och verktyg, i rätt ordning.
           </p>
           <div className="mt-10 flex flex-wrap items-center gap-4 hero-rise [animation-delay:400ms]">
             <a
@@ -327,7 +330,8 @@ function Services() {
             </h2>
             <p className="mt-6 text-ink/70 leading-relaxed max-w-2xl">
               Vi tar er från oklar riktning till konkret plan — och sedan hela vägen
-              till leverans. Här är de tre områdena vi driver.
+              till leverans. Alltid i samma ordning: förstå affären först, välj
+              system och verktyg sedan. Här är de tre områdena vi driver.
             </p>
           </div>
         </Reveal>

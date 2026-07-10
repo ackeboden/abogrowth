@@ -9,10 +9,10 @@ export const Route = createFileRoute("/tjanster/digitala-system-ai")({
       {
         name: "description",
         content:
-          "Vi hjälper företag att välja och införa rätt digitala system och AI-verktyg. Effektivare arbetsflöden — utan teknikskuld.",
+          "Strategin först, tekniken sedan. Vi hjälper företag att välja och införa rätt digitala system och AI-verktyg — en helhet som hänger ihop, utan teknikskuld.",
       },
       { property: "og:title", content: "Digitala system & AI-verktyg — ABO Growth" },
-      { property: "og:description", content: "Rätt system, rätt AI, rätt införda." },
+      { property: "og:description", content: "Strategin först — sedan rätt system, rätt införda." },
       { property: "og:type", content: "website" },
       { property: "og:url", content: "https://abogrowth.se/tjanster/digitala-system-ai" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -23,18 +23,18 @@ export const Route = createFileRoute("/tjanster/digitala-system-ai")({
 });
 
 const deliverables = [
+  { t: "Systemstrategi", b: "En samlad bild av vilka system ni behöver, hur de hänger ihop och i vilken ordning de ska på plats." },
   { t: "Arbetsflödesanalys", b: "Vi kartlägger hur arbetet faktiskt görs — inte hur det borde göras enligt processkartan." },
   { t: "Behovsdefinition", b: "Vad ska lösas, av vem, och hur mäter vi att det fungerar?" },
   { t: "Val av verktyg", b: "Objektiv jämförelse av system och AI-verktyg utifrån behov, budget och integration." },
-  { t: "Införande", b: "Konfiguration, integrationer, dataflytt och rollout i etapper." },
-  { t: "AI-användning", b: "Konkreta användningsfall för LLM och automation — inte hype." },
+  { t: "Införande & integration", b: "Konfiguration, integrationer, dataflytt och rollout i etapper — plus utbildning av teamet." },
   { t: "Uppföljning", b: "Adoption, effektmätning och iteration efter go-live." },
 ];
 
 const useCases = [
+  { t: "Få ordning på systemfloran", b: "Färre verktyg, tydligare ägarskap och integrationer som gör att data slutar bo i silos." },
   { t: "Effektivisera säljprocessen", b: "CRM, sekvensering och AI-stöd för kvalificering och uppföljning." },
-  { t: "Automatisera administration", b: "Fakturering, rapportering, dokumenthantering." },
-  { t: "AI i kunskapstungt arbete", b: "Assistenter, sammanfattningar och sökning i egen data." },
+  { t: "Automatisera administration", b: "Fakturering, rapportering och dokumenthantering — AI där det faktiskt sparar tid." },
 ];
 
 function Page() {
@@ -44,8 +44,8 @@ function Page() {
       <main>
         <PageHero
           eyebrow="Tjänst 01 — Digitala system & AI"
-          title={<>Rätt verktyg. <span className="text-brand-green">Rätt införda.</span></>}
-          intro="Vi hjälper er identifiera och införa digitala system och AI-verktyg som faktiskt gör arbetet enklare. Från kartläggning till löpande uppföljning."
+          title={<>Strategin först. <span className="text-brand-green">Tekniken sedan.</span></>}
+          intro="Vi börjar i era mål och arbetsflöden — sedan sätter vi ihop en helhet av system och AI-verktyg som hänger samman. Från kartläggning till löpande uppföljning."
         />
 
         <section className="border-b border-line bg-white">
@@ -56,9 +56,10 @@ function Page() {
                 Verktyg ska <span className="text-brand-green">tjäna affären</span> — inte tvärtom.
               </h2>
               <p className="mt-6 text-ink/75 leading-relaxed">
-                Ny teknik är billig. Fel val är dyrt. Vi hjälper er välja
-                pragmatiskt, införa etappvis och mäta effekten — inte samla
-                fler prenumerationer.
+                Ny teknik är billig. Fel val är dyrt. Frågan är inte vilket
+                verktyg som är hetast, utan vilken helhet som löser er uppgift.
+                Vi hjälper er välja pragmatiskt, införa etappvis och mäta
+                effekten — inte samla fler prenumerationer.
               </p>
             </div>
           </div>
@@ -100,8 +101,8 @@ function Page() {
         </section>
 
         <BookingCTA
-          title="Osäkra på var ni ska börja med AI?"
-          body="Vi tar ett första möte och kartlägger var effekten är störst. Konkret, inte teoretiskt."
+          title="Osäkra på vilka system och verktyg ni behöver?"
+          body="Vi tar ett första möte och kartlägger var effekten är störst — och i vilken ordning. Konkret, inte teoretiskt."
         />
 
         <section className="border-b border-line">

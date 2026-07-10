@@ -54,7 +54,7 @@ function Page() {
                 Kärnan är affärsutveckling: att förstå affären, hitta hävstängerna och
                 bygga en plan som faktiskt går att genomföra. Marknadsföring,
                 digitala system och AI-verktyg är sätten vi levererar på — inte
-                självändamål.
+                självändamål. Strategin först, tekniken sedan.
               </p>
               <p>
                 Vi jobbar strukturerat och faktabaserat för att undvika lösa
