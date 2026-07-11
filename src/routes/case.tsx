@@ -4,13 +4,13 @@ import { Header, Footer, BookingCTA, PageHero } from "@/components/Site";
 export const Route = createFileRoute("/case")({
   head: () => ({
     meta: [
-      { title: "Case — ABO Growth" },
+      { title: "Case | ABO Growth" },
       {
         name: "description",
         content:
           "Utvalda case från ABO Growth. Verkliga uppdrag inom affärsutveckling, tillväxt och digitala system.",
       },
-      { property: "og:title", content: "Case — ABO Growth" },
+      { property: "og:title", content: "Case | ABO Growth" },
       { property: "og:description", content: "Utvalda uppdrag och resultat." },
       { property: "og:type", content: "website" },
       { property: "og:url", content: "https://abogrowth.se/case" },
@@ -39,7 +39,7 @@ function Page() {
         <PageHero
           eyebrow="Case"
           title={<>Uppdrag som <span className="text-brand-green">visar hur vi jobbar</span>.</>}
-          intro="Utvalda case från riktiga uppdrag. Vi lägger till fler löpande — kontakta oss om ni vill höra mer om något specifikt."
+          intro="Utvalda case från riktiga uppdrag. Vi lägger till fler löpande. Kontakta oss om ni vill höra mer om något specifikt."
         />
 
         <section className="border-b border-line">
@@ -87,7 +87,7 @@ function EmptyState() {
         Vi lägger till case löpande.
       </h2>
       <p className="mt-5 text-sm text-ink/65 max-w-md mx-auto leading-relaxed">
-        Under tiden — hör av er om ni vill diskutera ett liknande uppdrag eller referenser inom ett specifikt område.
+        Hör gärna av er under tiden om ni vill diskutera ett liknande uppdrag eller referenser inom ett specifikt område.
       </p>
     </div>
   );

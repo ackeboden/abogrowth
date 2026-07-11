@@ -6,19 +6,19 @@ import { Header, Footer, GrowthLine, Reveal, useInView, BOOKING_HREF, CONTACT_EM
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "ABO Growth — Affärsutveckling & tillväxt" },
+      { title: "ABO Growth | Affärsutveckling & tillväxt" },
       {
         name: "description",
         content:
-          "ABO Growth driver affärsutveckling och tillväxt — strukturerat och konkret. Strategin först, tekniken sedan: vi hjälper er välja rätt system och AI-verktyg. Baserade i Stockholm.",
+          "ABO Growth driver affärsutveckling och tillväxt, strukturerat och konkret. Strategin först, tekniken sedan: vi hjälper er välja rätt system och AI-verktyg. Baserade i Stockholm.",
       },
       { name: "keywords", content: "affärsutveckling, tillväxtstrategi, kampanjer, AI-verktyg, digitala system, Stockholm, konsult, projektledning" },
-      { property: "og:title", content: "ABO Growth — Affärsutveckling & tillväxt" },
-      { property: "og:description", content: "Strukturerad affärsutveckling och tillväxt — från Stockholm." },
+      { property: "og:title", content: "ABO Growth | Affärsutveckling & tillväxt" },
+      { property: "og:description", content: "Strukturerad affärsutveckling och tillväxt från Stockholm." },
       { property: "og:type", content: "website" },
       { property: "og:url", content: "https://abogrowth.se/" },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:title", content: "ABO Growth — Affärsutveckling & tillväxt" },
+      { name: "twitter:title", content: "ABO Growth | Affärsutveckling & tillväxt" },
       { name: "twitter:description", content: "Vi bygger tillväxt för ert företag. Strukturerat, från Stockholm." },
     ],
     links: [{ rel: "canonical", href: "https://abogrowth.se/" }],
@@ -30,7 +30,7 @@ export const Route = createFileRoute("/")({
           "@type": "ProfessionalService",
           name: "ABO Growth",
           description:
-            "Affärsutveckling, tillväxtstrategi och optimerade kampanjer för växande företag — samt strategin bakom vilka digitala system och AI-verktyg ni faktiskt behöver.",
+            "Affärsutveckling, tillväxtstrategi och optimerade kampanjer för växande företag, samt strategin bakom vilka digitala system och AI-verktyg ni faktiskt behöver.",
           areaServed: "Sverige",
           address: { "@type": "PostalAddress", addressLocality: "Stockholm", addressCountry: "SE" },
           email: CONTACT_EMAIL,
@@ -68,7 +68,7 @@ const services: Service[] = [
     num: "01",
     title: "Digitala system & AI-verktyg",
     tag: "Ny tjänst",
-    body: "Först strategin, sedan tekniken. Vi kartlägger vad ni faktiskt behöver — vilka system som ska hänga ihop och var AI gör verklig nytta.",
+    body: "Först strategin, sedan tekniken. Vi kartlägger vad ni faktiskt behöver: vilka system som ska hänga ihop och var AI gör verklig nytta.",
     href: "/tjanster/digitala-system-ai",
     deliverables: [
       "Strategi för vilka system och verktyg ni behöver",
@@ -79,7 +79,7 @@ const services: Service[] = [
   {
     num: "02",
     title: "Affärsutveckling & tillväxtstrategi",
-    body: "Vi kartlägger var tillväxten faktiskt finns och bygger en plan som går att genomföra — med prioriterade initiativ som flyttar affären framåt.",
+    body: "Vi kartlägger var tillväxten faktiskt finns och bygger en plan som går att genomföra, med prioriterade initiativ som flyttar affären framåt.",
     href: "/tjanster/affarsutveckling",
     deliverables: [
       "Tillväxtanalys av marknad & konkurrens",
@@ -90,7 +90,7 @@ const services: Service[] = [
   {
     num: "03",
     title: "Optimerade kampanjer",
-    body: "Rätt budskap, i rätt kanal, till rätt målgrupp. Vi bygger, mäter och skruvar löpande — så budgeten jobbar för er, inte tvärtom.",
+    body: "Rätt budskap, i rätt kanal, till rätt målgrupp. Vi bygger, mäter och skruvar löpande så att budgeten jobbar för er, inte tvärtom.",
     href: "/tjanster/optimerade-kampanjer",
     deliverables: [
       "Kampanjstruktur för passande kanaler",
@@ -107,27 +107,27 @@ const frameworks = ["Trackers", "Faser & milstolpar", "Deadlines", "Löpande upp
 const faqItems = [
   {
     q: "Vad kostar det att jobba med er?",
-    a: "Det beror på omfattningen — ett avgränsat projekt kostar mindre än ett löpande samarbete. Ni får alltid ett konkret förslag med pris innan vi börjar, och första samtalet är kostnadsfritt. Inga överraskningar på fakturan.",
+    a: "Det beror på omfattningen. Ett avgränsat projekt kostar mindre än ett löpande samarbete. Ni får alltid ett konkret förslag med pris innan vi börjar, och första samtalet är kostnadsfritt. Inga överraskningar på fakturan.",
   },
   {
     q: "Hur snabbt ser vi resultat?",
-    a: "Kartläggningen tar en till två veckor och de första konkreta leverablerna kommer oftast inom en månad. Sedan är vi ärliga: tillväxt är ett löpande arbete — vi säger vad som går snabbt och vad som kräver uthållighet.",
+    a: "Kartläggningen tar en till två veckor och de första konkreta leverablerna kommer oftast inom en månad. Sedan är vi ärliga: tillväxt är ett löpande arbete, och vi säger vad som går snabbt och vad som kräver uthållighet.",
   },
   {
     q: "Jobbar ni med små företag?",
-    a: "Ja. Vi är själva en enskild firma och vet hur det är att växa med begränsade resurser. Upplägget skalas efter er storlek och budget — ingen betalar för mer än de behöver.",
+    a: "Ja. Vi är själva en enskild firma och vet hur det är att växa med begränsade resurser. Upplägget skalas efter er storlek och budget. Ingen betalar för mer än de behöver.",
   },
   {
     q: "Måste vi köpa en massa nya system och verktyg?",
-    a: "Nej. Vi börjar alltid i strategin: vad ni behöver och varför. Ofta räcker verktygen ni redan har — rätt ihopkopplade. Nya system föreslår vi bara när de löser ett verkligt problem, och vi tjänar ingenting på att ni köper fler licenser.",
+    a: "Nej. Vi börjar alltid i strategin: vad ni behöver och varför. Ofta räcker verktygen ni redan har, rätt ihopkopplade. Nya system föreslår vi bara när de löser ett verkligt problem, och vi tjänar ingenting på att ni köper fler licenser.",
   },
   {
     q: "Är det här mer AI-hype?",
-    a: "Nej. AI är ett verktyg bland flera — vi använder det där det faktiskt sparar tid och hoppar över det där det inte gör det. Strategin och helheten kommer först, tekniken väljs därefter.",
+    a: "Nej. AI är ett verktyg bland flera. Vi använder det där det faktiskt sparar tid och hoppar över det där det inte gör det. Strategin och helheten kommer först, tekniken väljs därefter.",
   },
   {
     q: "Kan vi börja smått?",
-    a: "Absolut. Många samarbeten börjar med ett avgränsat projekt — en kartläggning, en kampanj eller ett systemval. Fungerar det bra bygger vi vidare därifrån.",
+    a: "Absolut. Många samarbeten börjar med ett avgränsat projekt: en kartläggning, en kampanj eller ett systemval. Fungerar det bra bygger vi vidare därifrån.",
   },
 ];
 
@@ -218,14 +218,14 @@ function Hero() {
       <GrowthLine />
       <div className="relative mx-auto max-w-6xl px-6 pt-20 pb-24 md:pt-32 md:pb-40 grid md:grid-cols-12 gap-12 items-end">
         <div className="md:col-span-8">
-          <div className="eyebrow mb-8 hero-rise">ABO Growth — Stockholm</div>
+          <div className="eyebrow mb-8 hero-rise">ABO Growth · Stockholm</div>
           <h1 className="display-heading text-[44px] leading-[1.02] md:text-[clamp(44px,5.8vw,76px)] hero-rise [animation-delay:120ms]">
             Vi bygger <RotatingWord />
             <br />för ert företag.
           </h1>
           <p className="mt-8 max-w-xl text-lg text-ink/75 leading-relaxed hero-rise [animation-delay:260ms]">
             Strategi som blir till handling. Vi driver er affärsutveckling,
-            bygger kampanjer som mäts på riktigt — och hjälper er välja rätt
+            bygger kampanjer som mäts på riktigt och hjälper er välja rätt
             system och verktyg, i rätt ordning.
           </p>
           <div className="mt-10 flex flex-wrap items-center gap-4 hero-rise [animation-delay:400ms]">
@@ -300,17 +300,17 @@ function AiFocus() {
     {
       icon: Compass,
       title: "Strategi & verktygsval",
-      body: "Vi utgår från affärsmålet, inte från tekniken. Vilka system och verktyg ni behöver — och varför.",
+      body: "Vi utgår från affärsmålet, inte från tekniken. Vilka system och verktyg ni behöver, och varför.",
     },
     {
       icon: Cpu,
       title: "System som hänger ihop",
-      body: "CRM, analys och innehåll som faktiskt pratar med varandra — inte fyra silos som ingen underhåller.",
+      body: "CRM, analys och innehåll som faktiskt pratar med varandra, i stället för fyra silos som ingen underhåller.",
     },
     {
       icon: Workflow,
       title: "Automation & AI där det ger nytta",
-      body: "Kapa manuellt klickande och låt AI göra tunga lyft — men bara där det faktiskt sparar tid.",
+      body: "Kapa manuellt klickande och låt AI göra tunga lyft, men bara där det faktiskt sparar tid.",
     },
   ];
 
@@ -321,14 +321,14 @@ function AiFocus() {
         <Reveal>
           <div className="grid md:grid-cols-12 gap-10 items-end">
             <div className="md:col-span-8">
-              <div className="eyebrow mb-5">Vår spets — Digitala system & AI</div>
+              <div className="eyebrow mb-5">Vår spets · Digitala system & AI</div>
               <h2 className="display-heading text-3xl md:text-5xl text-paper">
-                Strategin först — <span className="text-brand-green">tekniken sedan</span>.
+                Strategin först, <span className="text-brand-green">tekniken sedan</span>.
               </h2>
               <p className="mt-6 text-paper/70 leading-relaxed max-w-2xl">
                 Nya system och AI-verktyg dyker upp varje månad. Vi börjar i era
                 mål och flöden, sorterar bruset och sätter ihop en helhet som
-                hänger samman — utan att förvandla vardagen till ett teknikprojekt.
+                hänger samman, utan att förvandla vardagen till ett teknikprojekt.
               </p>
             </div>
             <div className="md:col-span-4 md:text-right">
@@ -371,7 +371,7 @@ function Services() {
               Tre områden. <span className="text-brand-green">En riktning.</span>
             </h2>
             <p className="mt-6 text-ink/70 leading-relaxed max-w-2xl">
-              Vi tar er från oklar riktning till konkret plan — och sedan hela vägen
+              Vi tar er från oklar riktning till konkret plan, och sedan hela vägen
               till leverans. Alltid i samma ordning: förstå affären först, välj
               system och verktyg sedan. Här är de tre områdena vi driver.
             </p>
@@ -455,7 +455,7 @@ function Process() {
               Struktur som syns <span className="text-brand-green">i resultatet.</span>
             </h2>
             <p className="mt-6 text-paper/70 max-w-2xl leading-relaxed">
-              Vi jobbar med en tydlig metod och konkreta leverabler — trackers,
+              Vi jobbar med en tydlig metod och konkreta leverabler: trackers,
               faser, deadlines. Strategin är inget värd utan en plan för hur den
               ska genomföras.
             </p>
@@ -474,7 +474,7 @@ function Process() {
           {[
             { step: "01", title: "Kartlägg", body: "Vi förstår affären, marknaden och vad som faktiskt bromsar tillväxten." },
             { step: "02", title: "Prioritera", body: "Vi väljer de initiativ som ger störst effekt inom rimlig tid." },
-            { step: "03", title: "Leverera", body: "Vi driver arbetet — med tidslinjer, ägarskap och konkreta leverabler." },
+            { step: "03", title: "Leverera", body: "Vi driver arbetet, med tidslinjer, ägarskap och konkreta leverabler." },
             { step: "04", title: "Följ upp", body: "Vi mäter, justerar och skalar det som fungerar." },
           ].map((p, i) => (
             <Reveal key={p.step} delay={i * 110} className="bg-ink">
@@ -554,7 +554,7 @@ function Faq() {
             >
               Mejla oss
             </a>{" "}
-            — vi svarar inom ett dygn.
+            så svarar vi inom ett dygn.
           </p>
         </Reveal>
         <div className="md:col-span-8 space-y-3">
@@ -598,7 +598,7 @@ function Contact() {
           </h2>
           <p className="mt-6 text-ink/75 leading-relaxed">
             Några rader räcker. Vi svarar inom ett dygn och föreslår ett kort
-            första samtal — utan förpliktelser.
+            första samtal, utan förpliktelser.
           </p>
           <div className="mt-10 space-y-4 text-sm">
             <div>
@@ -626,7 +626,7 @@ function Contact() {
             {sent ? (
               <div className="py-10 text-center">
                 <div className="eyebrow mb-3">Tack</div>
-                <p className="display-heading text-2xl">Din mejlklient öppnades — skicka så hörs vi.</p>
+                <p className="display-heading text-2xl">Din mejlklient öppnades. Skicka, så hörs vi.</p>
                 <p className="mt-4 text-sm text-ink/60">
                   Öppnades inget? Mejla direkt till{" "}
                   <a href={`mailto:${CONTACT_EMAIL}`} className="font-semibold border-b-2 border-brand-green">

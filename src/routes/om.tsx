@@ -5,11 +5,11 @@ import { Header, Footer, BookingCTA, PageHero, Reveal, CONTACT_EMAIL } from "@/c
 export const Route = createFileRoute("/om")({
   head: () => ({
     meta: [
-      { title: "Om ABO Growth — Affärsutveckling från Stockholm" },
+      { title: "Om ABO Growth | Affärsutveckling från Stockholm" },
       {
         name: "description",
         content:
-          "ABO Growth drivs av Alexander från Stockholm. En person, inga mellanhänder — strategin först, tekniken sedan, och ärliga besked hela vägen.",
+          "ABO Growth drivs av Alexander från Stockholm. En person, inga mellanhänder. Strategin först, tekniken sedan och ärliga besked hela vägen.",
       },
       { property: "og:title", content: "Om ABO Growth" },
       { property: "og:description", content: "Den ni pratar med är den som levererar. Affärsutveckling från Stockholm." },
@@ -27,22 +27,22 @@ const principles = [
   {
     icon: Compass,
     title: "Strategin först, tekniken sedan",
-    body: "Vi börjar i affären: mål, flöden, flaskhalsar. Vilka system och verktyg som behövs är en följdfråga — aldrig utgångspunkten.",
+    body: "Vi börjar i affären: mål, flöden, flaskhalsar. Vilka system och verktyg som behövs är en följdfråga, aldrig utgångspunkten.",
   },
   {
     icon: ListChecks,
     title: "Konkret, inte konsultjargong",
-    body: "Leverabler ni kan peka på — en plan, en kampanj, ett system som funkar. Inte en rapport som samlar damm i en mapp.",
+    body: "Leverabler ni kan peka på: en plan, en kampanj, ett system som funkar. Inte en rapport som samlar damm i en mapp.",
   },
   {
     icon: ClipboardList,
     title: "Projektledning som metod",
-    body: "Faser, deadlines och tydligt ägarskap. Strategin är inget värd förrän den är genomförd — så vi driver den hela vägen.",
+    body: "Faser, deadlines och tydligt ägarskap. Strategin är inget värd förrän den är genomförd, så vi driver den hela vägen.",
   },
   {
     icon: Handshake,
     title: "Ärliga besked",
-    body: "Vi säger vad som går snabbt och vad som kräver uthållighet — och om vi inte är rätt hjälp för er, säger vi det också.",
+    body: "Vi säger vad som går snabbt och vad som kräver uthållighet. Och om vi inte är rätt hjälp för er säger vi det också.",
   },
 ];
 
@@ -58,7 +58,7 @@ function Page() {
               Den ni pratar med är <span className="text-brand-green">den som levererar</span>.
             </>
           }
-          intro="ABO Growth är en enskild firma i Stockholm. Inga säljteam, inga juniorer som tar över efter kickoffen — samma person hela vägen från första samtalet till leverans."
+          intro="ABO Growth är en enskild firma i Stockholm. Inga säljteam, inga juniorer som tar över efter kickoffen. Samma person hela vägen från första samtalet till leverans."
         />
 
         <section className="border-b border-line bg-white">
@@ -66,7 +66,7 @@ function Page() {
             <Reveal className="md:col-span-5">
               <div className="eyebrow mb-5">Personen bakom</div>
               <h2 className="display-heading text-3xl md:text-4xl">
-                Alexander — <span className="text-brand-green">grundare</span>.
+                Alexander, <span className="text-brand-green">grundare</span>.
               </h2>
               <div className="mt-10 pt-6 border-t border-line grid grid-cols-3 gap-6">
                 <Stat label="Bas" value="Stockholm" />
@@ -85,19 +85,14 @@ function Page() {
             </Reveal>
             <Reveal className="md:col-span-7 space-y-6 text-ink/80 leading-relaxed" delay={130}>
               <p>
-                ABO Growth drivs av Alexander, med bas i Stockholm. Bakgrunden är
-                affärsutveckling, partnerskap och projektledning — erfarenhet av att
-                driva initiativ hela vägen från idé till mätbart resultat.
-              </p>
-              <p>
                 Kärnan är affärsutveckling: att förstå affären, hitta hävstängerna och
                 bygga en plan som faktiskt går att genomföra. Marknadsföring,
-                digitala system och AI-verktyg är sätten vi levererar på — inte
+                digitala system och AI-verktyg är sätten vi levererar på, inte
                 självändamål. Strategin först, tekniken sedan.
               </p>
               <p>
-                Att firman är liten är inte något vi ursäktar — det är så vi vill
-                jobba. Korta beslutsvägar, inget som går förlorat i överlämningar,
+                Att firman är liten är inte något vi ursäktar. Det är så vi vill
+                jobba: korta beslutsvägar, inget som går förlorat i överlämningar,
                 och ett ansvar som inte går att delegera bort.
               </p>
             </Reveal>

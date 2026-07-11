@@ -5,13 +5,13 @@ import { Header, Footer, BookingCTA, PageHero, BOOKING_HREF } from "@/components
 export const Route = createFileRoute("/tjanster/affarsutveckling")({
   head: () => ({
     meta: [
-      { title: "Affärsutveckling & tillväxtstrategi — ABO Growth" },
+      { title: "Affärsutveckling & tillväxtstrategi | ABO Growth" },
       {
         name: "description",
         content:
-          "Nulägesanalys, positionering och tillväxtstrategi. Vi bygger en konkret plan för hur ert företag växer — analys, prioritering och genomförande.",
+          "Nulägesanalys, positionering och tillväxtstrategi. Vi bygger en konkret plan för hur ert företag växer: analys, prioritering och genomförande.",
       },
-      { property: "og:title", content: "Affärsutveckling & tillväxtstrategi — ABO Growth" },
+      { property: "og:title", content: "Affärsutveckling & tillväxtstrategi | ABO Growth" },
       { property: "og:description", content: "Konkret tillväxtstrategi som går att genomföra." },
       { property: "og:type", content: "website" },
       { property: "og:url", content: "https://abogrowth.se/tjanster/affarsutveckling" },
@@ -23,7 +23,7 @@ export const Route = createFileRoute("/tjanster/affarsutveckling")({
 });
 
 const deliverables = [
-  { t: "Nulägesanalys", b: "En ärlig bild av marknad, konkurrens och era interna hävstänger — var står ni idag och var finns potentialen." },
+  { t: "Nulägesanalys", b: "En ärlig bild av marknad, konkurrens och era interna hävstänger: var ni står idag och var potentialen finns." },
   { t: "Positionering", b: "Vem ni är för, vad ni står för och varför någon ska välja er framför alternativen." },
   { t: "Erbjudandearkitektur", b: "Paketering, prissättning och struktur som gör det enkelt att sälja och köpa." },
   { t: "Målgrupper", b: "Konkreta målgrupper som styr budskap, kanaler och säljprocess." },
@@ -43,7 +43,7 @@ function Page() {
       <Header />
       <main>
         <PageHero
-          eyebrow="Tjänst 02 — Affärsutveckling"
+          eyebrow="Tjänst 02 · Affärsutveckling"
           title={<>Analys, strategi och en <span className="text-brand-green">plan som håller</span>.</>}
           intro="Vi hjälper er förstå var affären står idag, var potentialen finns och hur ni tar er dit. Tydlig metod, konkreta leverabler, ingen konsultjargong."
         />

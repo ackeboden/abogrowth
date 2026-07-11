@@ -5,14 +5,14 @@ import { Header, Footer, BookingCTA, PageHero } from "@/components/Site";
 export const Route = createFileRoute("/tjanster/optimerade-kampanjer")({
   head: () => ({
     meta: [
-      { title: "Optimerade kampanjer — ABO Growth" },
+      { title: "Optimerade kampanjer | ABO Growth" },
       {
         name: "description",
         content:
-          "Kampanjer på rätt kanaler, med rätt budskap — löpande optimerade mot resultat. Vi hittar var er målgrupp finns och maximerar effekten.",
+          "Kampanjer på rätt kanaler, med rätt budskap, löpande optimerade mot resultat. Vi hittar var er målgrupp finns och maximerar effekten.",
       },
-      { property: "og:title", content: "Optimerade kampanjer — ABO Growth" },
-      { property: "og:description", content: "Rätt budskap, på rätt kanaler — optimerat löpande mot resultat." },
+      { property: "og:title", content: "Optimerade kampanjer | ABO Growth" },
+      { property: "og:description", content: "Rätt budskap på rätt kanaler, optimerat löpande mot resultat." },
       { property: "og:type", content: "website" },
       { property: "og:url", content: "https://abogrowth.se/tjanster/optimerade-kampanjer" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -23,12 +23,12 @@ export const Route = createFileRoute("/tjanster/optimerade-kampanjer")({
 });
 
 const deliverables = [
-  { t: "Kanalstrategi", b: "Vi väljer kanaler där er målgrupp faktiskt finns — inte där det låter modernt." },
+  { t: "Kanalstrategi", b: "Vi väljer kanaler där er målgrupp faktiskt finns, inte där det låter modernt." },
   { t: "Målgrupp & segment", b: "Konkreta segment som styr budskap, format och budget." },
   { t: "Kampanjstruktur & uppsättning", b: "Konton, spårning, kampanjer och målgrupper riggade rätt från start." },
   { t: "Annonsmaterial & budskap", b: "Bilder, video och copy anpassade per kanal och steg i kundresan." },
-  { t: "Löpande optimering", b: "A/B-tester på budskap, målgrupper och format — vi skalar det som fungerar." },
-  { t: "Rapportering & uppföljning", b: "Tydliga rapporter mot affärsmål — inte fåfängemått." },
+  { t: "Löpande optimering", b: "A/B-tester på budskap, målgrupper och format. Vi skalar det som fungerar." },
+  { t: "Rapportering & uppföljning", b: "Tydliga rapporter mot affärsmål, inte fåfängemått." },
 ];
 
 const steps = [
@@ -43,9 +43,9 @@ function Page() {
       <Header />
       <main>
         <PageHero
-          eyebrow="Tjänst 03 — Optimerade kampanjer"
-          title={<>Rätt budskap, på rätt kanaler — <span className="text-brand-green">optimerat löpande</span>.</>}
-          intro="Strategin först: vi börjar i affärsmålet, hittar var er målgrupp finns och väljer kanaler därefter. Sedan optimerar vi mot resultat — inte mot att synas för synandets skull."
+          eyebrow="Tjänst 03 · Optimerade kampanjer"
+          title={<>Rätt budskap, på rätt kanaler, <span className="text-brand-green">optimerat löpande</span>.</>}
+          intro="Strategin först: vi börjar i affärsmålet, hittar var er målgrupp finns och väljer kanaler därefter. Sedan optimerar vi mot resultat, inte mot att synas för synandets skull."
         />
 
         <section className="border-b border-line">
@@ -92,7 +92,7 @@ function Page() {
 
         <BookingCTA
           title="Vill ni få mer ut av era kampanjer?"
-          body="Ett första möte räcker för att se var effekten är störst — och var pengarna rinner ut idag."
+          body="Ett första möte räcker för att se var effekten är störst och var pengarna rinner ut idag."
         />
 
         <section className="border-b border-line">

@@ -5,14 +5,14 @@ import { Header, Footer, BookingCTA, PageHero, useInView } from "@/components/Si
 export const Route = createFileRoute("/tjanster/digitala-system-ai")({
   head: () => ({
     meta: [
-      { title: "Digitala system & AI-verktyg — ABO Growth" },
+      { title: "Digitala system & AI-verktyg | ABO Growth" },
       {
         name: "description",
         content:
-          "Strategin först, tekniken sedan. Vi hjälper företag att välja och införa rätt digitala system och AI-verktyg — en helhet som hänger ihop, utan teknikskuld.",
+          "Strategin först, tekniken sedan. Vi hjälper företag att välja och införa rätt digitala system och AI-verktyg: en helhet som hänger ihop, utan teknikskuld.",
       },
-      { property: "og:title", content: "Digitala system & AI-verktyg — ABO Growth" },
-      { property: "og:description", content: "Strategin först — sedan rätt system, rätt införda." },
+      { property: "og:title", content: "Digitala system & AI-verktyg | ABO Growth" },
+      { property: "og:description", content: "Strategin först, sedan rätt system, rätt införda." },
       { property: "og:type", content: "website" },
       { property: "og:url", content: "https://abogrowth.se/tjanster/digitala-system-ai" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -24,10 +24,10 @@ export const Route = createFileRoute("/tjanster/digitala-system-ai")({
 
 const deliverables = [
   { t: "Systemstrategi", b: "En samlad bild av vilka system ni behöver, hur de hänger ihop och i vilken ordning de ska på plats." },
-  { t: "Arbetsflödesanalys", b: "Vi kartlägger hur arbetet faktiskt görs — inte hur det borde göras enligt processkartan." },
+  { t: "Arbetsflödesanalys", b: "Vi kartlägger hur arbetet faktiskt görs, inte hur det borde göras enligt processkartan." },
   { t: "Behovsdefinition", b: "Vad ska lösas, av vem, och hur mäter vi att det fungerar?" },
   { t: "Val av verktyg", b: "Objektiv jämförelse av system och AI-verktyg utifrån behov, budget och integration." },
-  { t: "Införande & integration", b: "Konfiguration, integrationer, dataflytt och rollout i etapper — plus utbildning av teamet." },
+  { t: "Införande & integration", b: "Konfiguration, integrationer, dataflytt och rollout i etapper, plus utbildning av teamet." },
   { t: "Uppföljning", b: "Adoption, effektmätning och iteration efter go-live." },
 ];
 
@@ -61,7 +61,7 @@ function SystemMap() {
             Från spridda verktyg till <span className="text-brand-green">ett system</span>.
           </h2>
           <p className="mt-6 text-ink/75 leading-relaxed">
-            Så här tänker vi: affären i mitten, verktygen runt omkring — valda
+            Så här tänker vi: affären i mitten, verktygen runt omkring, valda
             för att de löser er uppgift och pratar med varandra.
           </p>
         </div>
@@ -107,7 +107,7 @@ function SystemMap() {
           ))}
         </div>
         <p className="mt-8 text-sm text-subtle max-w-xl">
-          Boxarna är exempel — vilka som ingår hos er avgörs av strategin, inte av trenderna.
+          Boxarna är exempel. Vilka som ingår hos er avgörs av strategin, inte av trenderna.
         </p>
       </div>
     </section>
@@ -117,7 +117,7 @@ function SystemMap() {
 const useCases = [
   { t: "Få ordning på systemfloran", b: "Färre verktyg, tydligare ägarskap och integrationer som gör att data slutar bo i silos." },
   { t: "Effektivisera säljprocessen", b: "CRM, sekvensering och AI-stöd för kvalificering och uppföljning." },
-  { t: "Automatisera administration", b: "Fakturering, rapportering och dokumenthantering — AI där det faktiskt sparar tid." },
+  { t: "Automatisera administration", b: "Fakturering, rapportering och dokumenthantering, med AI där det faktiskt sparar tid." },
 ];
 
 function Page() {
@@ -126,9 +126,9 @@ function Page() {
       <Header />
       <main>
         <PageHero
-          eyebrow="Tjänst 01 — Digitala system & AI"
+          eyebrow="Tjänst 01 · Digitala system & AI"
           title={<>Strategin först. <span className="text-brand-green">Tekniken sedan.</span></>}
-          intro="Vi börjar i era mål och arbetsflöden — sedan sätter vi ihop en helhet av system och AI-verktyg som hänger samman. Från kartläggning till löpande uppföljning."
+          intro="Vi börjar i era mål och arbetsflöden. Sedan sätter vi ihop en helhet av system och AI-verktyg som hänger samman, från kartläggning till löpande uppföljning."
         />
 
         <section className="border-b border-line bg-white">
@@ -136,13 +136,13 @@ function Page() {
             <div className="max-w-2xl">
               <div className="eyebrow mb-5">Vår hållning</div>
               <h2 className="display-heading text-3xl md:text-4xl">
-                Verktyg ska <span className="text-brand-green">tjäna affären</span> — inte tvärtom.
+                Verktyg ska <span className="text-brand-green">tjäna affären</span>, inte tvärtom.
               </h2>
               <p className="mt-6 text-ink/75 leading-relaxed">
                 Ny teknik är billig. Fel val är dyrt. Frågan är inte vilket
                 verktyg som är hetast, utan vilken helhet som löser er uppgift.
                 Vi hjälper er välja pragmatiskt, införa etappvis och mäta
-                effekten — inte samla fler prenumerationer.
+                effekten, inte samla fler prenumerationer.
               </p>
             </div>
           </div>
@@ -187,7 +187,7 @@ function Page() {
 
         <BookingCTA
           title="Osäkra på vilka system och verktyg ni behöver?"
-          body="Vi tar ett första möte och kartlägger var effekten är störst — och i vilken ordning. Konkret, inte teoretiskt."
+          body="Vi tar ett första möte och kartlägger var effekten är störst, och i vilken ordning. Konkret, inte teoretiskt."
         />
 
         <section className="border-b border-line">
