@@ -285,6 +285,81 @@
   stroke-dashoffset: 0;
 }
 
+/* Datapulser — små punkter som vandrar mellan affären och verktygen när
+   kartan satt sig. --nx/--ny sätts per punkt i React; hälften går åt
+   andra hållet (.flow-back) så det känns som ett samtal, inte en sändning. */
+@keyframes sysmap-flow {
+  0% { left: 50%; top: 50%; opacity: 0; }
+  18% { opacity: 1; }
+  82% { opacity: 1; }
+  100% { left: var(--nx); top: var(--ny); opacity: 0; }
+}
+
+@keyframes sysmap-flow-back {
+  0% { left: var(--nx); top: var(--ny); opacity: 0; }
+  18% { opacity: 1; }
+  82% { opacity: 1; }
+  100% { left: 50%; top: 50%; opacity: 0; }
+}
+
+.sysmap-pulse {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  margin: -3px 0 0 -3px;
+  border-radius: 9999px;
+  background: var(--brand-green);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.sysmap.is-visible .sysmap-pulse {
+  animation: sysmap-flow 3.2s ease-in-out infinite;
+}
+
+.sysmap.is-visible .sysmap-pulse.flow-back {
+  animation-name: sysmap-flow-back;
+}
+
+/* Pulsring som andas runt navet */
+@keyframes sysmap-hub-pulse {
+  0% { transform: translate(-50%, -50%) scale(1); opacity: 0.45; }
+  100% { transform: translate(-50%, -50%) scale(2.4); opacity: 0; }
+}
+
+.sysmap-hub-ring {
+  position: absolute;
+  width: 72px;
+  height: 72px;
+  border-radius: 9999px;
+  border: 1.5px solid var(--brand-green);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.sysmap.is-visible .sysmap-hub-ring {
+  animation: sysmap-hub-pulse 2.6s ease-out 1.8s infinite;
+}
+
+/* Mjuk svävning på boxarna efter att de landat, olika takt per box */
+@keyframes sysmap-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+}
+
+.sysmap.is-visible .sysmap-node-box {
+  animation: sysmap-float 5.5s ease-in-out infinite;
+}
+
+.sysmap-node-box {
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.sysmap .sysmap-node-box:hover {
+  border-color: rgba(31, 138, 92, 0.55);
+  box-shadow: 0 4px 14px rgba(31, 138, 92, 0.16);
+}
+
 /* FAQ — plusikonen roterar till kryss när frågan öppnas */
 details.faq summary::-webkit-details-marker {
   display: none;
@@ -358,5 +433,10 @@ details[open] .faq-icon {
   .sysmap-node,
   .faq-icon {
     transition: none;
+  }
+  .sysmap.is-visible .sysmap-pulse,
+  .sysmap.is-visible .sysmap-hub-ring,
+  .sysmap.is-visible .sysmap-node-box {
+    animation: none;
   }
 }

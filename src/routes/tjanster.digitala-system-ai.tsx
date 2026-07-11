@@ -62,7 +62,10 @@ function SystemMap() {
           </h2>
           <p className="mt-6 text-ink/75 leading-relaxed">
             Så här tänker vi: affären i mitten, verktygen runt omkring, valda
-            för att de löser er uppgift och pratar med varandra.
+            för att de löser er uppgift och pratar med varandra. I praktiken
+            betyder det att ett lead från sajten hamnar direkt i CRM:et,
+            att mejlen loggas automatiskt och att månadsrapporten i princip
+            skriver sig själv.
           </p>
         </div>
         <div
@@ -85,14 +88,24 @@ function SystemMap() {
               />
             ))}
           </svg>
+          {/* Pulsring som andas runt navet */}
+          <span className="sysmap-hub-ring" style={{ left: "50%", top: "50%" }} />
+          {/* Datapulser längs linjerna, varannan åt varje håll */}
+          {mapNodes.filter((n) => !n.hub).map((n, i) => (
+            <span
+              key={`pulse-${n.label}`}
+              className={`sysmap-pulse ${i % 2 === 1 ? "flow-back" : ""}`}
+              style={{
+                ["--nx" as string]: `${n.x}%`,
+                ["--ny" as string]: `${n.y}%`,
+                animationDelay: `${2.2 + i * 0.55}s`,
+              }}
+            />
+          ))}
           {mapNodes.map((n, i) => (
             <div
               key={n.label}
-              className={`sysmap-node absolute whitespace-nowrap px-3.5 py-2 md:px-5 md:py-2.5 text-xs md:text-sm font-semibold ${
-                n.hub
-                  ? "bg-brand-green text-paper shadow-md"
-                  : "bg-white border border-line text-ink/80 shadow-sm"
-              }`}
+              className="sysmap-node absolute"
               style={{
                 left: `${inView ? n.x : n.sx}%`,
                 top: `${inView ? n.y : n.sy}%`,
@@ -102,7 +115,17 @@ function SystemMap() {
                 zIndex: n.hub ? 2 : 1,
               }}
             >
-              {n.label}
+              {/* Inre boxen svävar och reagerar på hover; yttre sköter positionen */}
+              <div
+                className={`sysmap-node-box whitespace-nowrap px-3.5 py-2 md:px-5 md:py-2.5 text-xs md:text-sm font-semibold ${
+                  n.hub
+                    ? "bg-brand-green text-paper shadow-md"
+                    : "bg-white border border-line text-ink/80 shadow-sm"
+                }`}
+                style={{ animationDelay: `${1.6 + i * 0.8}s` }}
+              >
+                {n.label}
+              </div>
             </div>
           ))}
         </div>
@@ -113,6 +136,14 @@ function SystemMap() {
     </section>
   );
 }
+
+// Samma tre-fas-upplägg som övriga tjänstesidor, så ett uppdrag känns igen
+// oavsett vilken tjänst man läser om.
+const steps = [
+  { n: "01", t: "Kartläggning", b: "1–2 veckor. Vi går igenom era arbetsflöden och system: vad ni har, vad som faktiskt används och var tiden läcker." },
+  { n: "02", t: "Systemstrategi & val", b: "1–2 veckor. Ni får en konkret plan: vilka verktyg ni behöver, i vilken ordning de ska på plats och vad det kostar." },
+  { n: "03", t: "Införande & uppföljning", b: "Löpande. Vi konfigurerar, integrerar och utbildar teamet. Sedan mäter vi effekten och justerar tills det sitter." },
+];
 
 const useCases = [
   { t: "Få ordning på systemfloran", b: "Färre verktyg, tydligare ägarskap och integrationer som gör att data slutar bo i silos." },
@@ -128,7 +159,7 @@ function Page() {
         <PageHero
           eyebrow="Tjänst 01 · Digitala system & AI"
           title={<>Strategin först. <span className="text-brand-green">Tekniken sedan.</span></>}
-          intro="Vi börjar i era mål och arbetsflöden. Sedan sätter vi ihop en helhet av system och AI-verktyg som hänger samman, från kartläggning till löpande uppföljning."
+          intro="Vi kartlägger era arbetsflöden, väljer rätt system och AI-verktyg, inför dem och utbildar teamet. Ni får en digital helhet som hänger samman och en vardag där systemen jobbar åt er, inte tvärtom."
         />
 
         <section className="border-b border-line bg-white">
@@ -153,7 +184,11 @@ function Page() {
         <section className="border-b border-line">
           <div className="mx-auto max-w-6xl px-6 py-20 md:py-28">
             <div className="eyebrow mb-5">Vad ni får</div>
-            <h2 className="display-heading text-3xl md:text-4xl mb-12">Leverabler</h2>
+            <h2 className="display-heading text-3xl md:text-4xl">Leverabler</h2>
+            <p className="mt-6 mb-12 text-ink/75 leading-relaxed max-w-2xl">
+              Sex konkreta delar. Tillsammans tar de er från dagens läge till
+              en vardag där systemen sköter rutinerna och ni sköter affären.
+            </p>
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
               {deliverables.map((d) => (
                 <div
@@ -163,6 +198,34 @@ function Page() {
                   <Check className="h-5 w-5 text-brand-green mb-4" strokeWidth={2.5} />
                   <h3 className="display-heading text-lg mb-3">{d.t}</h3>
                   <p className="text-sm text-ink/70 leading-relaxed">{d.b}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section className="border-b border-line bg-white">
+          <div className="mx-auto max-w-6xl px-6 py-20 md:py-28 grid md:grid-cols-12 gap-12">
+            <div className="md:col-span-4">
+              <div className="eyebrow mb-5">Upplägg</div>
+              <h2 className="display-heading text-3xl md:text-4xl">Tre faser. <span className="text-brand-green">Tydliga milstolpar.</span></h2>
+              <p className="mt-6 text-ink/75 leading-relaxed">
+                Ett uppdrag hos oss har alltid en tydlig början, konkreta
+                beslutspunkter och ett slut ni själva väljer. Inga eviga
+                konsulttimmar utan riktning.
+              </p>
+            </div>
+            <div className="md:col-span-8 space-y-6">
+              {steps.map((s) => (
+                <div
+                  key={s.n}
+                  className="bg-paper border border-line p-8 shadow-sm hover:shadow-md hover:border-brand-green/40 transition-all flex gap-6"
+                >
+                  <div className="tracked text-xs text-brand-green pt-1 w-10 shrink-0">{s.n}</div>
+                  <div>
+                    <h3 className="display-heading text-lg mb-2">{s.t}</h3>
+                    <p className="text-sm text-ink/70 leading-relaxed">{s.b}</p>
+                  </div>
                 </div>
               ))}
             </div>
