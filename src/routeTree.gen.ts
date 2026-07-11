@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
+import { Route as SaGarDetTillRouteImport } from './routes/sa-gar-det-till'
 import { Route as OmRouteImport } from './routes/om'
 import { Route as CaseRouteImport } from './routes/case'
 import { Route as IndexRouteImport } from './routes/index'
@@ -20,6 +21,11 @@ import { Route as TjansterAffarsutvecklingRouteImport } from './routes/tjanster.
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
   id: '/sitemap.xml',
   path: '/sitemap.xml',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SaGarDetTillRoute = SaGarDetTillRouteImport.update({
+  id: '/sa-gar-det-till',
+  path: '/sa-gar-det-till',
   getParentRoute: () => rootRouteImport,
 } as any)
 const OmRoute = OmRouteImport.update({
@@ -60,6 +66,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/case': typeof CaseRoute
   '/om': typeof OmRoute
+  '/sa-gar-det-till': typeof SaGarDetTillRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/tjanster/affarsutveckling': typeof TjansterAffarsutvecklingRoute
   '/tjanster/digitala-system-ai': typeof TjansterDigitalaSystemAiRoute
@@ -69,6 +76,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/case': typeof CaseRoute
   '/om': typeof OmRoute
+  '/sa-gar-det-till': typeof SaGarDetTillRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/tjanster/affarsutveckling': typeof TjansterAffarsutvecklingRoute
   '/tjanster/digitala-system-ai': typeof TjansterDigitalaSystemAiRoute
@@ -79,6 +87,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/case': typeof CaseRoute
   '/om': typeof OmRoute
+  '/sa-gar-det-till': typeof SaGarDetTillRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/tjanster/affarsutveckling': typeof TjansterAffarsutvecklingRoute
   '/tjanster/digitala-system-ai': typeof TjansterDigitalaSystemAiRoute
@@ -90,6 +99,7 @@ export interface FileRouteTypes {
     | '/'
     | '/case'
     | '/om'
+    | '/sa-gar-det-till'
     | '/sitemap.xml'
     | '/tjanster/affarsutveckling'
     | '/tjanster/digitala-system-ai'
@@ -99,6 +109,7 @@ export interface FileRouteTypes {
     | '/'
     | '/case'
     | '/om'
+    | '/sa-gar-det-till'
     | '/sitemap.xml'
     | '/tjanster/affarsutveckling'
     | '/tjanster/digitala-system-ai'
@@ -108,6 +119,7 @@ export interface FileRouteTypes {
     | '/'
     | '/case'
     | '/om'
+    | '/sa-gar-det-till'
     | '/sitemap.xml'
     | '/tjanster/affarsutveckling'
     | '/tjanster/digitala-system-ai'
@@ -118,6 +130,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   CaseRoute: typeof CaseRoute
   OmRoute: typeof OmRoute
+  SaGarDetTillRoute: typeof SaGarDetTillRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   TjansterAffarsutvecklingRoute: typeof TjansterAffarsutvecklingRoute
   TjansterDigitalaSystemAiRoute: typeof TjansterDigitalaSystemAiRoute
@@ -131,6 +144,13 @@ declare module '@tanstack/react-router' {
       path: '/sitemap.xml'
       fullPath: '/sitemap.xml'
       preLoaderRoute: typeof SitemapDotxmlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sa-gar-det-till': {
+      id: '/sa-gar-det-till'
+      path: '/sa-gar-det-till'
+      fullPath: '/sa-gar-det-till'
+      preLoaderRoute: typeof SaGarDetTillRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/om': {
@@ -182,6 +202,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   CaseRoute: CaseRoute,
   OmRoute: OmRoute,
+  SaGarDetTillRoute: SaGarDetTillRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   TjansterAffarsutvecklingRoute: TjansterAffarsutvecklingRoute,
   TjansterDigitalaSystemAiRoute: TjansterDigitalaSystemAiRoute,

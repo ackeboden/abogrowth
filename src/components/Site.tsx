@@ -112,6 +112,7 @@ export function Footer() {
             <li><Link to="/tjanster/optimerade-kampanjer" className="hover:text-paper">Optimerade kampanjer</Link></li>
             <li><Link to="/case" className="hover:text-paper">Case</Link></li>
             <li><Link to="/om" className="hover:text-paper">Om</Link></li>
+            <li><Link to="/sa-gar-det-till" className="hover:text-paper">Så går det till</Link></li>
             <li><Link to="/" hash="kontakt" className="hover:text-paper">Kontakt</Link></li>
           </ul>
         </div>
@@ -152,6 +153,11 @@ export function BookingCTA({
             Boka ett samtal <ArrowUpRight className="h-4 w-4" strokeWidth={2.5} />
           </a>
           <div className="mt-3 text-xs text-paper/50">Svar inom ett dygn.</div>
+          <div className="mt-2 text-xs">
+            <Link to="/sa-gar-det-till" className="text-paper/60 underline underline-offset-4 hover:text-brand-green transition-colors">
+              Så går det till →
+            </Link>
+          </div>
         </div>
       </div>
     </section>
@@ -176,6 +182,39 @@ export function PageHero({
       </div>
     </section>
   );
+}
+
+/**
+ * useInView — true när elementet scrollats in i bild (triggas en gång).
+ * Vid prefers-reduced-motion blir den true direkt, utan att vänta på scroll.
+ * Används av scenerier som styr sina egna animationer (processlinjen,
+ * systemkartan) — till skillnad från Reveal som bara tonar in ett block.
+ */
+export function useInView<T extends HTMLElement>(threshold = 0.35) {
+  const ref = useRef<T>(null);
+  const [inView, setInView] = useState(false);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      setInView(true);
+      return;
+    }
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setInView(true);
+          io.disconnect();
+        }
+      },
+      { threshold },
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, [threshold]);
+
+  return { ref, inView };
 }
 
 /**

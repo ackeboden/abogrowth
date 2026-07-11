@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowUpRight, Check } from "lucide-react";
-import { Header, Footer, BookingCTA, PageHero } from "@/components/Site";
+import { Header, Footer, BookingCTA, PageHero, useInView } from "@/components/Site";
 
 export const Route = createFileRoute("/tjanster/digitala-system-ai")({
   head: () => ({
@@ -30,6 +30,89 @@ const deliverables = [
   { t: "Införande & integration", b: "Konfiguration, integrationer, dataflytt och rollout i etapper — plus utbildning av teamet." },
   { t: "Uppföljning", b: "Adoption, effektmätning och iteration efter go-live." },
 ];
+
+// Systemkartans noder. x/y = slutposition (% av ytan), sx/sy/sr = startläget:
+// en rörig hög kring mitten som glider ut till ordnade platser runt affären.
+// Navet ("Er affär") ligger stilla — affären flyttar sig inte, verktygen gör det.
+const mapNodes = [
+  { label: "Er affär", x: 50, y: 50, sx: 50, sy: 50, sr: 0, hub: true },
+  { label: "CRM", x: 16, y: 20, sx: 42, sy: 38, sr: -10 },
+  { label: "Mejl & kalender", x: 84, y: 18, sx: 58, sy: 42, sr: 7 },
+  { label: "Ekonomi", x: 14, y: 78, sx: 44, sy: 61, sr: 9 },
+  { label: "Analys", x: 86, y: 80, sx: 57, sy: 58, sr: -7 },
+  { label: "Innehåll", x: 50, y: 8, sx: 48, sy: 33, sr: 12 },
+  { label: "AI-assistent", x: 50, y: 92, sx: 53, sy: 66, sr: -12 },
+];
+
+/**
+ * SystemMap — sidans signaturscen. Verktygsboxarna ligger först huller om
+ * buller kring mitten; när ytan scrollas in glider de ut till sina platser
+ * och kopplingslinjerna till affären ritas. Hela poängen med tjänsten som
+ * en enda animation: ordning ur röran, med affären i centrum.
+ */
+function SystemMap() {
+  const { ref, inView } = useInView<HTMLDivElement>(0.45);
+  return (
+    <section className="border-b border-line">
+      <div className="mx-auto max-w-6xl px-6 py-20 md:py-28">
+        <div className="max-w-2xl">
+          <div className="eyebrow mb-5">Helheten</div>
+          <h2 className="display-heading text-3xl md:text-4xl">
+            Från spridda verktyg till <span className="text-brand-green">ett system</span>.
+          </h2>
+          <p className="mt-6 text-ink/75 leading-relaxed">
+            Så här tänker vi: affären i mitten, verktygen runt omkring — valda
+            för att de löser er uppgift och pratar med varandra.
+          </p>
+        </div>
+        <div
+          ref={ref}
+          aria-hidden="true"
+          className={`sysmap relative mt-12 h-72 md:h-96 ${inView ? "is-visible" : ""}`}
+        >
+          <svg className="absolute inset-0 h-full w-full" viewBox="0 0 100 100" preserveAspectRatio="none" fill="none">
+            {mapNodes.filter((n) => !n.hub).map((n, i) => (
+              <line
+                key={n.label}
+                className="sysmap-link"
+                pathLength={1}
+                x1="50" y1="50" x2={n.x} y2={n.y}
+                stroke="#1F8A5C"
+                strokeOpacity="0.35"
+                strokeWidth="1"
+                vectorEffect="non-scaling-stroke"
+                style={{ transitionDelay: `${0.85 + i * 0.12}s` }}
+              />
+            ))}
+          </svg>
+          {mapNodes.map((n, i) => (
+            <div
+              key={n.label}
+              className={`sysmap-node absolute whitespace-nowrap px-3.5 py-2 md:px-5 md:py-2.5 text-xs md:text-sm font-semibold ${
+                n.hub
+                  ? "bg-brand-green text-paper shadow-md"
+                  : "bg-white border border-line text-ink/80 shadow-sm"
+              }`}
+              style={{
+                left: `${inView ? n.x : n.sx}%`,
+                top: `${inView ? n.y : n.sy}%`,
+                transform: `translate(-50%, -50%) rotate(${inView ? 0 : n.sr}deg)`,
+                opacity: inView ? 1 : 0.55,
+                transitionDelay: `${i * 0.07}s`,
+                zIndex: n.hub ? 2 : 1,
+              }}
+            >
+              {n.label}
+            </div>
+          ))}
+        </div>
+        <p className="mt-8 text-sm text-subtle max-w-xl">
+          Boxarna är exempel — vilka som ingår hos er avgörs av strategin, inte av trenderna.
+        </p>
+      </div>
+    </section>
+  );
+}
 
 const useCases = [
   { t: "Få ordning på systemfloran", b: "Färre verktyg, tydligare ägarskap och integrationer som gör att data slutar bo i silos." },
@@ -64,6 +147,8 @@ function Page() {
             </div>
           </div>
         </section>
+
+        <SystemMap />
 
         <section className="border-b border-line">
           <div className="mx-auto max-w-6xl px-6 py-20 md:py-28">

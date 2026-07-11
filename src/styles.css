@@ -240,6 +240,64 @@
   animation-play-state: paused;
 }
 
+/* Processlinje — kurva som ritas genom de fyra arbetssätts-stegen när
+   sektionen scrollas in. pathLength=1 på pathen gör att dasharray/-offset
+   kan vara 1 oavsett kurvans verkliga längd. */
+.process-line-path {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  transition: stroke-dashoffset 1.6s ease-out 0.2s;
+}
+
+.process-line.is-visible .process-line-path {
+  stroke-dashoffset: 0;
+}
+
+.process-line-dot {
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(0.3);
+  transition: opacity 0.45s ease-out, transform 0.45s cubic-bezier(0.2, 0.7, 0.3, 1);
+}
+
+.process-line.is-visible .process-line-dot {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
+}
+
+/* Systemkarta — verktygsboxar som glider från en rörig hög i mitten till
+   ordnade positioner runt affären. Position (left/top) sätts i React och
+   animeras här; kopplingslinjerna ritas när boxarna satt sig. */
+.sysmap-node {
+  transition:
+    left 1s cubic-bezier(0.2, 0.7, 0.3, 1),
+    top 1s cubic-bezier(0.2, 0.7, 0.3, 1),
+    transform 1s cubic-bezier(0.2, 0.7, 0.3, 1),
+    opacity 0.8s ease-out;
+}
+
+.sysmap-link {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  transition: stroke-dashoffset 0.8s ease-out;
+}
+
+.sysmap.is-visible .sysmap-link {
+  stroke-dashoffset: 0;
+}
+
+/* FAQ — plusikonen roterar till kryss när frågan öppnas */
+details.faq summary::-webkit-details-marker {
+  display: none;
+}
+
+.faq-icon {
+  transition: transform 0.3s ease;
+}
+
+details[open] .faq-icon {
+  transform: rotate(45deg);
+}
+
 /* Pulserande glöd i AI-sektionen */
 @keyframes ai-glow-pulse {
   0%, 100% { opacity: 0.55; transform: scale(1); }
@@ -286,5 +344,19 @@
     animation: none;
     flex-wrap: wrap;
     width: 100%;
+  }
+  .process-line-path,
+  .sysmap-link {
+    transition: none;
+    stroke-dashoffset: 0;
+  }
+  .process-line-dot {
+    transition: none;
+    opacity: 1;
+    transform: translate(-50%, -50%);
+  }
+  .sysmap-node,
+  .faq-icon {
+    transition: none;
   }
 }

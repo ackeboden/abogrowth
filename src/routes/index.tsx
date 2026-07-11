@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { ArrowUpRight, Check, Compass, Workflow, Cpu } from "lucide-react";
-import { Header, Footer, GrowthLine, Reveal, BOOKING_HREF, CONTACT_EMAIL } from "@/components/Site";
+import { ArrowUpRight, Check, Compass, Workflow, Cpu, Plus } from "lucide-react";
+import { Header, Footer, GrowthLine, Reveal, useInView, BOOKING_HREF, CONTACT_EMAIL } from "@/components/Site";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -35,6 +35,18 @@ export const Route = createFileRoute("/")({
           address: { "@type": "PostalAddress", addressLocality: "Stockholm", addressCountry: "SE" },
           email: CONTACT_EMAIL,
           url: "https://abogrowth.se/",
+        }),
+      },
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "FAQPage",
+          mainEntity: faqItems.map((f) => ({
+            "@type": "Question",
+            name: f.q,
+            acceptedAnswer: { "@type": "Answer", text: f.a },
+          })),
         }),
       },
     ],
@@ -90,6 +102,35 @@ const services: Service[] = [
 
 const frameworks = ["Trackers", "Faser & milstolpar", "Deadlines", "Löpande uppföljning"];
 
+// Vanliga frågor — visas i FAQ-sektionen OCH i FAQPage-schemat (SEO).
+// Håll frågor och svar identiska på båda ställena, annars kan Google straffa sidan.
+const faqItems = [
+  {
+    q: "Vad kostar det att jobba med er?",
+    a: "Det beror på omfattningen — ett avgränsat projekt kostar mindre än ett löpande samarbete. Ni får alltid ett konkret förslag med pris innan vi börjar, och första samtalet är kostnadsfritt. Inga överraskningar på fakturan.",
+  },
+  {
+    q: "Hur snabbt ser vi resultat?",
+    a: "Kartläggningen tar en till två veckor och de första konkreta leverablerna kommer oftast inom en månad. Sedan är vi ärliga: tillväxt är ett löpande arbete — vi säger vad som går snabbt och vad som kräver uthållighet.",
+  },
+  {
+    q: "Jobbar ni med små företag?",
+    a: "Ja. Vi är själva en enskild firma och vet hur det är att växa med begränsade resurser. Upplägget skalas efter er storlek och budget — ingen betalar för mer än de behöver.",
+  },
+  {
+    q: "Måste vi köpa en massa nya system och verktyg?",
+    a: "Nej. Vi börjar alltid i strategin: vad ni behöver och varför. Ofta räcker verktygen ni redan har — rätt ihopkopplade. Nya system föreslår vi bara när de löser ett verkligt problem, och vi tjänar ingenting på att ni köper fler licenser.",
+  },
+  {
+    q: "Är det här mer AI-hype?",
+    a: "Nej. AI är ett verktyg bland flera — vi använder det där det faktiskt sparar tid och hoppar över det där det inte gör det. Strategin och helheten kommer först, tekniken väljs därefter.",
+  },
+  {
+    q: "Kan vi börja smått?",
+    a: "Absolut. Många samarbeten börjar med ett avgränsat projekt — en kartläggning, en kampanj eller ett systemval. Fungerar det bra bygger vi vidare därifrån.",
+  },
+];
+
 // Orden roterar själva erbjudandet — besökaren ska inom sekunder se VAD vi levererar.
 // "helhet" före "AI-flöden": tekniken är ett medel, inte huvudnumret.
 const rotatingWords = ["tillväxt", "kampanjer", "helhet", "struktur"] as const;
@@ -121,6 +162,7 @@ function Index() {
         <AiFocus />
         <Services />
         <Process />
+        <Faq />
         <Contact />
       </main>
       <Footer />
@@ -426,7 +468,9 @@ function Process() {
           </div>
         </Reveal>
 
-        <div className="mt-16 grid gap-px bg-paper/10 md:grid-cols-4 border border-paper/10">
+        <ProcessLine />
+
+        <div className="mt-16 md:mt-5 grid gap-px bg-paper/10 md:grid-cols-4 border border-paper/10">
           {[
             { step: "01", title: "Kartlägg", body: "Vi förstår affären, marknaden och vad som faktiskt bromsar tillväxten." },
             { step: "02", title: "Prioritera", body: "Vi väljer de initiativ som ger störst effekt inom rimlig tid." },
@@ -439,6 +483,90 @@ function Process() {
                 <h3 className="display-heading text-lg mb-3 text-paper">{p.title}</h3>
                 <p className="text-sm text-paper/65 leading-relaxed">{p.body}</p>
               </div>
+            </Reveal>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// Kurvans fyra punkter (x i % av bredden, y i % av höjden) — en per processteg,
+// centrerade över respektive kolumn. Kurvan i SVG:n måste passera genom samma
+// punkter (y-värdena är desamma / 24-dels viewBox-höjd).
+const processDots = [
+  { x: 12.5, y: 79 },
+  { x: 37.5, y: 58 },
+  { x: 62.5, y: 37.5 },
+  { x: 87.5, y: 17 },
+];
+
+/**
+ * ProcessLine — tillväxtkurva som ritas genom de fyra stegen när sektionen
+ * scrollas in, med en punkt som tänds över varje kolumn. Döljs på mobil där
+ * stegen staplas vertikalt. Dekorativ (aria-hidden) — stegen är innehållet.
+ */
+function ProcessLine() {
+  const { ref, inView } = useInView<HTMLDivElement>(0.6);
+  return (
+    <div
+      ref={ref}
+      aria-hidden="true"
+      className={`process-line relative mt-14 h-16 hidden md:block ${inView ? "is-visible" : ""}`}
+    >
+      <svg className="absolute inset-0 h-full w-full" viewBox="0 0 100 24" preserveAspectRatio="none" fill="none">
+        <path
+          className="process-line-path"
+          pathLength={1}
+          d="M0,21.5 C6,21 9,20.2 12.5,19 S30,15.4 37.5,14 S55,10.4 62.5,9 S80,5.4 87.5,4 S97,2.7 100,2.4"
+          stroke="#1F8A5C"
+          strokeOpacity="0.55"
+          strokeWidth="1.5"
+          strokeLinecap="round"
+          vectorEffect="non-scaling-stroke"
+        />
+      </svg>
+      {processDots.map((d, i) => (
+        <span
+          key={d.x}
+          className="process-line-dot absolute h-2.5 w-2.5 rounded-full bg-brand-green"
+          style={{ left: `${d.x}%`, top: `${d.y}%`, transitionDelay: `${0.35 + i * 0.32}s` }}
+        />
+      ))}
+    </div>
+  );
+}
+
+function Faq() {
+  return (
+    <section id="faq" className="border-b border-line bg-white">
+      <div className="mx-auto max-w-6xl px-6 py-24 md:py-32 grid md:grid-cols-12 gap-12 items-start">
+        <Reveal className="md:col-span-4">
+          <div className="eyebrow mb-5">Vanliga frågor</div>
+          <h2 className="display-heading text-3xl md:text-4xl">
+            Undrar ni något? <span className="text-brand-green">Fler har undrat samma sak.</span>
+          </h2>
+          <p className="mt-6 text-ink/70 leading-relaxed">
+            Hittar ni inte svaret här?{" "}
+            <a
+              href={`mailto:${CONTACT_EMAIL}`}
+              className="font-semibold border-b-2 border-brand-green pb-0.5 hover:text-brand-green"
+            >
+              Mejla oss
+            </a>{" "}
+            — vi svarar inom ett dygn.
+          </p>
+        </Reveal>
+        <div className="md:col-span-8 space-y-3">
+          {faqItems.map((f, i) => (
+            <Reveal key={f.q} delay={i * 70}>
+              <details className="faq bg-paper border border-line hover:border-brand-green/40 transition-colors">
+                <summary className="flex items-center justify-between gap-4 cursor-pointer list-none p-6 text-sm md:text-base font-semibold">
+                  {f.q}
+                  <Plus className="faq-icon h-4 w-4 shrink-0 text-brand-green" strokeWidth={2.5} />
+                </summary>
+                <p className="px-6 pb-6 -mt-1 text-sm text-ink/70 leading-relaxed max-w-2xl">{f.a}</p>
+              </details>
             </Reveal>
           ))}
         </div>
