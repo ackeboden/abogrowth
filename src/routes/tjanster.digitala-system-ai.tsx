@@ -34,14 +34,15 @@ const deliverables = [
 // Systemkartans noder. x/y = slutposition (% av ytan), sx/sy/sr = startläget:
 // en rörig hög kring mitten som glider ut till ordnade platser runt affären.
 // Navet ("Er affär") ligger stilla — affären flyttar sig inte, verktygen gör det.
+// labelShort visas under md: "Mejl & kalender" sticker annars utanför kartan på 375px.
 const mapNodes = [
   { label: "Er affär", x: 50, y: 50, sx: 50, sy: 50, sr: 0, hub: true },
   { label: "CRM", x: 16, y: 20, sx: 42, sy: 38, sr: -10 },
-  { label: "Mejl & kalender", x: 84, y: 18, sx: 58, sy: 42, sr: 7 },
+  { label: "Mejl & kalender", labelShort: "Mejl", x: 84, y: 18, sx: 58, sy: 42, sr: 7 },
   { label: "Ekonomi", x: 14, y: 78, sx: 44, sy: 61, sr: 9 },
   { label: "Analys", x: 86, y: 80, sx: 57, sy: 58, sr: -7 },
   { label: "Innehåll", x: 50, y: 8, sx: 48, sy: 33, sr: 12 },
-  { label: "AI-assistent", x: 50, y: 92, sx: 53, sy: 66, sr: -12 },
+  { label: "AI-assistent", labelShort: "AI", x: 50, y: 92, sx: 53, sy: 66, sr: -12 },
 ];
 
 /**
@@ -117,14 +118,21 @@ function SystemMap() {
             >
               {/* Inre boxen svävar och reagerar på hover; yttre sköter positionen */}
               <div
-                className={`sysmap-node-box whitespace-nowrap px-3.5 py-2 md:px-5 md:py-2.5 text-xs md:text-sm font-semibold ${
+                className={`sysmap-node-box whitespace-nowrap px-3 py-1.5 md:px-5 md:py-2.5 text-xs md:text-sm font-semibold ${
                   n.hub
                     ? "bg-brand-green text-paper shadow-md"
                     : "bg-white border border-line text-ink/80 shadow-sm"
                 }`}
                 style={{ animationDelay: `${1.6 + i * 0.8}s` }}
               >
-                {n.label}
+                {"labelShort" in n && n.labelShort ? (
+                  <>
+                    <span className="md:hidden">{n.labelShort}</span>
+                    <span className="hidden md:inline">{n.label}</span>
+                  </>
+                ) : (
+                  n.label
+                )}
               </div>
             </div>
           ))}

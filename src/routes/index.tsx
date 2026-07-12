@@ -216,7 +216,7 @@ function Hero() {
     <section id="top" className="relative border-b border-line overflow-hidden">
       <div className="hero-ambient" aria-hidden="true" />
       <GrowthLine />
-      <div className="relative mx-auto max-w-6xl px-6 pt-20 pb-24 md:pt-32 md:pb-40 grid md:grid-cols-12 gap-12 items-end">
+      <div className="relative mx-auto max-w-6xl px-6 pt-14 pb-16 md:pt-32 md:pb-40 grid md:grid-cols-12 gap-8 md:gap-12 items-end">
         <div className="md:col-span-8">
           <div className="eyebrow mb-8 hero-rise">ABO Growth · Stockholm</div>
           <h1 className="display-heading text-[44px] leading-[1.02] md:text-[clamp(44px,5.8vw,76px)] hero-rise [animation-delay:120ms]">
@@ -647,7 +647,7 @@ function Contact() {
                     rows={5}
                     value={form.message}
                     onChange={(e) => setForm({ ...form, message: e.target.value })}
-                    className="w-full bg-paper border border-line px-4 py-3 text-sm focus:outline-none focus:border-brand-green"
+                    className="w-full bg-paper border border-line px-4 py-3 text-base md:text-sm focus:outline-none focus:border-brand-green"
                     placeholder="Vad vill ni uppnå?"
                   />
                 </div>
@@ -687,7 +687,7 @@ function Field({
         required={required}
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        className="w-full bg-paper border border-line px-4 py-3 text-sm focus:outline-none focus:border-brand-green"
+        className="w-full bg-paper border border-line px-4 py-3 text-base md:text-sm focus:outline-none focus:border-brand-green"
       />
     </div>
   );

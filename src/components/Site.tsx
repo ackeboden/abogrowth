@@ -185,6 +185,80 @@ export function PageHero({
 }
 
 /**
+ * whenInView — kör onVisible en gång när elementet är i bild.
+ * IntersectionObserver i första hand, men med manuell koll vid mount och
+ * på scroll/resize som fallback: vissa in-app-webbläsare och inbäddade
+ * vyer levererar aldrig IO-callbacks, och då får animerat innehåll ALDRIG
+ * bli permanent osynligt. Returnerar en cleanup-funktion.
+ */
+function whenInView(el: HTMLElement, threshold: number, onVisible: () => void) {
+  let done = false;
+  let ticking = false;
+
+  const finish = () => {
+    if (done) return;
+    done = true;
+    cleanup();
+    onVisible();
+  };
+
+  const check = () => {
+    const r = el.getBoundingClientRect();
+    const vh = window.innerHeight || document.documentElement.clientHeight;
+    if (r.height <= 0) return;
+    const synlig = Math.min(r.bottom, vh) - Math.max(r.top, 0);
+    if (synlig / Math.min(r.height, vh) >= threshold) finish();
+  };
+
+  const io =
+    typeof IntersectionObserver !== "undefined"
+      ? new IntersectionObserver(
+          ([entry]) => {
+            if (entry.isIntersecting) finish();
+          },
+          { threshold },
+        )
+      : null;
+  io?.observe(el);
+
+  // Tidsbaserad throttling, INTE requestAnimationFrame: i miljöer där
+  // renderaren inte målar frames (vissa inbäddade vyer) körs rAF-callbacks
+  // aldrig, och det är precis de miljöerna fallbacken finns till för.
+  let senast = 0;
+  const onScroll = () => {
+    const nu = Date.now();
+    if (nu - senast < 100) {
+      if (!ticking) {
+        ticking = true;
+        window.setTimeout(() => {
+          ticking = false;
+          check();
+        }, 120);
+      }
+      return;
+    }
+    senast = nu;
+    check();
+  };
+  window.addEventListener("scroll", onScroll, { passive: true });
+  window.addEventListener("resize", onScroll, { passive: true });
+  const mountCheck = window.setTimeout(check, 150);
+  // Sista utvägen: lågfrekvent poll. I vissa inbäddade vyer avfyras varken
+  // IO, rAF eller scroll-event; setTimeout/setInterval är det enda som går
+  // att lita på. Städas bort så fort elementet blivit synligt.
+  const poll = window.setInterval(check, 400);
+
+  function cleanup() {
+    io?.disconnect();
+    window.removeEventListener("scroll", onScroll);
+    window.removeEventListener("resize", onScroll);
+    window.clearTimeout(mountCheck);
+    window.clearInterval(poll);
+  }
+  return cleanup;
+}
+
+/**
  * useInView — true när elementet scrollats in i bild (triggas en gång).
  * Vid prefers-reduced-motion blir den true direkt, utan att vänta på scroll.
  * Används av scenerier som styr sina egna animationer (processlinjen,
@@ -201,17 +275,7 @@ export function useInView<T extends HTMLElement>(threshold = 0.35) {
       setInView(true);
       return;
     }
-    const io = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setInView(true);
-          io.disconnect();
-        }
-      },
-      { threshold },
-    );
-    io.observe(el);
-    return () => io.disconnect();
+    return whenInView(el, threshold, () => setInView(true));
   }, [threshold]);
 
   return { ref, inView };
@@ -240,17 +304,7 @@ export function Reveal({
       setVisible(true);
       return;
     }
-    const io = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setVisible(true);
-          io.disconnect();
-        }
-      },
-      { threshold: 0.15, rootMargin: "0px 0px -40px 0px" },
-    );
-    io.observe(el);
-    return () => io.disconnect();
+    return whenInView(el, 0.15, () => setVisible(true));
   }, []);
 
   return (
