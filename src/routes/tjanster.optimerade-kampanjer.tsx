@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowUpRight, Check } from "lucide-react";
-import { Header, Footer, BookingCTA, PageHero } from "@/components/Site";
+import { Header, Footer, BookingCTA, PageHero, Reveal } from "@/components/Site";
 
 export const Route = createFileRoute("/tjanster/optimerade-kampanjer")({
   head: () => ({
@@ -50,18 +50,19 @@ function Page() {
 
         <section className="border-b border-line">
           <div className="mx-auto max-w-6xl px-6 py-20 md:py-28">
-            <div className="eyebrow mb-5">Vad ni får</div>
-            <h2 className="display-heading text-3xl md:text-4xl mb-12">Leverabler</h2>
+            <Reveal>
+              <div className="eyebrow mb-5">Vad ni får</div>
+              <h2 className="display-heading text-3xl md:text-4xl mb-12">Leverabler</h2>
+            </Reveal>
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-              {deliverables.map((d) => (
-                <div
-                  key={d.t}
-                  className="bg-white border border-line p-5 md:p-8 shadow-sm hover:shadow-md hover:border-brand-green/40 transition-all"
-                >
-                  <Check className="h-5 w-5 text-brand-green mb-4" strokeWidth={2.5} />
-                  <h3 className="display-heading text-lg mb-3">{d.t}</h3>
-                  <p className="text-sm text-ink/70 leading-relaxed">{d.b}</p>
-                </div>
+              {deliverables.map((d, i) => (
+                <Reveal key={d.t} delay={i * 90}>
+                  <div className="h-full bg-white border border-line p-5 md:p-8 shadow-sm transition-all duration-300 hover:shadow-md hover:border-brand-green/40 hover:-translate-y-1">
+                    <Check className="h-5 w-5 text-brand-green mb-4" strokeWidth={2.5} />
+                    <h3 className="display-heading text-lg mb-3">{d.t}</h3>
+                    <p className="text-sm text-ink/70 leading-relaxed">{d.b}</p>
+                  </div>
+                </Reveal>
               ))}
             </div>
           </div>
@@ -69,22 +70,21 @@ function Page() {
 
         <section className="border-b border-line">
           <div className="mx-auto max-w-6xl px-6 py-20 md:py-28 grid md:grid-cols-12 gap-12">
-            <div className="md:col-span-4">
+            <Reveal className="md:col-span-4">
               <div className="eyebrow mb-5">Upplägg</div>
               <h2 className="display-heading text-3xl md:text-4xl">Tre faser. <span className="text-brand-green">Tydliga milstolpar.</span></h2>
-            </div>
+            </Reveal>
             <div className="md:col-span-8 space-y-6">
-              {steps.map((s) => (
-                <div
-                  key={s.n}
-                  className="bg-white border border-line p-5 md:p-8 shadow-sm hover:shadow-md hover:border-brand-green/40 transition-all flex gap-6"
-                >
-                  <div className="tracked text-xs text-brand-green pt-1 w-10 shrink-0">{s.n}</div>
-                  <div>
-                    <h3 className="display-heading text-lg mb-2">{s.t}</h3>
-                    <p className="text-sm text-ink/70 leading-relaxed">{s.b}</p>
+              {steps.map((s, i) => (
+                <Reveal key={s.n} delay={i * 110}>
+                  <div className="bg-white border border-line p-5 md:p-8 shadow-sm transition-all duration-300 hover:shadow-md hover:border-brand-green/40 hover:-translate-y-1 flex gap-6">
+                    <div className="tracked text-xs text-brand-green pt-1 w-10 shrink-0">{s.n}</div>
+                    <div>
+                      <h3 className="display-heading text-lg mb-2">{s.t}</h3>
+                      <p className="text-sm text-ink/70 leading-relaxed">{s.b}</p>
+                    </div>
                   </div>
-                </div>
+                </Reveal>
               ))}
             </div>
           </div>

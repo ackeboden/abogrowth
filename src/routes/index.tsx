@@ -60,6 +60,7 @@ type Service = {
   body: string;
   href?: string;
   tag?: string;
+  featured?: boolean;
   deliverables: string[];
 };
 
@@ -67,7 +68,8 @@ const services: Service[] = [
   {
     num: "01",
     title: "Digitala system & AI-verktyg",
-    tag: "Ny tjänst",
+    tag: "Vår spets",
+    featured: true,
     body: "Först strategin, sedan tekniken. Vi kartlägger vad ni faktiskt behöver: vilka system som ska hänga ihop och var AI gör verklig nytta.",
     href: "/tjanster/digitala-system-ai",
     deliverables: [
@@ -135,11 +137,11 @@ const faqItems = [
 // "helhet" före "AI-flöden": tekniken är ett medel, inte huvudnumret.
 const rotatingWords = ["tillväxt", "kampanjer", "helhet", "struktur"] as const;
 
-// Snabb-länkar i heron till de tre tjänsterna
+// Snabb-länkar i heron till de tre tjänsterna; spetstjänsten markeras grön.
 const heroChips = [
-  { label: "Digitala system & AI", to: "/tjanster/digitala-system-ai" },
-  { label: "Affärsutveckling", to: "/tjanster/affarsutveckling" },
-  { label: "Optimerade kampanjer", to: "/tjanster/optimerade-kampanjer" },
+  { label: "Digitala system & AI", to: "/tjanster/digitala-system-ai", featured: true },
+  { label: "Affärsutveckling", to: "/tjanster/affarsutveckling", featured: false },
+  { label: "Optimerade kampanjer", to: "/tjanster/optimerade-kampanjer", featured: false },
 ] as const;
 
 // Rullande band med det vi erbjuder — tjänster, inte enskilda annonsplattformar.
@@ -244,7 +246,11 @@ function Hero() {
               <Link
                 key={c.to}
                 to={c.to}
-                className="group inline-flex items-center gap-1.5 border border-line bg-white/70 px-3.5 py-2 text-xs font-semibold tracked-tight hover:border-brand-green hover:text-brand-green transition-colors"
+                className={`group inline-flex items-center gap-1.5 border px-3.5 py-2 text-xs font-semibold tracked-tight transition-colors ${
+                  c.featured
+                    ? "border-brand-green bg-brand-green/10 text-brand-green hover:bg-brand-green hover:text-paper"
+                    : "border-line bg-white/70 hover:border-brand-green hover:text-brand-green"
+                }`}
               >
                 {c.label}
                 <ArrowUpRight
@@ -384,6 +390,8 @@ function Services() {
           {services.map((s, i) => {
             const inner = (
               <>
+                {/* Grön topplinje markerar spetstjänsten */}
+                {s.featured && <span aria-hidden="true" className="absolute inset-x-0 top-0 h-1 bg-brand-green" />}
                 <span
                   aria-hidden="true"
                   className="pointer-events-none select-none absolute -bottom-5 right-3 display-heading text-[110px] leading-none text-ink/[0.04]"
@@ -393,7 +401,13 @@ function Services() {
                 <div className="flex items-start justify-between mb-8 min-h-6">
                   <span className="tracked text-xs text-subtle">{s.num}</span>
                   {s.tag && (
-                    <span className="text-[10px] tracked px-2 py-1 bg-brand-green/10 text-brand-green border border-brand-green/30">
+                    <span
+                      className={`text-[10px] tracked px-2 py-1 ${
+                        s.featured
+                          ? "bg-brand-green text-paper"
+                          : "bg-brand-green/10 text-brand-green border border-brand-green/30"
+                      }`}
+                    >
                       {s.tag}
                     </span>
                   )}
@@ -425,8 +439,11 @@ function Services() {
                 )}
               </>
             );
-            const shared =
-              "group relative overflow-hidden h-full bg-white border border-line p-5 md:p-10 flex flex-col shadow-sm transition-all duration-300 hover:shadow-md hover:border-brand-green/40 hover:-translate-y-1";
+            const shared = `group relative overflow-hidden h-full bg-white border p-5 md:p-10 flex flex-col transition-all duration-300 hover:shadow-md hover:-translate-y-1 ${
+              s.featured
+                ? "border-brand-green/50 shadow-md hover:border-brand-green"
+                : "border-line shadow-sm hover:border-brand-green/40"
+            }`;
             return (
               <Reveal key={s.num} delay={i * 130}>
                 {s.href ? (
