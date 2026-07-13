@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowUpRight, Check } from "lucide-react";
-import { Header, Footer, BookingCTA, PageHero, useInView } from "@/components/Site";
+import { Header, Footer, BookingCTA, PageHero, Reveal, useInView } from "@/components/Site";
 
 export const Route = createFileRoute("/tjanster/digitala-system-ai")({
   head: () => ({
@@ -54,9 +54,9 @@ const mapNodes = [
 function SystemMap() {
   const { ref, inView } = useInView<HTMLDivElement>(0.45);
   return (
-    <section className="border-b border-line">
+    <section className="border-b border-line bg-white">
       <div className="mx-auto max-w-6xl px-6 py-20 md:py-28">
-        <div className="max-w-2xl">
+        <Reveal className="max-w-2xl">
           <div className="eyebrow mb-5">Helheten</div>
           <h2 className="display-heading text-3xl md:text-4xl">
             Från spridda verktyg till <span className="text-brand-green">ett system</span>.
@@ -68,7 +68,7 @@ function SystemMap() {
             att mejlen loggas automatiskt och att månadsrapporten i princip
             skriver sig själv.
           </p>
-        </div>
+        </Reveal>
         <div
           ref={ref}
           aria-hidden="true"
@@ -170,9 +170,11 @@ function Page() {
           intro="Vi kartlägger era arbetsflöden, väljer rätt system och AI-verktyg, inför dem och utbildar teamet. Ni får en digital helhet som hänger samman och en vardag där systemen jobbar åt er, inte tvärtom."
         />
 
-        <section className="border-b border-line bg-white">
+        <SystemMap />
+
+        <section className="border-b border-line">
           <div className="mx-auto max-w-6xl px-6 py-20 md:py-28">
-            <div className="max-w-2xl">
+            <Reveal className="max-w-2xl">
               <div className="eyebrow mb-5">Vår hållning</div>
               <h2 className="display-heading text-3xl md:text-4xl">
                 Verktyg ska <span className="text-brand-green">tjäna affären</span>, inte tvärtom.
@@ -183,30 +185,29 @@ function Page() {
                 Vi hjälper er välja pragmatiskt, införa etappvis och mäta
                 effekten, inte samla fler prenumerationer.
               </p>
-            </div>
+            </Reveal>
           </div>
         </section>
 
-        <SystemMap />
-
         <section className="border-b border-line">
           <div className="mx-auto max-w-6xl px-6 py-20 md:py-28">
-            <div className="eyebrow mb-5">Vad ni får</div>
-            <h2 className="display-heading text-3xl md:text-4xl">Leverabler</h2>
-            <p className="mt-6 mb-12 text-ink/75 leading-relaxed max-w-2xl">
-              Sex konkreta delar. Tillsammans tar de er från dagens läge till
-              en vardag där systemen sköter rutinerna och ni sköter affären.
-            </p>
+            <Reveal>
+              <div className="eyebrow mb-5">Vad ni får</div>
+              <h2 className="display-heading text-3xl md:text-4xl">Leverabler</h2>
+              <p className="mt-6 mb-12 text-ink/75 leading-relaxed max-w-2xl">
+                Sex konkreta delar. Tillsammans tar de er från dagens läge till
+                en vardag där systemen sköter rutinerna och ni sköter affären.
+              </p>
+            </Reveal>
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-              {deliverables.map((d) => (
-                <div
-                  key={d.t}
-                  className="bg-white border border-line p-5 md:p-8 shadow-sm hover:shadow-md hover:border-brand-green/40 transition-all"
-                >
-                  <Check className="h-5 w-5 text-brand-green mb-4" strokeWidth={2.5} />
-                  <h3 className="display-heading text-lg mb-3">{d.t}</h3>
-                  <p className="text-sm text-ink/70 leading-relaxed">{d.b}</p>
-                </div>
+              {deliverables.map((d, i) => (
+                <Reveal key={d.t} delay={i * 90}>
+                  <div className="h-full bg-white border border-line p-5 md:p-8 shadow-sm transition-all duration-300 hover:shadow-md hover:border-brand-green/40 hover:-translate-y-1">
+                    <Check className="h-5 w-5 text-brand-green mb-4" strokeWidth={2.5} />
+                    <h3 className="display-heading text-lg mb-3">{d.t}</h3>
+                    <p className="text-sm text-ink/70 leading-relaxed">{d.b}</p>
+                  </div>
+                </Reveal>
               ))}
             </div>
           </div>
@@ -214,7 +215,7 @@ function Page() {
 
         <section className="border-b border-line bg-white">
           <div className="mx-auto max-w-6xl px-6 py-20 md:py-28 grid md:grid-cols-12 gap-12">
-            <div className="md:col-span-4">
+            <Reveal className="md:col-span-4">
               <div className="eyebrow mb-5">Upplägg</div>
               <h2 className="display-heading text-3xl md:text-4xl">Tre faser. <span className="text-brand-green">Tydliga milstolpar.</span></h2>
               <p className="mt-6 text-ink/75 leading-relaxed">
@@ -222,19 +223,18 @@ function Page() {
                 beslutspunkter och ett slut ni själva väljer. Inga eviga
                 konsulttimmar utan riktning.
               </p>
-            </div>
+            </Reveal>
             <div className="md:col-span-8 space-y-6">
-              {steps.map((s) => (
-                <div
-                  key={s.n}
-                  className="bg-paper border border-line p-5 md:p-8 shadow-sm hover:shadow-md hover:border-brand-green/40 transition-all flex gap-6"
-                >
-                  <div className="tracked text-xs text-brand-green pt-1 w-10 shrink-0">{s.n}</div>
-                  <div>
-                    <h3 className="display-heading text-lg mb-2">{s.t}</h3>
-                    <p className="text-sm text-ink/70 leading-relaxed">{s.b}</p>
+              {steps.map((s, i) => (
+                <Reveal key={s.n} delay={i * 110}>
+                  <div className="bg-paper border border-line p-5 md:p-8 shadow-sm transition-all duration-300 hover:shadow-md hover:border-brand-green/40 hover:-translate-y-1 flex gap-6">
+                    <div className="tracked text-xs text-brand-green pt-1 w-10 shrink-0">{s.n}</div>
+                    <div>
+                      <h3 className="display-heading text-lg mb-2">{s.t}</h3>
+                      <p className="text-sm text-ink/70 leading-relaxed">{s.b}</p>
+                    </div>
                   </div>
-                </div>
+                </Reveal>
               ))}
             </div>
           </div>
@@ -242,15 +242,19 @@ function Page() {
 
         <section className="border-b border-line">
           <div className="mx-auto max-w-6xl px-6 py-20 md:py-28">
-            <div className="eyebrow mb-5">Användningsfall</div>
-            <h2 className="display-heading text-3xl md:text-4xl mb-12">Där vi ofta börjar</h2>
+            <Reveal>
+              <div className="eyebrow mb-5">Användningsfall</div>
+              <h2 className="display-heading text-3xl md:text-4xl mb-12">Där vi ofta börjar</h2>
+            </Reveal>
             <div className="grid gap-8 md:grid-cols-3">
               {useCases.map((u, i) => (
-                <div key={u.t} className="border-t-2 border-brand-green pt-6">
-                  <div className="tracked text-xs text-subtle mb-3">0{i + 1}</div>
-                  <h3 className="display-heading text-xl mb-3">{u.t}</h3>
-                  <p className="text-sm text-ink/70 leading-relaxed">{u.b}</p>
-                </div>
+                <Reveal key={u.t} delay={i * 120}>
+                  <div className="group border-t-2 border-brand-green pt-6 transition-transform duration-300 hover:-translate-y-1">
+                    <div className="tracked text-xs text-subtle mb-3 transition-colors group-hover:text-brand-green">0{i + 1}</div>
+                    <h3 className="display-heading text-xl mb-3">{u.t}</h3>
+                    <p className="text-sm text-ink/70 leading-relaxed">{u.b}</p>
+                  </div>
+                </Reveal>
               ))}
             </div>
           </div>
