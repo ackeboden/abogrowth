@@ -420,6 +420,11 @@ details[open] .faq-icon {
     flex-wrap: wrap;
     width: 100%;
   }
+  /* Bandets dublettrad finns bara för den sömlösa loopen; när bandet står
+     stilla ska den döljas, annars visas allt innehåll två gånger staplat. */
+  .marquee-track > [aria-hidden="true"] {
+    display: none;
+  }
   .process-line-path,
   .sysmap-link {
     transition: none;

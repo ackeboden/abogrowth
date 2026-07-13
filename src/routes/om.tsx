@@ -113,7 +113,7 @@ function Page() {
             <div className="mt-14 grid gap-6 md:grid-cols-2">
               {principles.map((p, i) => (
                 <Reveal key={p.title} delay={i * 110}>
-                  <div className="h-full border border-paper/15 bg-white/5 p-8 transition-all duration-300 hover:border-brand-green/50 hover:bg-white/[0.08] hover:-translate-y-1">
+                  <div className="h-full border border-paper/15 bg-white/5 p-5 md:p-8 transition-all duration-300 hover:border-brand-green/50 hover:bg-white/[0.08] hover:-translate-y-1">
                     <div className="w-10 h-10 flex items-center justify-center bg-brand-green/15 text-brand-green mb-6">
                       <p.icon className="h-5 w-5" strokeWidth={2} />
                     </div>

@@ -75,7 +75,7 @@ function Page() {
             <div className="md:col-span-8 space-y-6">
               {steps.map((s, i) => (
                 <Reveal key={s.n} delay={i * 110}>
-                  <div className="bg-white border border-line p-8 shadow-sm hover:shadow-md hover:border-brand-green/40 transition-all flex gap-6">
+                  <div className="bg-white border border-line p-5 md:p-8 shadow-sm hover:shadow-md hover:border-brand-green/40 transition-all flex gap-6">
                     <div className="tracked text-xs text-brand-green pt-1 w-10 shrink-0">{s.n}</div>
                     <div>
                       <h3 className="display-heading text-lg mb-2">{s.t}</h3>
@@ -104,7 +104,7 @@ function Page() {
             <div className="md:col-span-7">
               <ul className="space-y-4">
                 {promises.map((p) => (
-                  <li key={p} className="flex items-start gap-3 border border-line bg-paper p-5 text-sm text-ink/80">
+                  <li key={p} className="flex items-start gap-3 border border-line bg-paper p-4 md:p-5 text-sm text-ink/80">
                     <Check className="h-4 w-4 mt-0.5 shrink-0 text-brand-green" strokeWidth={2.5} />
                     {p}
                   </li>

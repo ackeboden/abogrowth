@@ -49,7 +49,7 @@ function Page() {
             ) : (
               <div className="grid gap-px bg-line md:grid-cols-2 border border-line">
                 {cases.map((c) => (
-                  <article key={c.slug} className="bg-paper p-8 md:p-10">
+                  <article key={c.slug} className="bg-paper p-5 md:p-10">
                     <div className="tracked text-xs text-subtle mb-3">{c.client}</div>
                     <h2 className="display-heading text-2xl mb-4">{c.title}</h2>
                     <p className="text-sm text-ink/70 leading-relaxed mb-6">{c.summary}</p>
@@ -81,7 +81,7 @@ function Page() {
 
 function EmptyState() {
   return (
-    <div className="border-2 border-dashed border-line bg-white p-12 md:p-20 text-center">
+    <div className="border-2 border-dashed border-line bg-white p-8 md:p-20 text-center">
       <div className="eyebrow mb-4">Kommer snart</div>
       <h2 className="display-heading text-2xl md:text-3xl max-w-xl mx-auto">
         Vi lägger till case löpande.

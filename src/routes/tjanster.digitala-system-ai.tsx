@@ -201,7 +201,7 @@ function Page() {
               {deliverables.map((d) => (
                 <div
                   key={d.t}
-                  className="bg-white border border-line p-8 shadow-sm hover:shadow-md hover:border-brand-green/40 transition-all"
+                  className="bg-white border border-line p-5 md:p-8 shadow-sm hover:shadow-md hover:border-brand-green/40 transition-all"
                 >
                   <Check className="h-5 w-5 text-brand-green mb-4" strokeWidth={2.5} />
                   <h3 className="display-heading text-lg mb-3">{d.t}</h3>
@@ -227,7 +227,7 @@ function Page() {
               {steps.map((s) => (
                 <div
                   key={s.n}
-                  className="bg-paper border border-line p-8 shadow-sm hover:shadow-md hover:border-brand-green/40 transition-all flex gap-6"
+                  className="bg-paper border border-line p-5 md:p-8 shadow-sm hover:shadow-md hover:border-brand-green/40 transition-all flex gap-6"
                 >
                   <div className="tracked text-xs text-brand-green pt-1 w-10 shrink-0">{s.n}</div>
                   <div>

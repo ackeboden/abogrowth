@@ -255,7 +255,8 @@ function Hero() {
             ))}
           </div>
         </div>
-        <div className="md:col-span-4 md:pb-2 hero-rise [animation-delay:540ms]">
+        {/* Statistiklådan tar för mycket plats på mobil; visas från md och uppåt */}
+        <div className="hidden md:block md:col-span-4 md:pb-2 hero-rise [animation-delay:540ms]">
           <div className="border-l-2 border-brand-green pl-5 space-y-3 text-sm text-ink/70 bg-paper/70 backdrop-blur-sm py-2">
             <div className="flex justify-between"><span className="tracked text-xs text-subtle">Bas</span><span>Stockholm</span></div>
             <div className="flex justify-between"><span className="tracked text-xs text-subtle">Form</span><span>Enskild firma</span></div>
@@ -285,8 +286,9 @@ function Marquee() {
       ))}
     </div>
   );
+  // Bandet döljs på mobil: tog för mycket plats direkt under heron.
   return (
-    <section aria-label="Kompetenser och kanaler" className="marquee border-b border-line bg-white/60 overflow-hidden">
+    <section aria-label="Kompetenser och kanaler" className="marquee hidden md:block border-b border-line bg-white/60 overflow-hidden">
       <div className="marquee-track">
         {row(false)}
         {row(true)}
@@ -345,7 +347,7 @@ function AiFocus() {
         <div className="mt-14 grid gap-6 lg:grid-cols-3">
           {points.map((p, i) => (
             <Reveal key={p.title} delay={i * 130}>
-              <div className="h-full border border-paper/15 bg-white/5 p-8 transition-all duration-300 hover:border-brand-green/50 hover:bg-white/[0.08] hover:-translate-y-1">
+              <div className="h-full border border-paper/15 bg-white/5 p-5 md:p-8 transition-all duration-300 hover:border-brand-green/50 hover:bg-white/[0.08] hover:-translate-y-1">
                 <div className="w-10 h-10 flex items-center justify-center bg-brand-green/15 text-brand-green mb-6">
                   <p.icon className="h-5 w-5" strokeWidth={2} />
                 </div>
@@ -424,7 +426,7 @@ function Services() {
               </>
             );
             const shared =
-              "group relative overflow-hidden h-full bg-white border border-line p-8 md:p-10 flex flex-col shadow-sm transition-all duration-300 hover:shadow-md hover:border-brand-green/40 hover:-translate-y-1";
+              "group relative overflow-hidden h-full bg-white border border-line p-5 md:p-10 flex flex-col shadow-sm transition-all duration-300 hover:shadow-md hover:border-brand-green/40 hover:-translate-y-1";
             return (
               <Reveal key={s.num} delay={i * 130}>
                 {s.href ? (
@@ -478,7 +480,7 @@ function Process() {
             { step: "04", title: "Följ upp", body: "Vi mäter, justerar och skalar det som fungerar." },
           ].map((p, i) => (
             <Reveal key={p.step} delay={i * 110} className="bg-ink">
-              <div className="h-full p-8 transition-colors duration-300 hover:bg-white/5">
+              <div className="h-full p-5 md:p-8 transition-colors duration-300 hover:bg-white/5">
                 <div className="tracked text-xs text-brand-green mb-6">{p.step}</div>
                 <h3 className="display-heading text-lg mb-3 text-paper">{p.title}</h3>
                 <p className="text-sm text-paper/65 leading-relaxed">{p.body}</p>
@@ -561,11 +563,11 @@ function Faq() {
           {faqItems.map((f, i) => (
             <Reveal key={f.q} delay={i * 70}>
               <details className="faq bg-paper border border-line hover:border-brand-green/40 transition-colors">
-                <summary className="flex items-center justify-between gap-4 cursor-pointer list-none p-6 text-sm md:text-base font-semibold">
+                <summary className="flex items-center justify-between gap-4 cursor-pointer list-none p-4 md:p-6 text-sm md:text-base font-semibold">
                   {f.q}
                   <Plus className="faq-icon h-4 w-4 shrink-0 text-brand-green" strokeWidth={2.5} />
                 </summary>
-                <p className="px-6 pb-6 -mt-1 text-sm text-ink/70 leading-relaxed max-w-2xl">{f.a}</p>
+                <p className="px-4 pb-4 md:px-6 md:pb-6 -mt-1 text-sm text-ink/70 leading-relaxed max-w-2xl">{f.a}</p>
               </details>
             </Reveal>
           ))}
@@ -620,7 +622,7 @@ function Contact() {
 
         <Reveal className="md:col-span-7" delay={130}>
           <form
-            className="h-full bg-white border border-line p-8 md:p-10 space-y-5"
+            className="h-full bg-white border border-line p-5 md:p-10 space-y-5"
             onSubmit={submit}
           >
             {sent ? (
