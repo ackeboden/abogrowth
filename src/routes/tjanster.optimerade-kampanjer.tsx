@@ -184,7 +184,7 @@ function Page() {
         <PageHero
           eyebrow="Tjänst 03 · Optimerade kampanjer"
           title={<>Rätt budskap, på rätt kanaler, <span className="text-brand-green">optimerat löpande</span>.</>}
-          intro="Strategin först: vi börjar i affärsmålet, hittar var er målgrupp finns och väljer kanaler därefter. Sedan optimerar vi mot resultat, inte mot att synas för synandets skull."
+          intro="En stödtjänst som drar nytta av era ihopkopplade system. Vi börjar i affärsmålet, hittar var er målgrupp finns och väljer kanaler därefter. Sedan optimerar vi mot resultat, inte mot att synas för synandets skull."
         />
 
         <KanalMap />

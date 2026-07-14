@@ -6,20 +6,20 @@ import { Header, Footer, GrowthLine, Reveal, useInView, BOOKING_HREF, CONTACT_EM
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "ABO Growth | Affärsutveckling & tillväxt" },
+      { title: "ABO Growth | Ordning i era system och AI" },
       {
         name: "description",
         content:
-          "ABO Growth driver affärsutveckling och tillväxt, strukturerat och konkret. Strategin först, tekniken sedan: vi hjälper er välja rätt system och AI-verktyg. Baserade i Stockholm.",
+          "Nya digitala system och AI-verktyg dyker upp varje vecka. ABO Growth hjälper er få koll: struktur i systemfloran, verktyg som hänger ihop och en tydlig väg framåt. Från Stockholm.",
       },
-      { name: "keywords", content: "affärsutveckling, tillväxtstrategi, kampanjer, AI-verktyg, digitala system, Stockholm, konsult, projektledning" },
-      { property: "og:title", content: "ABO Growth | Affärsutveckling & tillväxt" },
-      { property: "og:description", content: "Strukturerad affärsutveckling och tillväxt från Stockholm." },
+      { name: "keywords", content: "digitala system, AI-verktyg, systemstrategi, struktur, effektivitet, automatisering, integration, affärsutveckling, Stockholm, konsult" },
+      { property: "og:title", content: "ABO Growth | Ordning i era system och AI" },
+      { property: "og:description", content: "Få koll på era digitala system och AI-verktyg. Struktur, ordning och effektivitet, från Stockholm." },
       { property: "og:type", content: "website" },
       { property: "og:url", content: "https://abogrowth.se/" },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:title", content: "ABO Growth | Affärsutveckling & tillväxt" },
-      { name: "twitter:description", content: "Vi bygger tillväxt för ert företag. Strukturerat, från Stockholm." },
+      { name: "twitter:title", content: "ABO Growth | Ordning i era system och AI" },
+      { name: "twitter:description", content: "Få koll på era digitala system och AI-verktyg. Struktur och ordning, från Stockholm." },
     ],
     links: [{ rel: "canonical", href: "https://abogrowth.se/" }],
     scripts: [
@@ -30,7 +30,7 @@ export const Route = createFileRoute("/")({
           "@type": "ProfessionalService",
           name: "ABO Growth",
           description:
-            "Affärsutveckling, tillväxtstrategi och optimerade kampanjer för växande företag, samt strategin bakom vilka digitala system och AI-verktyg ni faktiskt behöver.",
+            "ABO Growth hjälper företag att få ordning i sina digitala system och AI-verktyg: systemstrategi, struktur och effektivitet, med affärsutveckling och kampanjer som stödtjänster.",
           areaServed: "Sverige",
           address: { "@type": "PostalAddress", addressLocality: "Stockholm", addressCountry: "SE" },
           email: CONTACT_EMAIL,
@@ -68,14 +68,14 @@ const services: Service[] = [
   {
     num: "01",
     title: "Digitala system & AI-verktyg",
-    tag: "Vår spets",
+    tag: "Huvudtjänst",
     featured: true,
-    body: "Först strategin, sedan tekniken. Vi kartlägger vad ni faktiskt behöver: vilka system som ska hänga ihop och var AI gör verklig nytta.",
+    body: "Vi hjälper er få koll: kartlägger systemfloran, rensar bland verktygen och kopplar ihop det som ska hänga samman. Sedan visar vi var AI gör verklig nytta.",
     href: "/tjanster/digitala-system-ai",
     deliverables: [
-      "Strategi för vilka system och verktyg ni behöver",
-      "Införande, integration och utbildning av teamet",
-      "Automationer där de sparar mest tid",
+      "Kartläggning av era system och verktyg",
+      "En struktur där allt hänger ihop",
+      "Automation och AI där det sparar mest tid",
     ],
   },
   {
@@ -133,9 +133,9 @@ const faqItems = [
   },
 ];
 
-// Orden roterar själva erbjudandet — besökaren ska inom sekunder se VAD vi levererar.
-// "helhet" före "AI-flöden": tekniken är ett medel, inte huvudnumret.
-const rotatingWords = ["tillväxt", "kampanjer", "helhet", "struktur"] as const;
+// Orden roterar det vi skapar ordning i — besökaren ska inom sekunder förstå
+// kärnan: koll och struktur i den digitala floran.
+const rotatingWords = ["systemen", "verktygen", "AI:n", "datan"] as const;
 
 // Snabb-länkar i heron till de tre tjänsterna; spetstjänsten markeras grön.
 const heroChips = [
@@ -144,14 +144,13 @@ const heroChips = [
   { label: "Optimerade kampanjer", to: "/tjanster/optimerade-kampanjer", featured: false },
 ] as const;
 
-// Rullande band med det vi erbjuder — tjänster, inte enskilda annonsplattformar.
-// Strategi och helhet först, verktygen sedan (samma ordning som resten av sajten).
+// Rullande band med det vi erbjuder. Systemstrategi och struktur först,
+// affärsutveckling och kampanjer som stödtjänster sist.
 const marqueeItems = [
-  "Tillväxtstrategi", "Affärsutveckling", "Systemstrategi", "Digitala system",
-  "Optimerade kampanjer", "Analys & uppföljning", "CRM",
-  "Automatiserade flöden", "AI-verktyg", "AI-agenter",
-  "SEO", "Nyhetsbrev", "Landningssidor", "Innehållsproduktion",
-  "Årshjul & innehållsplan",
+  "Systemstrategi", "Systemkartläggning", "Digitala system", "AI-verktyg",
+  "AI-agenter", "Automatiserade flöden", "Integrationer", "Struktur & ordning",
+  "Effektivisering", "Analys & uppföljning", "CRM",
+  "Affärsutveckling", "Optimerade kampanjer", "SEO", "Nyhetsbrev",
 ] as const;
 
 function Index() {
@@ -201,7 +200,7 @@ function RotatingWord() {
     >
       {/* Sizer: reserverar plats för det längsta ordet så rubriken inte hoppar */}
       <span aria-hidden="true" className="invisible col-start-1 row-start-1 whitespace-nowrap">
-        kampanjer
+        verktygen
       </span>
       <span
         key={current}
@@ -220,15 +219,15 @@ function Hero() {
       <GrowthLine />
       <div className="relative mx-auto max-w-6xl px-6 pt-14 pb-16 md:pt-32 md:pb-40 grid md:grid-cols-12 gap-8 md:gap-12 items-end">
         <div className="md:col-span-8">
-          <div className="eyebrow mb-8 hero-rise">ABO Growth · Stockholm</div>
+          <div className="eyebrow mb-8 hero-rise">ABO Growth · Digitala system & AI</div>
           <h1 className="display-heading text-[44px] leading-[1.02] md:text-[clamp(44px,5.8vw,76px)] hero-rise [animation-delay:120ms]">
-            Vi bygger <RotatingWord />
-            <br />för ert företag.
+            Få koll på <RotatingWord />
+            <br />i den digitala djungeln.
           </h1>
           <p className="mt-8 max-w-xl text-lg text-ink/75 leading-relaxed hero-rise [animation-delay:260ms]">
-            Strategi som blir till handling. Vi driver er affärsutveckling,
-            bygger kampanjer som mäts på riktigt och hjälper er välja rätt
-            system och verktyg, i rätt ordning.
+            Nya system och AI-verktyg dyker upp varje vecka, och det är lätt
+            att tappa greppet. Vi hjälper er skapa ordning: en systemflora
+            som hänger ihop, mindre dubbelarbete och en tydlig väg framåt.
           </p>
           <div className="mt-10 flex flex-wrap items-center gap-4 hero-rise [animation-delay:400ms]">
             <a
@@ -266,7 +265,7 @@ function Hero() {
           <div className="border-l-2 border-brand-green pl-5 space-y-3 text-sm text-ink/70 bg-paper/70 backdrop-blur-sm py-2">
             <div className="flex justify-between"><span className="tracked text-xs text-subtle">Bas</span><span>Stockholm</span></div>
             <div className="flex justify-between"><span className="tracked text-xs text-subtle">Form</span><span>Enskild firma</span></div>
-            <div className="flex justify-between"><span className="tracked text-xs text-subtle">Fokus</span><span>Tillväxt</span></div>
+            <div className="flex justify-between"><span className="tracked text-xs text-subtle">Fokus</span><span>Struktur & ordning</span></div>
             <div className="flex justify-between"><span className="tracked text-xs text-subtle">Spets</span><span>Digitala system & AI</span></div>
           </div>
         </div>
@@ -331,12 +330,14 @@ function AiFocus() {
             <div className="md:col-span-8">
               <div className="eyebrow mb-5">Vår spets · Digitala system & AI</div>
               <h2 className="display-heading text-3xl md:text-5xl text-paper">
-                Strategin först, <span className="text-brand-green">tekniken sedan</span>.
+                Ordning i <span className="text-brand-green">djungeln</span>.
               </h2>
               <p className="mt-6 text-paper/70 leading-relaxed max-w-2xl">
-                Nya system och AI-verktyg dyker upp varje månad. Vi börjar i era
-                mål och flöden, sorterar bruset och sätter ihop en helhet som
-                hänger samman, utan att förvandla vardagen till ett teknikprojekt.
+                Nya system och AI-verktyg dyker upp varje vecka. Alla säger sig
+                vara oumbärliga, konkurrenterna verkar redan köra igång, och er
+                data ligger spridd på fem ställen. Vi reder ut floran, kopplar
+                ihop det som ska prata med varandra och visar var AI faktiskt gör
+                nytta, så att ni får koll i stället för fler flikar.
               </p>
             </div>
             <div className="md:col-span-4 md:text-right">
@@ -376,12 +377,12 @@ function Services() {
           <div className="max-w-3xl">
             <div className="eyebrow mb-5">Vad vi gör</div>
             <h2 className="display-heading text-3xl md:text-5xl">
-              Tre områden. <span className="text-brand-green">En riktning.</span>
+              En grund. <span className="text-brand-green">Två som bygger vidare.</span>
             </h2>
             <p className="mt-6 text-ink/70 leading-relaxed max-w-2xl">
-              Vi tar er från oklar riktning till konkret plan, och sedan hela vägen
-              till leverans. Alltid i samma ordning: förstå affären först, välj
-              system och verktyg sedan. Här är de tre områdena vi driver.
+              Kärnan är att få ordning i era digitala system och AI-verktyg. När
+              grunden sitter blir allt annat enklare: affärsutveckling och
+              kampanjer bygger vidare på en struktur som redan hänger ihop.
             </p>
           </div>
         </Reveal>

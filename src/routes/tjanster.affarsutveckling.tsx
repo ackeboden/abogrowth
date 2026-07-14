@@ -147,7 +147,7 @@ function Page() {
         <PageHero
           eyebrow="Tjänst 02 · Affärsutveckling"
           title={<>Analys, strategi och en <span className="text-brand-green">plan som håller</span>.</>}
-          intro="Vi hjälper er förstå var affären står idag, var potentialen finns och hur ni tar er dit. Tydlig metod, konkreta leverabler, ingen konsultjargong."
+          intro="En stödtjänst som bygger vidare på ordningen i era system. Vi hjälper er förstå var affären står idag, var potentialen finns och hur ni tar er dit. Tydlig metod, konkreta leverabler, ingen konsultjargong."
         />
 
         <PlanMap />
