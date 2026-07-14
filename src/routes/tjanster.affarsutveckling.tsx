@@ -22,72 +22,80 @@ export const Route = createFileRoute("/tjanster/affarsutveckling")({
   component: Page,
 });
 
-// Prioriteringskartan: sex initiativ ligger huller om buller; tre flyger in i
-// den inramade planen (01/02/03), resten prioriteras bort och tonas ner.
-// prio anger plats i planen; utan prio hamnar chippen i bortvalt-kolumnen.
-const prioNodes = [
-  { label: "Fler återköp", x: 72, y: 18, sx: 45, sy: 40, sr: -8, prio: 1 },
-  { label: "Bättre säljprocess", x: 72, y: 50, sx: 55, sy: 55, sr: 6, prio: 2 },
-  { label: "Nytt erbjudande", x: 72, y: 82, sx: 48, sy: 62, sr: -5, prio: 3 },
-  { label: "Ny marknad", x: 18, y: 20, sx: 52, sy: 35, sr: 9 },
-  { label: "Höjd prissättning", x: 18, y: 50, sx: 42, sy: 50, sr: -7 },
-  { label: "Ny målgrupp", x: 18, y: 80, sx: 58, sy: 45, sr: 7 },
+// Tidslinjekartan: sex initiativ ligger huller om buller och flyger in i tre
+// faser längs en tidslinje som ritas under dem. Alla initiativ får plats,
+// men i rätt ordning; speglar leverabeln "prioriterad handlingsplan med tidslinje".
+const planNodes = [
+  { label: "Bättre säljprocess", x: 18, y: 26, sx: 45, sy: 40, sr: -8, fas: 1 },
+  { label: "Fler återköp", x: 18, y: 48, sx: 55, sy: 55, sr: 6, fas: 1 },
+  { label: "Nytt erbjudande", x: 50, y: 26, sx: 48, sy: 62, sr: -5, fas: 2 },
+  { label: "Höjd prissättning", x: 50, y: 48, sx: 52, sy: 35, sr: 9, fas: 2 },
+  { label: "Ny målgrupp", x: 82, y: 26, sx: 42, sy: 50, sr: -7, fas: 3 },
+  { label: "Ny marknad", x: 82, y: 48, sx: 58, sy: 45, sr: 7, fas: 3 },
+];
+
+const faser = [
+  { x: 18, namn: "Fas 1" },
+  { x: 50, namn: "Fas 2" },
+  { x: 82, namn: "Fas 3" },
 ];
 
 /**
- * PrioMap — sidans signaturscen, samma teknik som systemkartan på tjänst 01.
- * Alla initiativ ser likadana ut i högen; när ytan scrollas in sorteras de:
- * tre får plats i den inramade tillväxtplanen, resten tonas ner. Poängen med
- * tjänsten som en enda animation: prioritering är att välja bort.
+ * PlanMap — sidans signaturscen, samma teknik som systemkartan på tjänst 01.
+ * Initiativen ligger först i en hög; när ytan scrollas in flyger de till sina
+ * faser medan tidslinjen ritas under dem och fasmarkörerna tänds. Planen som
+ * animation: allt får plats, men i rätt ordning.
  */
-function PrioMap() {
+function PlanMap() {
   const { ref, inView } = useInView<HTMLDivElement>(0.45);
   return (
     <section className="border-b border-line bg-white">
       <div className="mx-auto max-w-6xl px-6 py-20 md:py-28">
         <Reveal className="max-w-2xl">
-          <div className="eyebrow mb-5">Prioriteringen</div>
+          <div className="eyebrow mb-5">Planen</div>
           <h2 className="display-heading text-3xl md:text-4xl">
-            Allt går att göra. <span className="text-brand-green">Allt ska inte göras.</span>
+            Rätt initiativ, <span className="text-brand-green">i rätt ordning</span>.
           </h2>
           <p className="mt-6 text-ink/75 leading-relaxed">
-            En tillväxtplan är lika mycket ett urval som en plan. Vi väger
-            initiativen mot varandra och lägger kraften på de som flyttar
-            affären mest, i rätt ordning.
+            En tillväxtplan är en sekvens, inte en önskelista. Vi lägger varje
+            initiativ där det gör störst nytta och ger varje fas ett tydligt
+            mål att leverera mot.
           </p>
         </Reveal>
         <div
           ref={ref}
           aria-hidden="true"
-          className={`sysmap relative mt-12 h-80 md:h-96 ${inView ? "is-visible" : ""}`}
+          className={`sysmap relative mt-12 h-72 md:h-80 ${inView ? "is-visible" : ""}`}
         >
           <svg className="absolute inset-0 h-full w-full" viewBox="0 0 100 100" preserveAspectRatio="none" fill="none">
-            {/* Ramen kring planen ritas när chipsen landat */}
-            <rect
+            {/* Tidslinjen ritas vänster till höger när chipsen börjar landa */}
+            <line
               className="sysmap-link"
               pathLength={1}
-              x="55" y="5" width="36" height="90" rx="1.5"
+              x1="4" y1="70" x2="96" y2="70"
               stroke="#1F8A5C"
-              strokeOpacity="0.5"
-              strokeWidth="1"
+              strokeOpacity="0.45"
+              strokeWidth="1.5"
               vectorEffect="non-scaling-stroke"
-              style={{ transitionDelay: "1.1s" }}
+              style={{ transitionDelay: "0.8s" }}
             />
           </svg>
-          <span
-            className="sysmap-badge absolute tracked text-[10px] text-brand-green bg-white px-2"
-            style={{ left: "73%", top: "5%", transform: "translate(-50%, -50%)", transitionDelay: "1.5s" }}
-          >
-            Er tillväxtplan
-          </span>
-          {/* Etikett över de nedtonade: utan den läses de som trasiga, inte bortvalda */}
-          <span
-            className="sysmap-badge absolute tracked text-[10px] text-subtle bg-white px-2"
-            style={{ left: "18%", top: "5%", transform: "translate(-50%, -50%)", transitionDelay: "1.5s" }}
-          >
-            Väljs bort
-          </span>
-          {prioNodes.map((n, i) => (
+          {/* Fasmarkörer och etiketter tänds i tur och ordning längs linjen */}
+          {faser.map((f, i) => (
+            <span key={f.namn}>
+              <span
+                className="sysmap-badge absolute h-2.5 w-2.5 rounded-full bg-brand-green"
+                style={{ left: `${f.x}%`, top: "70%", transform: "translate(-50%, -50%)", transitionDelay: `${1.2 + i * 0.25}s` }}
+              />
+              <span
+                className="sysmap-badge absolute tracked text-[10px] text-brand-green whitespace-nowrap"
+                style={{ left: `${f.x}%`, top: "82%", transform: "translate(-50%, -50%)", transitionDelay: `${1.35 + i * 0.25}s` }}
+              >
+                {f.namn}
+              </span>
+            </span>
+          ))}
+          {planNodes.map((n, i) => (
             <div
               key={n.label}
               className="sysmap-node absolute"
@@ -95,29 +103,21 @@ function PrioMap() {
                 left: `${inView ? n.x : n.sx}%`,
                 top: `${inView ? n.y : n.sy}%`,
                 transform: `translate(-50%, -50%) rotate(${inView ? 0 : n.sr}deg)`,
-                opacity: inView ? (n.prio ? 1 : 0.4) : 0.55,
+                opacity: inView ? 1 : 0.55,
                 transitionDelay: `${i * 0.07}s`,
-                zIndex: n.prio ? 2 : 1,
               }}
             >
               <div
-                className={`sysmap-node-box whitespace-nowrap px-3 py-1.5 md:px-5 md:py-2.5 text-xs md:text-sm font-semibold bg-white border shadow-sm ${
-                  n.prio ? "border-brand-green/50" : "border-line text-ink/70"
-                }`}
+                className="sysmap-node-box whitespace-nowrap px-3 py-1.5 md:px-5 md:py-2.5 text-xs md:text-sm font-semibold bg-white border border-line text-ink/80 shadow-sm"
                 style={{ animationDelay: `${1.6 + i * 0.8}s` }}
               >
-                {n.prio && (
-                  <span className="sysmap-badge tracked text-[10px] text-brand-green mr-2" style={{ transitionDelay: `${1.2 + n.prio * 0.15}s` }}>
-                    0{n.prio}
-                  </span>
-                )}
                 {n.label}
               </div>
             </div>
           ))}
         </div>
         <p className="mt-8 text-sm text-subtle max-w-xl">
-          Initiativen är exempel. Vilka som hamnar i er plan avgör analysen, inte magkänslan.
+          Initiativen är exempel. Ordningen hos er avgör analysen.
         </p>
       </div>
     </section>
@@ -150,7 +150,7 @@ function Page() {
           intro="Vi hjälper er förstå var affären står idag, var potentialen finns och hur ni tar er dit. Tydlig metod, konkreta leverabler, ingen konsultjargong."
         />
 
-        <PrioMap />
+        <PlanMap />
 
         <section className="border-b border-line">
           <div className="mx-auto max-w-6xl px-6 py-20 md:py-28">
