@@ -46,6 +46,15 @@ function isH3SwallowedErrorBody(body: string): boolean {
 
 export default {
   async fetch(request: Request, env: unknown, ctx: unknown) {
+    // Kanonisk domän: netlify.app-subdomänen ska omdirigera, inte servera
+    // dubblettinnehåll. Exakt hostname-match så deploy previews
+    // (deploy-preview-N--abogrowth.netlify.app) inte påverkas.
+    const url = new URL(request.url);
+    if (url.hostname === "abogrowth.netlify.app") {
+      url.hostname = "abogrowth.se";
+      url.protocol = "https:";
+      return Response.redirect(url.toString(), 301);
+    }
     try {
       const handler = await getServerEntry();
       const response = await handler.fetch(request, env, ctx);

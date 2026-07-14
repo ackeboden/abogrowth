@@ -93,8 +93,10 @@ export function Header() {
 }
 
 export function Footer() {
+  // Något mörkare än bg-ink + topplinje: när footern följer en mörk
+  // CTA-sektion ska gränsen synas, annars flyter de ihop till ett sjok.
   return (
-    <footer className="bg-ink text-paper/70">
+    <footer className="bg-[#121517] border-t border-paper/10 text-paper/70">
       <div className="mx-auto max-w-6xl px-6 py-12 grid gap-8 md:grid-cols-3">
         <div>
           <Logo inverted />
@@ -139,7 +141,7 @@ export function BookingCTA({
 }: { title?: string; body?: string }) {
   return (
     <section className="bg-ink text-paper">
-      <div className="mx-auto max-w-6xl px-6 py-20 md:py-24 grid md:grid-cols-12 gap-10 items-center">
+      <div className="mx-auto max-w-6xl px-6 py-16 md:py-20 grid md:grid-cols-12 gap-10 items-center">
         <div className="md:col-span-8">
           <div className="eyebrow mb-4 text-brand-green">Boka samtal</div>
           <h2 className="display-heading text-3xl md:text-5xl text-paper">{title}</h2>
