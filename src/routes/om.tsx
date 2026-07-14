@@ -83,26 +83,25 @@ function Page() {
                 </a>
               </div>
             </Reveal>
-            {/* Jag-form medvetet: personligast på hela sajten, resten behåller vi-form. */}
+            {/* Jag-form medvetet: personligast på hela sajten, resten behåller vi-form.
+                Tonen ska vara självsäker och saklig, inga vardagliga effektord. */}
             <Reveal className="md:col-span-7 space-y-6 text-ink/80 leading-relaxed" delay={130}>
               <p>
-                Jag startade ABO Growth för att jag tycker om när saker blir
-                klara. Inte påbörjade, inte utredda i en rapport, utan genomförda
-                och mätbara. Därför jobbar jag strukturerat: tydliga faser,
-                deadlines och en plan som håller hela vägen till leverans.
+                Jag driver saker i mål. Det är kärnan i ABO Growth: tydliga
+                faser, tydliga deadlines och leveranser som går att mäta. Ni
+                ska aldrig behöva undra var arbetet står eller vad som händer
+                härnäst.
               </p>
               <p>
-                Samtidigt är jag nyfiken av naturen. Jag testar nya system och
-                AI-verktyg själv innan jag rekommenderar dem, så att ni slipper
-                vara försökskaniner. Det är så jag kan säga vilken teknik som
-                faktiskt gör nytta i er vardag och vilken som bara låter bra.
-                Strategin först, tekniken sedan.
+                Jag ligger långt fram i den tekniska utvecklingen och
+                utvärderar varje system och AI-verktyg själv innan det når
+                mina kunder. Det som inte gör mätbar nytta rekommenderar jag
+                inte. Strategin först, tekniken sedan.
               </p>
               <p>
-                Mest av allt handlar jobbet om att lyssna. Jag vill förstå er
-                affär, era kunder och er vardag innan jag föreslår något alls.
-                Det är också därför samarbeten brukar bli långa: förtroende
-                byggs över tid, inte i ett säljsamtal.
+                Och jag bygger samarbeten på verklig förståelse för er affär,
+                era kunder och er vardag. Jag lyssnar först och levererar
+                sedan. Det är därför samarbetena håller över tid.
               </p>
             </Reveal>
           </div>
