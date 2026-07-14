@@ -83,17 +83,26 @@ function Page() {
                 </a>
               </div>
             </Reveal>
+            {/* Jag-form medvetet: personligast på hela sajten, resten behåller vi-form. */}
             <Reveal className="md:col-span-7 space-y-6 text-ink/80 leading-relaxed" delay={130}>
               <p>
-                Kärnan är affärsutveckling: att förstå affären, hitta hävstängerna och
-                bygga en plan som faktiskt går att genomföra. Marknadsföring,
-                digitala system och AI-verktyg är sätten vi levererar på, inte
-                självändamål. Strategin först, tekniken sedan.
+                Jag startade ABO Growth för att jag tycker om när saker blir
+                klara. Inte påbörjade, inte utredda i en rapport, utan genomförda
+                och mätbara. Därför jobbar jag strukturerat: tydliga faser,
+                deadlines och en plan som håller hela vägen till leverans.
               </p>
               <p>
-                Att firman är liten är inte något vi ursäktar. Det är så vi vill
-                jobba: korta beslutsvägar, inget som går förlorat i överlämningar,
-                och ett ansvar som inte går att delegera bort.
+                Samtidigt är jag nyfiken av naturen. Jag testar nya system och
+                AI-verktyg själv innan jag rekommenderar dem, så att ni slipper
+                vara försökskaniner. Det är så jag kan säga vilken teknik som
+                faktiskt gör nytta i er vardag och vilken som bara låter bra.
+                Strategin först, tekniken sedan.
+              </p>
+              <p>
+                Mest av allt handlar jobbet om att lyssna. Jag vill förstå er
+                affär, era kunder och er vardag innan jag föreslår något alls.
+                Det är också därför samarbeten brukar bli långa: förtroende
+                byggs över tid, inte i ett säljsamtal.
               </p>
             </Reveal>
           </div>
