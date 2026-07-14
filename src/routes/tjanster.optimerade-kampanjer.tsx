@@ -1,4 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { useEffect, useState } from "react";
 import { ArrowUpRight, Check } from "lucide-react";
 import { Header, Footer, BookingCTA, PageHero, Reveal, useInView } from "@/components/Site";
 
@@ -23,23 +24,37 @@ export const Route = createFileRoute("/tjanster/optimerade-kampanjer")({
 });
 
 // Kanalkartan: budgeten utgår från målet och varje kanal får ett löpande
-// beslut. statusTyp styr brickans utseende; pausad kanal tonas ner.
+// beslut. Positionerna är responsiva: på mobil ligger navet överst och
+// kanalerna staplas under (d = desktop, m = mobil).
 type KanalNode = {
   label: string;
-  x: number; y: number;
+  d: { x: number; y: number };
+  m: { x: number; y: number };
   sx: number; sy: number; sr: number;
   hub?: boolean;
   status?: string;
-  statusTyp?: "skala" | "justera" | "pausa";
+  statusTyp?: "skala" | "justera";
 };
 
 const kanalNodes: KanalNode[] = [
-  { label: "Ert mål", x: 14, y: 50, sx: 14, sy: 50, sr: 0, hub: true },
-  { label: "Sök", x: 72, y: 12, sx: 40, sy: 42, sr: -8, status: "Skala", statusTyp: "skala" },
-  { label: "Sociala medier", x: 72, y: 38, sx: 48, sy: 55, sr: 6, status: "Skala", statusTyp: "skala" },
-  { label: "Nyhetsbrev", x: 72, y: 64, sx: 44, sy: 60, sr: -6, status: "Justera", statusTyp: "justera" },
-  { label: "Display", x: 72, y: 88, sx: 52, sy: 48, sr: 8, status: "Pausa", statusTyp: "pausa" },
+  { label: "Ert mål", d: { x: 14, y: 50 }, m: { x: 50, y: 8 }, sx: 50, sy: 50, sr: 0, hub: true },
+  { label: "Sök", d: { x: 72, y: 18 }, m: { x: 50, y: 38 }, sx: 40, sy: 45, sr: -8, status: "Skala", statusTyp: "skala" },
+  { label: "Sociala medier", d: { x: 72, y: 50 }, m: { x: 50, y: 64 }, sx: 55, sy: 58, sr: 6, status: "Skala", statusTyp: "skala" },
+  { label: "Nyhetsbrev", d: { x: 72, y: 82 }, m: { x: 50, y: 90 }, sx: 45, sy: 68, sr: -6, status: "Justera", statusTyp: "justera" },
 ];
+
+/** true under md-brytpunkten; lyssnar på ändringar (rotation, fönsterbyte). */
+function useIsMobile() {
+  const [mobil, setMobil] = useState(false);
+  useEffect(() => {
+    const mq = window.matchMedia("(max-width: 767px)");
+    setMobil(mq.matches);
+    const onChange = (e: MediaQueryListEvent) => setMobil(e.matches);
+    mq.addEventListener("change", onChange);
+    return () => mq.removeEventListener("change", onChange);
+  }, []);
+  return mobil;
+}
 
 /**
  * KanalMap — sidans signaturscen, samma teknik som kartorna på de andra
@@ -49,6 +64,9 @@ const kanalNodes: KanalNode[] = [
  */
 function KanalMap() {
   const { ref, inView } = useInView<HTMLDivElement>(0.45);
+  const mobil = useIsMobile();
+  const pos = (n: KanalNode) => (mobil ? n.m : n.d);
+  const nav = pos(kanalNodes[0]);
   return (
     <section className="border-b border-line bg-white">
       <div className="mx-auto max-w-6xl px-6 py-20 md:py-28">
@@ -66,79 +84,74 @@ function KanalMap() {
         <div
           ref={ref}
           aria-hidden="true"
-          className={`sysmap relative mt-12 h-72 md:h-96 ${inView ? "is-visible" : ""}`}
+          className={`sysmap relative mt-12 h-80 md:h-96 ${inView ? "is-visible" : ""}`}
         >
           <svg className="absolute inset-0 h-full w-full" viewBox="0 0 100 100" preserveAspectRatio="none" fill="none">
-            {kanalNodes.filter((n) => !("hub" in n && n.hub)).map((n, i) => (
+            {kanalNodes.filter((n) => !n.hub).map((n, i) => (
               <line
-                key={n.label}
+                key={`${n.label}-${mobil ? "m" : "d"}`}
                 className="sysmap-link"
                 pathLength={1}
-                x1="14" y1="50" x2={n.x} y2={n.y}
+                x1={nav.x} y1={nav.y} x2={pos(n).x} y2={pos(n).y}
                 stroke="#1F8A5C"
-                strokeOpacity={n.statusTyp === "pausa" ? "0.15" : "0.35"}
+                strokeOpacity="0.35"
                 strokeWidth="1"
                 vectorEffect="non-scaling-stroke"
                 style={{ transitionDelay: `${0.85 + i * 0.12}s` }}
               />
             ))}
           </svg>
-          <span className="sysmap-hub-ring" style={{ left: "14%", top: "50%" }} />
-          {kanalNodes.filter((n) => !("hub" in n && n.hub) && n.statusTyp !== "pausa").map((n, i) => (
+          <span className="sysmap-hub-ring" style={{ left: `${nav.x}%`, top: `${nav.y}%` }} />
+          {kanalNodes.filter((n) => !n.hub).map((n, i) => (
             <span
-              key={`pulse-${n.label}`}
+              key={`pulse-${n.label}-${mobil ? "m" : "d"}`}
               className={`sysmap-pulse ${i % 2 === 1 ? "flow-back" : ""}`}
               style={{
-                ["--hx" as string]: "14%",
-                ["--hy" as string]: "50%",
-                ["--nx" as string]: `${n.x}%`,
-                ["--ny" as string]: `${n.y}%`,
+                ["--hx" as string]: `${nav.x}%`,
+                ["--hy" as string]: `${nav.y}%`,
+                ["--nx" as string]: `${pos(n).x}%`,
+                ["--ny" as string]: `${pos(n).y}%`,
                 animationDelay: `${2.2 + i * 0.55}s`,
               }}
             />
           ))}
-          {kanalNodes.map((n, i) => {
-            const hub = "hub" in n && n.hub;
-            return (
+          {kanalNodes.map((n, i) => (
+            <div
+              key={n.label}
+              className="sysmap-node absolute"
+              style={{
+                left: `${inView ? pos(n).x : n.sx}%`,
+                top: `${inView ? pos(n).y : n.sy}%`,
+                transform: `translate(-50%, -50%) rotate(${inView ? 0 : n.sr}deg)`,
+                opacity: inView ? 1 : 0.55,
+                transitionDelay: `${i * 0.07}s`,
+                zIndex: n.hub ? 2 : 1,
+              }}
+            >
               <div
-                key={n.label}
-                className="sysmap-node absolute"
-                style={{
-                  left: `${inView ? n.x : n.sx}%`,
-                  top: `${inView ? n.y : n.sy}%`,
-                  transform: `translate(-50%, -50%) rotate(${inView ? 0 : n.sr}deg)`,
-                  opacity: inView ? ("statusTyp" in n && n.statusTyp === "pausa" ? 0.45 : 1) : 0.55,
-                  transitionDelay: `${i * 0.07}s`,
-                  zIndex: hub ? 2 : 1,
-                }}
+                className={`sysmap-node-box whitespace-nowrap px-3.5 py-2 md:px-5 md:py-2.5 text-xs md:text-sm font-semibold ${
+                  n.hub
+                    ? "bg-brand-green text-paper shadow-md"
+                    : "bg-white border border-line text-ink/80 shadow-sm"
+                }`}
+                style={{ animationDelay: `${1.6 + i * 0.8}s` }}
               >
-                <div
-                  className={`sysmap-node-box whitespace-nowrap px-3 py-1.5 md:px-5 md:py-2.5 text-xs md:text-sm font-semibold ${
-                    hub
-                      ? "bg-brand-green text-paper shadow-md"
-                      : "bg-white border border-line text-ink/80 shadow-sm"
-                  }`}
-                  style={{ animationDelay: `${1.6 + i * 0.8}s` }}
-                >
-                  {n.label}
-                  {"status" in n && n.status && (
-                    <span
-                      className={`sysmap-badge tracked text-[9px] ml-2 px-1.5 py-0.5 align-middle ${
-                        n.statusTyp === "skala"
-                          ? "bg-brand-green text-paper"
-                          : n.statusTyp === "justera"
-                            ? "border border-brand-green/40 text-brand-green"
-                            : "border border-line text-subtle"
-                      }`}
-                      style={{ transitionDelay: `${2 + i * 0.2}s` }}
-                    >
-                      {n.status}
-                    </span>
-                  )}
-                </div>
+                {n.label}
+                {n.status && (
+                  <span
+                    className={`sysmap-badge tracked text-[9px] ml-2 px-1.5 py-0.5 align-middle ${
+                      n.statusTyp === "skala"
+                        ? "bg-brand-green text-paper"
+                        : "border border-brand-green/40 text-brand-green"
+                    }`}
+                    style={{ transitionDelay: `${2 + i * 0.2}s` }}
+                  >
+                    {n.status}
+                  </span>
+                )}
               </div>
-            );
-          })}
+            </div>
+          ))}
         </div>
         <p className="mt-8 text-sm text-subtle max-w-xl">
           Kanalerna är exempel. Vilka som skalas hos er avgör siffrorna, inte vanan.
