@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowUpRight, Check } from "lucide-react";
-import { Header, Footer, BookingCTA, PageHero, Reveal } from "@/components/Site";
+import { Header, Footer, BookingCTA, PageHero, Reveal, useInView } from "@/components/Site";
 
 export const Route = createFileRoute("/tjanster/optimerade-kampanjer")({
   head: () => ({
@@ -21,6 +21,132 @@ export const Route = createFileRoute("/tjanster/optimerade-kampanjer")({
   }),
   component: Page,
 });
+
+// Kanalkartan: budgeten utgår från målet och varje kanal får ett löpande
+// beslut. statusTyp styr brickans utseende; pausad kanal tonas ner.
+type KanalNode = {
+  label: string;
+  x: number; y: number;
+  sx: number; sy: number; sr: number;
+  hub?: boolean;
+  status?: string;
+  statusTyp?: "skala" | "justera" | "pausa";
+};
+
+const kanalNodes: KanalNode[] = [
+  { label: "Ert mål", x: 14, y: 50, sx: 14, sy: 50, sr: 0, hub: true },
+  { label: "Sök", x: 72, y: 12, sx: 40, sy: 42, sr: -8, status: "Skala", statusTyp: "skala" },
+  { label: "Sociala medier", x: 72, y: 38, sx: 48, sy: 55, sr: 6, status: "Skala", statusTyp: "skala" },
+  { label: "Nyhetsbrev", x: 72, y: 64, sx: 44, sy: 60, sr: -6, status: "Justera", statusTyp: "justera" },
+  { label: "Display", x: 72, y: 88, sx: 52, sy: 48, sr: 8, status: "Pausa", statusTyp: "pausa" },
+];
+
+/**
+ * KanalMap — sidans signaturscen, samma teknik som kartorna på de andra
+ * tjänstesidorna. Kanalerna ligger först i en hög; när ytan scrollas in
+ * flyger de ut, linjerna från målet ritas, datapulser vandrar och varje
+ * kanal får sitt löpande beslut: skala, justera eller pausa.
+ */
+function KanalMap() {
+  const { ref, inView } = useInView<HTMLDivElement>(0.45);
+  return (
+    <section className="border-b border-line bg-white">
+      <div className="mx-auto max-w-6xl px-6 py-20 md:py-28">
+        <Reveal className="max-w-2xl">
+          <div className="eyebrow mb-5">Löpande optimering</div>
+          <h2 className="display-heading text-3xl md:text-4xl">
+            Budgeten ska ligga <span className="text-brand-green">där den gör nytta</span>.
+          </h2>
+          <p className="mt-6 text-ink/75 leading-relaxed">
+            Vi följer varje kanal mot samma mål. Det som levererar får mer
+            budget, det som tvekar justeras och det som inte bär pausas.
+            Besluten ser ni i rapporten varje månad.
+          </p>
+        </Reveal>
+        <div
+          ref={ref}
+          aria-hidden="true"
+          className={`sysmap relative mt-12 h-72 md:h-96 ${inView ? "is-visible" : ""}`}
+        >
+          <svg className="absolute inset-0 h-full w-full" viewBox="0 0 100 100" preserveAspectRatio="none" fill="none">
+            {kanalNodes.filter((n) => !("hub" in n && n.hub)).map((n, i) => (
+              <line
+                key={n.label}
+                className="sysmap-link"
+                pathLength={1}
+                x1="14" y1="50" x2={n.x} y2={n.y}
+                stroke="#1F8A5C"
+                strokeOpacity={n.statusTyp === "pausa" ? "0.15" : "0.35"}
+                strokeWidth="1"
+                vectorEffect="non-scaling-stroke"
+                style={{ transitionDelay: `${0.85 + i * 0.12}s` }}
+              />
+            ))}
+          </svg>
+          <span className="sysmap-hub-ring" style={{ left: "14%", top: "50%" }} />
+          {kanalNodes.filter((n) => !("hub" in n && n.hub) && n.statusTyp !== "pausa").map((n, i) => (
+            <span
+              key={`pulse-${n.label}`}
+              className={`sysmap-pulse ${i % 2 === 1 ? "flow-back" : ""}`}
+              style={{
+                ["--hx" as string]: "14%",
+                ["--hy" as string]: "50%",
+                ["--nx" as string]: `${n.x}%`,
+                ["--ny" as string]: `${n.y}%`,
+                animationDelay: `${2.2 + i * 0.55}s`,
+              }}
+            />
+          ))}
+          {kanalNodes.map((n, i) => {
+            const hub = "hub" in n && n.hub;
+            return (
+              <div
+                key={n.label}
+                className="sysmap-node absolute"
+                style={{
+                  left: `${inView ? n.x : n.sx}%`,
+                  top: `${inView ? n.y : n.sy}%`,
+                  transform: `translate(-50%, -50%) rotate(${inView ? 0 : n.sr}deg)`,
+                  opacity: inView ? ("statusTyp" in n && n.statusTyp === "pausa" ? 0.45 : 1) : 0.55,
+                  transitionDelay: `${i * 0.07}s`,
+                  zIndex: hub ? 2 : 1,
+                }}
+              >
+                <div
+                  className={`sysmap-node-box whitespace-nowrap px-3 py-1.5 md:px-5 md:py-2.5 text-xs md:text-sm font-semibold ${
+                    hub
+                      ? "bg-brand-green text-paper shadow-md"
+                      : "bg-white border border-line text-ink/80 shadow-sm"
+                  }`}
+                  style={{ animationDelay: `${1.6 + i * 0.8}s` }}
+                >
+                  {n.label}
+                  {"status" in n && n.status && (
+                    <span
+                      className={`sysmap-badge tracked text-[9px] ml-2 px-1.5 py-0.5 align-middle ${
+                        n.statusTyp === "skala"
+                          ? "bg-brand-green text-paper"
+                          : n.statusTyp === "justera"
+                            ? "border border-brand-green/40 text-brand-green"
+                            : "border border-line text-subtle"
+                      }`}
+                      style={{ transitionDelay: `${2 + i * 0.2}s` }}
+                    >
+                      {n.status}
+                    </span>
+                  )}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+        <p className="mt-8 text-sm text-subtle max-w-xl">
+          Kanalerna är exempel. Vilka som skalas hos er avgör siffrorna, inte vanan.
+        </p>
+      </div>
+    </section>
+  );
+}
 
 const deliverables = [
   { t: "Kanalstrategi", b: "Vi väljer kanaler där er målgrupp faktiskt finns, inte där det låter modernt." },
@@ -47,6 +173,8 @@ function Page() {
           title={<>Rätt budskap, på rätt kanaler, <span className="text-brand-green">optimerat löpande</span>.</>}
           intro="Strategin först: vi börjar i affärsmålet, hittar var er målgrupp finns och väljer kanaler därefter. Sedan optimerar vi mot resultat, inte mot att synas för synandets skull."
         />
+
+        <KanalMap />
 
         <section className="border-b border-line">
           <div className="mx-auto max-w-6xl px-6 py-20 md:py-28">

@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Header, Footer, BookingCTA, PageHero } from "@/components/Site";
+import { IllustrationDiagram } from "@/components/Illustrations";
 
 export const Route = createFileRoute("/case")({
   head: () => ({
@@ -82,6 +83,7 @@ function Page() {
 function EmptyState() {
   return (
     <div className="border-2 border-dashed border-line bg-white p-8 md:p-20 text-center">
+      <IllustrationDiagram className="mx-auto mb-6 w-full max-w-[200px]" />
       <div className="eyebrow mb-4">Kommer snart</div>
       <h2 className="display-heading text-2xl md:text-3xl max-w-xl mx-auto">
         Vi lägger till case löpande.

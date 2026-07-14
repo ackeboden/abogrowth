@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowUpRight, Check } from "lucide-react";
 import { Header, Footer, PageHero, Reveal, BOOKING_HREF, CONTACT_EMAIL } from "@/components/Site";
+import { IllustrationSamtal } from "@/components/Illustrations";
 
 export const Route = createFileRoute("/sa-gar-det-till")({
   head: () => ({
@@ -100,6 +101,7 @@ function Page() {
                 inte vi. Första mötet handlar om att förstå er affär, inte om
                 att sälja in vår.
               </p>
+              <IllustrationSamtal className="mt-10 w-full max-w-[240px]" />
             </div>
             <div className="md:col-span-7">
               <ul className="space-y-4">

@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowUpRight, Compass, ListChecks, ClipboardList, Handshake } from "lucide-react";
 import { Header, Footer, BookingCTA, PageHero, Reveal, CONTACT_EMAIL } from "@/components/Site";
+import { IllustrationKompass } from "@/components/Illustrations";
 
 export const Route = createFileRoute("/om")({
   head: () => ({
@@ -82,6 +83,7 @@ function Page() {
                   {CONTACT_EMAIL}
                 </a>
               </div>
+              <IllustrationKompass className="mt-10 w-full max-w-[240px]" />
             </Reveal>
             {/* Jag-form medvetet: personligast på hela sajten, resten behåller vi-form.
                 Tonen ska vara självsäker och saklig, inga vardagliga effektord. */}

@@ -289,7 +289,7 @@
    kartan satt sig. --nx/--ny sätts per punkt i React; hälften går åt
    andra hållet (.flow-back) så det känns som ett samtal, inte en sändning. */
 @keyframes sysmap-flow {
-  0% { left: 50%; top: 50%; opacity: 0; }
+  0% { left: var(--hx, 50%); top: var(--hy, 50%); opacity: 0; }
   18% { opacity: 1; }
   82% { opacity: 1; }
   100% { left: var(--nx); top: var(--ny); opacity: 0; }
@@ -299,7 +299,17 @@
   0% { left: var(--nx); top: var(--ny); opacity: 0; }
   18% { opacity: 1; }
   82% { opacity: 1; }
-  100% { left: 50%; top: 50%; opacity: 0; }
+  100% { left: var(--hx, 50%); top: var(--hy, 50%); opacity: 0; }
+}
+
+/* Statusbrickor och etiketter i kartorna tänds efter att boxarna landat */
+.sysmap-badge {
+  opacity: 0;
+  transition: opacity 0.5s ease-out;
+}
+
+.sysmap.is-visible .sysmap-badge {
+  opacity: 1;
 }
 
 .sysmap-pulse {
@@ -443,5 +453,9 @@ details[open] .faq-icon {
   .sysmap.is-visible .sysmap-hub-ring,
   .sysmap.is-visible .sysmap-node-box {
     animation: none;
+  }
+  .sysmap-badge {
+    transition: none;
+    opacity: 1;
   }
 }
