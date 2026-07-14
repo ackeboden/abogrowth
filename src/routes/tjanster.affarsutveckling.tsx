@@ -80,6 +80,13 @@ function PrioMap() {
           >
             Er tillväxtplan
           </span>
+          {/* Etikett över de nedtonade: utan den läses de som trasiga, inte bortvalda */}
+          <span
+            className="sysmap-badge absolute tracked text-[10px] text-subtle bg-white px-2"
+            style={{ left: "18%", top: "5%", transform: "translate(-50%, -50%)", transitionDelay: "1.5s" }}
+          >
+            Väljs bort
+          </span>
           {prioNodes.map((n, i) => (
             <div
               key={n.label}
