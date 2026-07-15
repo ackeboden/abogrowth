@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowUpRight, Check } from "lucide-react";
-import { Header, Footer, BookingCTA, PageHero, Reveal, useInView, BOOKING_HREF } from "@/components/Site";
+import { Header, Footer, BookingCTA, PageHero, Reveal, useInView, useIsMobile, BOOKING_HREF } from "@/components/Site";
 
 export const Route = createFileRoute("/tjanster/affarsutveckling")({
   head: () => ({
@@ -22,32 +22,34 @@ export const Route = createFileRoute("/tjanster/affarsutveckling")({
   component: Page,
 });
 
-// Tidslinjekartan: sex initiativ ligger huller om buller och flyger in i tre
-// faser längs en tidslinje som ritas under dem. Alla initiativ får plats,
-// men i rätt ordning; speglar leverabeln "prioriterad handlingsplan med tidslinje".
+// Tidslinjekartan: sex initiativ flyger in i tre faser längs en tidslinje.
+// Responsiv: desktop = horisontell tidslinje med tre kolumner; mobil = vertikal
+// tidslinje till vänster med initiativen staplade i en kolumn (d/m-positioner).
 const planNodes = [
-  { label: "Bättre säljprocess", x: 18, y: 26, sx: 45, sy: 40, sr: -8, fas: 1 },
-  { label: "Fler återköp", x: 18, y: 48, sx: 55, sy: 55, sr: 6, fas: 1 },
-  { label: "Nytt erbjudande", x: 50, y: 26, sx: 48, sy: 62, sr: -5, fas: 2 },
-  { label: "Höjd prissättning", x: 50, y: 48, sx: 52, sy: 35, sr: 9, fas: 2 },
-  { label: "Ny målgrupp", x: 82, y: 26, sx: 42, sy: 50, sr: -7, fas: 3 },
-  { label: "Ny marknad", x: 82, y: 48, sx: 58, sy: 45, sr: 7, fas: 3 },
+  { label: "Bättre säljprocess", d: { x: 18, y: 26 }, m: { x: 62, y: 11 }, sx: 45, sy: 40, sr: -8, fas: 1 },
+  { label: "Fler återköp", d: { x: 18, y: 48 }, m: { x: 62, y: 25 }, sx: 55, sy: 55, sr: 6, fas: 1 },
+  { label: "Nytt erbjudande", d: { x: 50, y: 26 }, m: { x: 62, y: 44 }, sx: 48, sy: 62, sr: -5, fas: 2 },
+  { label: "Höjd prissättning", d: { x: 50, y: 48 }, m: { x: 62, y: 58 }, sx: 52, sy: 35, sr: 9, fas: 2 },
+  { label: "Ny målgrupp", d: { x: 82, y: 26 }, m: { x: 62, y: 77 }, sx: 42, sy: 50, sr: -7, fas: 3 },
+  { label: "Ny marknad", d: { x: 82, y: 48 }, m: { x: 62, y: 91 }, sx: 58, sy: 45, sr: 7, fas: 3 },
 ];
 
+// Fasmarkörernas mittpunkt per läge (desktop: x längs linjen; mobil: y längs linjen).
 const faser = [
-  { x: 18, namn: "Fas 1" },
-  { x: 50, namn: "Fas 2" },
-  { x: 82, namn: "Fas 3" },
+  { namn: "Fas 1", dx: 18, my: 18 },
+  { namn: "Fas 2", dx: 50, my: 51 },
+  { namn: "Fas 3", dx: 82, my: 84 },
 ];
 
 /**
  * PlanMap — sidans signaturscen, samma teknik som systemkartan på tjänst 01.
  * Initiativen ligger först i en hög; när ytan scrollas in flyger de till sina
- * faser medan tidslinjen ritas under dem och fasmarkörerna tänds. Planen som
- * animation: allt får plats, men i rätt ordning.
+ * faser medan tidslinjen ritas och fasmarkörerna tänds. Planen som animation:
+ * allt får plats, men i rätt ordning. Vertikal layout på mobil.
  */
 function PlanMap() {
   const { ref, inView } = useInView<HTMLDivElement>(0.45);
+  const mobil = useIsMobile();
   return (
     <section className="border-b border-line bg-white">
       <div className="mx-auto max-w-6xl px-6 py-20 md:py-28">
@@ -65,14 +67,15 @@ function PlanMap() {
         <div
           ref={ref}
           aria-hidden="true"
-          className={`sysmap relative mt-12 h-72 md:h-80 ${inView ? "is-visible" : ""}`}
+          className={`sysmap relative mt-12 h-[26rem] md:h-80 ${inView ? "is-visible" : ""}`}
         >
           <svg className="absolute inset-0 h-full w-full" viewBox="0 0 100 100" preserveAspectRatio="none" fill="none">
-            {/* Tidslinjen ritas vänster till höger när chipsen börjar landa */}
+            {/* Tidslinjen: horisontell på desktop, vertikal på mobil */}
             <line
+              key={mobil ? "m" : "d"}
               className="sysmap-link"
               pathLength={1}
-              x1="4" y1="70" x2="96" y2="70"
+              x1={mobil ? 12 : 4} y1={mobil ? 6 : 70} x2={mobil ? 12 : 96} y2={mobil ? 94 : 70}
               stroke="#1F8A5C"
               strokeOpacity="0.45"
               strokeWidth="1.5"
@@ -85,36 +88,49 @@ function PlanMap() {
             <span key={f.namn}>
               <span
                 className="sysmap-badge absolute h-2.5 w-2.5 rounded-full bg-brand-green"
-                style={{ left: `${f.x}%`, top: "70%", transform: "translate(-50%, -50%)", transitionDelay: `${1.2 + i * 0.25}s` }}
+                style={{
+                  left: `${mobil ? 12 : f.dx}%`,
+                  top: `${mobil ? f.my : 70}%`,
+                  transform: "translate(-50%, -50%)",
+                  transitionDelay: `${1.2 + i * 0.25}s`,
+                }}
               />
               <span
                 className="sysmap-badge absolute tracked text-[10px] text-brand-green whitespace-nowrap"
-                style={{ left: `${f.x}%`, top: "82%", transform: "translate(-50%, -50%)", transitionDelay: `${1.35 + i * 0.25}s` }}
+                style={{
+                  left: `${mobil ? 27 : f.dx}%`,
+                  top: `${mobil ? f.my : 82}%`,
+                  transform: "translate(-50%, -50%)",
+                  transitionDelay: `${1.35 + i * 0.25}s`,
+                }}
               >
                 {f.namn}
               </span>
             </span>
           ))}
-          {planNodes.map((n, i) => (
-            <div
-              key={n.label}
-              className="sysmap-node absolute"
-              style={{
-                left: `${inView ? n.x : n.sx}%`,
-                top: `${inView ? n.y : n.sy}%`,
-                transform: `translate(-50%, -50%) rotate(${inView ? 0 : n.sr}deg)`,
-                opacity: inView ? 1 : 0.55,
-                transitionDelay: `${i * 0.07}s`,
-              }}
-            >
+          {planNodes.map((n, i) => {
+            const p = mobil ? n.m : n.d;
+            return (
               <div
-                className="sysmap-node-box whitespace-nowrap px-3 py-1.5 md:px-5 md:py-2.5 text-xs md:text-sm font-semibold bg-white border border-line text-ink/80 shadow-sm"
-                style={{ animationDelay: `${1.6 + i * 0.8}s` }}
+                key={n.label}
+                className="sysmap-node absolute"
+                style={{
+                  left: `${inView ? p.x : n.sx}%`,
+                  top: `${inView ? p.y : n.sy}%`,
+                  transform: `translate(-50%, -50%) rotate(${inView ? 0 : n.sr}deg)`,
+                  opacity: inView ? 1 : 0.55,
+                  transitionDelay: `${i * 0.07}s`,
+                }}
               >
-                {n.label}
+                <div
+                  className="sysmap-node-box whitespace-nowrap px-3 py-1.5 md:px-5 md:py-2.5 text-xs md:text-sm font-semibold bg-white border border-line text-ink/80 shadow-sm"
+                  style={{ animationDelay: `${1.6 + i * 0.8}s` }}
+                >
+                  {n.label}
+                </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
         <p className="mt-8 text-sm text-subtle max-w-xl">
           Initiativen är exempel. Ordningen hos er avgör analysen.

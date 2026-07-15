@@ -5,6 +5,20 @@ import { Logo } from "./Logo";
 
 export const CONTACT_EMAIL = "alexander@aboconsult.se";
 
+/** true under md-brytpunkten (<768px); lyssnar på ändringar. Delas av kartorna
+ *  som byter mellan horisontell desktop- och vertikal mobillayout. */
+export function useIsMobile() {
+  const [mobil, setMobil] = useState(false);
+  useEffect(() => {
+    const mq = window.matchMedia("(max-width: 767px)");
+    setMobil(mq.matches);
+    const onChange = (e: MediaQueryListEvent) => setMobil(e.matches);
+    mq.addEventListener("change", onChange);
+    return () => mq.removeEventListener("change", onChange);
+  }, []);
+  return mobil;
+}
+
 export const BOOKING_HREF =
   `mailto:${CONTACT_EMAIL}?subject=Boka%20ett%20samtal%20med%20ABO%20Growth&body=Hej%20Alexander%2C%0A%0AVi%20vill%20g%C3%A4rna%20boka%20ett%20f%C3%B6rsta%20samtal.%0A%0AKort%20om%20oss%3A%0AVad%20vi%20vill%20uppn%C3%A5%3A%0AF%C3%B6rslag%20p%C3%A5%20tider%3A%0A%0ATack%21`;
 

@@ -1,7 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
 import { ArrowUpRight, Check } from "lucide-react";
-import { Header, Footer, BookingCTA, PageHero, Reveal, useInView } from "@/components/Site";
+import { Header, Footer, BookingCTA, PageHero, Reveal, useInView, useIsMobile } from "@/components/Site";
 
 export const Route = createFileRoute("/tjanster/optimerade-kampanjer")({
   head: () => ({
@@ -42,19 +41,6 @@ const kanalNodes: KanalNode[] = [
   { label: "Sociala medier", d: { x: 72, y: 50 }, m: { x: 50, y: 64 }, sx: 55, sy: 58, sr: 6, status: "Skala", statusTyp: "skala" },
   { label: "Nyhetsbrev", d: { x: 72, y: 82 }, m: { x: 50, y: 90 }, sx: 45, sy: 68, sr: -6, status: "Justera", statusTyp: "justera" },
 ];
-
-/** true under md-brytpunkten; lyssnar på ändringar (rotation, fönsterbyte). */
-function useIsMobile() {
-  const [mobil, setMobil] = useState(false);
-  useEffect(() => {
-    const mq = window.matchMedia("(max-width: 767px)");
-    setMobil(mq.matches);
-    const onChange = (e: MediaQueryListEvent) => setMobil(e.matches);
-    mq.addEventListener("change", onChange);
-    return () => mq.removeEventListener("change", onChange);
-  }, []);
-  return mobil;
-}
 
 /**
  * KanalMap — sidans signaturscen, samma teknik som kartorna på de andra

@@ -6,14 +6,14 @@ import { IllustrationKompass } from "@/components/Illustrations";
 export const Route = createFileRoute("/om")({
   head: () => ({
     meta: [
-      { title: "Om ABO Growth | Affärsutveckling från Stockholm" },
+      { title: "Om ABO Growth | Personen bakom" },
       {
         name: "description",
         content:
           "ABO Growth drivs av Alexander från Stockholm. En person, inga mellanhänder. Strategin först, tekniken sedan och ärliga besked hela vägen.",
       },
       { property: "og:title", content: "Om ABO Growth" },
-      { property: "og:description", content: "Den ni pratar med är den som levererar. Affärsutveckling från Stockholm." },
+      { property: "og:description", content: "Den ni pratar med är den som levererar. Digitala system, AI och struktur, från Stockholm." },
       { property: "og:type", content: "website" },
       { property: "og:url", content: "https://abogrowth.se/om" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -72,7 +72,7 @@ function Page() {
               <div className="mt-10 pt-6 border-t border-line grid grid-cols-3 gap-6">
                 <Stat label="Bas" value="Stockholm" />
                 <Stat label="Form" value="Enskild firma" />
-                <Stat label="Kärna" value="Tillväxt" />
+                <Stat label="Kärna" value="System & AI" />
               </div>
               <div className="mt-8 text-sm">
                 <div className="tracked text-[10px] text-subtle mb-1">Kontakt</div>

@@ -328,7 +328,7 @@ function AiFocus() {
         <Reveal>
           <div className="grid md:grid-cols-12 gap-10 items-end">
             <div className="md:col-span-8">
-              <div className="eyebrow mb-5">Vår spets · Digitala system & AI</div>
+              <div className="eyebrow mb-5">Huvudtjänst · Digitala system & AI</div>
               <h2 className="display-heading text-3xl md:text-5xl text-paper">
                 Ordning i <span className="text-brand-green">djungeln</span>.
               </h2>
