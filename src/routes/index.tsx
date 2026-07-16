@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { ArrowUpRight, Check, Compass, Workflow, Cpu, Plus } from "lucide-react";
-import { Header, Footer, GrowthLine, Reveal, useInView, PriceEmbed, BOOKING_HREF, CONTACT_EMAIL } from "@/components/Site";
+import { Header, Footer, GrowthLine, Reveal, useInView, PriceEmbed, CONTACT_EMAIL } from "@/components/Site";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -231,12 +231,12 @@ function Hero() {
             som hänger ihop, mindre dubbelarbete och en tydlig väg framåt.
           </p>
           <div className="mt-10 flex flex-wrap items-center gap-4 hero-rise [animation-delay:400ms]">
-            <a
-              href={BOOKING_HREF}
+            <Link
+              to="/boka"
               className="inline-flex items-center gap-2 bg-ink text-paper px-6 py-3.5 text-sm font-semibold hover:bg-brand-green transition-colors"
             >
               Boka ett samtal <ArrowUpRight className="h-4 w-4" strokeWidth={2.5} />
-            </a>
+            </Link>
             <a href="#tjanster" className="text-sm font-semibold border-b-2 border-brand-green pb-1 hover:text-brand-green">
               Se vad vi gör
             </a>

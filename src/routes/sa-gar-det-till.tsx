@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowUpRight, Check } from "lucide-react";
-import { Header, Footer, PageHero, Reveal, BOOKING_HREF, CONTACT_EMAIL } from "@/components/Site";
+import { Header, Footer, PageHero, Reveal, CONTACT_EMAIL } from "@/components/Site";
 import { IllustrationSamtal } from "@/components/Illustrations";
 
 export const Route = createFileRoute("/sa-gar-det-till")({
@@ -127,12 +127,12 @@ function Page() {
               </p>
             </div>
             <div className="md:col-span-4 md:text-right">
-              <a
-                href={BOOKING_HREF}
+              <Link
+                to="/boka"
                 className="inline-flex items-center gap-2 bg-brand-green text-paper px-6 py-4 text-sm font-semibold hover:bg-paper hover:text-ink transition-colors"
               >
                 Boka ett samtal <ArrowUpRight className="h-4 w-4" strokeWidth={2.5} />
-              </a>
+              </Link>
               <div className="mt-3 text-xs text-paper/50">
                 Eller mejla direkt: <a href={`mailto:${CONTACT_EMAIL}`} className="underline hover:text-paper">{CONTACT_EMAIL}</a>
               </div>

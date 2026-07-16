@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+<meta charset="UTF-8" />
+<meta name="robots" content="noindex" />
+<title>Formulärdefinitioner – ABO Growth</title>
+</head>
+<body>
+<!--
+  Statisk fil som ENBART finns för att Netlify ska upptäcka formulären vid
+  deploy (Netlify skannar statiska HTML-filer i publish-mappen). De riktiga,
+  stilsatta formulären renderas av React och postar hit via fetch. Ändra inte
+  fältnamnen utan att uppdatera motsvarande React-formulär.
+-->
+<form name="boka-samtal" data-netlify="true" netlify-honeypot="bot-field" hidden>
+  <input type="hidden" name="form-name" value="boka-samtal" />
+  <input type="text" name="bot-field" />
+  <input type="text" name="namn" />
+  <input type="email" name="epost" />
+  <input type="text" name="foretag" />
+  <input type="text" name="telefon" />
+  <textarea name="meddelande"></textarea>
+</form>
+</body>
+</html>

@@ -14,6 +14,7 @@ import { Route as SaGarDetTillRouteImport } from './routes/sa-gar-det-till'
 import { Route as PrisRouteImport } from './routes/pris'
 import { Route as OmRouteImport } from './routes/om'
 import { Route as CaseRouteImport } from './routes/case'
+import { Route as BokaRouteImport } from './routes/boka'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as TjansterOptimeradeKampanjerRouteImport } from './routes/tjanster.optimerade-kampanjer'
 import { Route as TjansterDigitalaSystemAiRouteImport } from './routes/tjanster.digitala-system-ai'
@@ -44,6 +45,11 @@ const CaseRoute = CaseRouteImport.update({
   path: '/case',
   getParentRoute: () => rootRouteImport,
 } as any)
+const BokaRoute = BokaRouteImport.update({
+  id: '/boka',
+  path: '/boka',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -70,6 +76,7 @@ const TjansterAffarsutvecklingRoute =
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/boka': typeof BokaRoute
   '/case': typeof CaseRoute
   '/om': typeof OmRoute
   '/pris': typeof PrisRoute
@@ -81,6 +88,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/boka': typeof BokaRoute
   '/case': typeof CaseRoute
   '/om': typeof OmRoute
   '/pris': typeof PrisRoute
@@ -93,6 +101,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/boka': typeof BokaRoute
   '/case': typeof CaseRoute
   '/om': typeof OmRoute
   '/pris': typeof PrisRoute
@@ -106,6 +115,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/boka'
     | '/case'
     | '/om'
     | '/pris'
@@ -117,6 +127,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/boka'
     | '/case'
     | '/om'
     | '/pris'
@@ -128,6 +139,7 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/boka'
     | '/case'
     | '/om'
     | '/pris'
@@ -140,6 +152,7 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  BokaRoute: typeof BokaRoute
   CaseRoute: typeof CaseRoute
   OmRoute: typeof OmRoute
   PrisRoute: typeof PrisRoute
@@ -187,6 +200,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CaseRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/boka': {
+      id: '/boka'
+      path: '/boka'
+      fullPath: '/boka'
+      preLoaderRoute: typeof BokaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -220,6 +240,7 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  BokaRoute: BokaRoute,
   CaseRoute: CaseRoute,
   OmRoute: OmRoute,
   PrisRoute: PrisRoute,

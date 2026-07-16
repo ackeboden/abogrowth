@@ -96,8 +96,8 @@ export function useIsMobile() {
   return mobil;
 }
 
-export const BOOKING_HREF =
-  `mailto:${CONTACT_EMAIL}?subject=Boka%20ett%20samtal%20med%20ABO%20Growth&body=Hej%20Alexander%2C%0A%0AVi%20vill%20g%C3%A4rna%20boka%20ett%20f%C3%B6rsta%20samtal.%0A%0AKort%20om%20oss%3A%0AVad%20vi%20vill%20uppn%C3%A5%3A%0AF%C3%B6rslag%20p%C3%A5%20tider%3A%0A%0ATack%21`;
+// Alla "Boka ett samtal"-knappar leder till /boka-sidan med Netlify-formuläret.
+export const BOOKING_TO = "/boka";
 
 const NAV_LINKS = [
   { label: "Tjänster", to: "/", hash: "tjanster" },
@@ -135,12 +135,12 @@ export function Header() {
               {l.label}
             </Link>
           ))}
-          <a
-            href={BOOKING_HREF}
+          <Link
+            to="/boka"
             className="inline-flex items-center gap-1.5 bg-ink text-paper px-4 py-2 hover:bg-brand-green transition-colors font-semibold"
           >
             Boka ett samtal <ArrowUpRight className="h-3.5 w-3.5" strokeWidth={2.5} />
-          </a>
+          </Link>
         </nav>
         <button
           type="button"
@@ -170,13 +170,13 @@ export function Header() {
               {l.label}
             </Link>
           ))}
-          <a
-            href={BOOKING_HREF}
+          <Link
+            to="/boka"
             onClick={() => setOpen(false)}
             className="mt-8 inline-flex items-center justify-center gap-2 bg-ink text-paper px-6 py-4 text-sm font-semibold hover:bg-brand-green transition-colors"
           >
             Boka ett samtal <ArrowUpRight className="h-4 w-4" strokeWidth={2.5} />
-          </a>
+          </Link>
         </nav>
       )}
     </header>
@@ -238,12 +238,12 @@ export function BookingCTA({
           <p className="mt-5 text-paper/70 max-w-xl leading-relaxed">{body}</p>
         </div>
         <div className="md:col-span-4 md:text-right">
-          <a
-            href={BOOKING_HREF}
+          <Link
+            to="/boka"
             className="inline-flex items-center gap-2 bg-brand-green text-paper px-6 py-4 text-sm font-semibold hover:bg-paper hover:text-ink transition-colors"
           >
             Boka ett samtal <ArrowUpRight className="h-4 w-4" strokeWidth={2.5} />
-          </a>
+          </Link>
           <div className="mt-3 text-xs text-paper/50">Svar inom ett dygn.</div>
           <div className="mt-2 text-xs">
             <Link to="/sa-gar-det-till" className="text-paper/60 underline underline-offset-4 hover:text-brand-green transition-colors">
