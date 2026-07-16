@@ -175,7 +175,7 @@
     </div>
     <div id="breakdown"></div>
     <div class="cta-row">
-      <a class="btn" id="ctaMail" href="#">Boka ett samtal direkt</a>
+      <a class="btn" id="ctaMail" href="/boka" target="_top">Boka ett samtal direkt</a>
       <button class="btn ghost" id="resetBtn">Börja om</button>
     </div>
     <div class="disclaimer">
@@ -478,8 +478,8 @@ function finish() {
   document.querySelector("#panelResult .sent-note").textContent =
     `✓ Tack ${namn}! Er uppskattning är skickad till oss — vi hör av oss på ${epost} inom ett dygn.`;
 
-  document.getElementById("ctaMail").href =
-    `mailto:alexander@aboconsult.se?subject=${encodeURIComponent("Boka samtal – prisuppskattning från abogrowth.se")}&body=${encodeURIComponent("Hej Alexander,\n\nVi fyllde precis i prisverktyget på hemsidan och vill gärna boka ett första samtal.\n\nTack!")}`;
+  // "Boka ett samtal direkt" leder till /boka (target=_top navigerar hela
+  // sidan, inte iframen). Ingen mejlklient längre.
 
   document.getElementById("progressWrap").classList.remove("visible");
   showPanel("panelResult");
