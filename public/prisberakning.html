@@ -458,7 +458,10 @@ function finish() {
   const epost = emailInput.value.trim();
   const foretag = document.getElementById("contactCompany").value.trim();
 
-  fetch("/", {
+  // Posta till den statiska filens egen sökväg, inte "/". På den serverrenderade
+  // sajten ägs "/" av serverfunktionen som slukar POST:en innan Netlify Forms
+  // hinner fånga den; /prisberakning.html serveras statiskt och fångas rätt.
+  fetch("/prisberakning.html", {
     method: "POST",
     headers: { "Content-Type": "application/x-www-form-urlencoded" },
     body: encodeForm({
