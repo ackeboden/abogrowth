@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { ArrowUpRight, Check, Compass, Workflow, Cpu, Plus } from "lucide-react";
-import { Header, Footer, GrowthLine, Reveal, useInView, BOOKING_HREF, CONTACT_EMAIL } from "@/components/Site";
+import { Header, Footer, GrowthLine, Reveal, useInView, PriceEmbed, BOOKING_HREF, CONTACT_EMAIL } from "@/components/Site";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -164,6 +164,7 @@ function Index() {
         <Services />
         <Process />
         <Faq />
+        <Price />
         <Contact />
       </main>
       <Footer />
@@ -589,6 +590,29 @@ function Faq() {
               </details>
             </Reveal>
           ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function Price() {
+  return (
+    <section id="pris" className="border-b border-line bg-white">
+      <div className="mx-auto max-w-3xl px-6 py-24 md:py-28">
+        <Reveal>
+          <div className="eyebrow mb-5">Prisuppskattning</div>
+          <h2 className="display-heading text-3xl md:text-5xl">
+            Vad kostar det? <span className="text-brand-green">Räkna själv.</span>
+          </h2>
+          <p className="mt-6 text-ink/70 leading-relaxed">
+            Svara på några frågor om omfattning så får ni en ungefärlig prisbild
+            direkt, plus förslag på vad ett upplägg hos oss skulle kunna
+            innehålla. Ingen offert, ingen förpliktelse.
+          </p>
+        </Reveal>
+        <div className="mt-10">
+          <PriceEmbed />
         </div>
       </div>
     </section>

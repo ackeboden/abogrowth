@@ -5,6 +5,83 @@ import { Logo } from "./Logo";
 
 export const CONTACT_EMAIL = "alexander@aboconsult.se";
 
+/**
+ * PriceEmbed — bäddar in det fristående prisverktyget (public/prisberakning.html)
+ * i en ramlös, responsiv iframe. Används på /pris OCH på startsidan. Filen är
+ * samma origin, så föräldern mäter innehållshöjden direkt och följer den med en
+ * ResizeObserver — iframen växer/krymper med panelerna utan egen scrollbar och
+ * utan att bero på postMessage-timing. postMessage från verktyget är backup.
+ */
+export function PriceEmbed() {
+  const ref = useRef<HTMLIFrameElement>(null);
+  const [height, setHeight] = useState(760);
+
+  useEffect(() => {
+    const iframe = ref.current;
+    if (!iframe) return;
+    const apply = (h: number) => setHeight(Math.max(320, Math.ceil(h)));
+
+    let ro: ResizeObserver | undefined;
+    const measure = () => {
+      try {
+        const doc = iframe.contentDocument;
+        if (doc?.documentElement) apply(doc.documentElement.getBoundingClientRect().height);
+      } catch {
+        /* cross-origin: förlita oss på postMessage-backupen */
+      }
+    };
+    const onLoad = () => {
+      measure();
+      try {
+        const body = iframe.contentDocument?.body;
+        if (body && "ResizeObserver" in window) {
+          ro = new ResizeObserver(measure);
+          ro.observe(body);
+        }
+      } catch {
+        /* ignorera */
+      }
+    };
+    iframe.addEventListener("load", onLoad);
+    if (iframe.contentDocument?.readyState === "complete") onLoad();
+
+    // Förälderns viewport-ändring ändrar iframens bredd → innehållet reflow:ar
+    // en frame senare. Mät om efter reflow (nästa frame + en uppföljning), då
+    // RO på iframe-body inte alltid fångar detta i alla webbläsare.
+    const onResize = () => {
+      requestAnimationFrame(measure);
+      window.setTimeout(measure, 200);
+    };
+    window.addEventListener("resize", onResize);
+
+    const onMessage = (e: MessageEvent) => {
+      if (e.origin !== window.location.origin) return;
+      if (e.source !== iframe.contentWindow) return;
+      const data = e.data as { type?: string; height?: number } | null;
+      if (data?.type === "abogrowth-pris-height" && typeof data.height === "number") apply(data.height);
+    };
+    window.addEventListener("message", onMessage);
+
+    return () => {
+      iframe.removeEventListener("load", onLoad);
+      window.removeEventListener("message", onMessage);
+      window.removeEventListener("resize", onResize);
+      ro?.disconnect();
+    };
+  }, []);
+
+  return (
+    <iframe
+      ref={ref}
+      src="/prisberakning.html"
+      title="Prisuppskattningsverktyg"
+      loading="lazy"
+      className="block w-full border-0"
+      style={{ height }}
+    />
+  );
+}
+
 /** true under md-brytpunkten (<768px); lyssnar på ändringar. Delas av kartorna
  *  som byter mellan horisontell desktop- och vertikal mobillayout. */
 export function useIsMobile() {
