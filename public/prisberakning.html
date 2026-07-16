@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Prisuppskattning – ABO Growth</title>
+<style>
+  :root{
+    --green:#1F8A5C;
+    --green-dark:#14603F;
+    --green-tint:#EAF4EE;
+    --ink:#1A1F1C;
+    --ink-soft:#5B655F;
+    --bg:#FAFAF8;
+    --card:#FFFFFF;
+    --border:#E3E3DE;
+    --radius:10px;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, Roboto, Helvetica, Arial, sans-serif;
+    background:var(--bg);
+    color:var(--ink);
+    line-height:1.5;
+  }
+  .wrap{
+    max-width:600px;
+    margin:0 auto;
+    padding:32px 20px 56px;
+  }
+  .eyebrow{
+    font-size:12px;
+    font-weight:700;
+    letter-spacing:.08em;
+    text-transform:uppercase;
+    color:var(--green);
+    margin-bottom:6px;
+  }
+  h1{
+    font-size:24px;
+    font-weight:700;
+    margin:0 0 8px;
+    letter-spacing:-0.01em;
+  }
+  .intro{
+    color:var(--ink-soft);
+    font-size:15px;
+    margin:0 0 28px;
+  }
+
+  .progress-wrap{ display:none; margin-bottom:22px; }
+  .progress-wrap.visible{ display:block; }
+  .progress-track{ height:4px; background:var(--border); border-radius:4px; overflow:hidden; }
+  .progress-fill{ height:100%; background:var(--green); border-radius:4px; transition:width .25s ease; }
+  .progress-label{ font-size:12px; color:var(--ink-soft); margin-top:8px; }
+
+  .panel{ display:none; }
+  .panel.visible{ display:block; }
+
+  .service-grid{ display:grid; gap:10px; margin-bottom:20px; }
+  .service-card{
+    display:flex; align-items:flex-start; gap:12px;
+    background:var(--card); border:1.5px solid var(--border); border-radius:var(--radius);
+    padding:14px 16px; cursor:pointer; transition:border-color .15s ease, background .15s ease;
+  }
+  .service-card:hover{ border-color:var(--green); }
+  .service-card.active{ border-color:var(--green); background:var(--green-tint); }
+  .service-card .box{
+    width:18px;height:18px;border-radius:5px;border:1.5px solid #C7CCC8;flex:0 0 18px;margin-top:2px;
+    display:flex;align-items:center;justify-content:center;background:#fff;
+  }
+  .service-card.active .box{ background:var(--green); border-color:var(--green); }
+  .service-card.active .box:after{
+    content:""; width:5px;height:9px; border:solid #fff; border-width:0 2px 2px 0;
+    transform:rotate(45deg) translate(-1px,-1px);
+  }
+  .service-card .txt strong{ display:block; font-size:15px; }
+  .service-card .txt span{ font-size:13px; color:var(--ink-soft); }
+
+  .q-service-tag{ font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:.06em; color:var(--green); margin-bottom:8px; }
+  .q-label{ font-size:18px; font-weight:700; margin:0 0 18px; line-height:1.35; }
+  .opts{ display:grid; gap:10px; margin-bottom:24px; }
+  .opt{
+    display:flex; align-items:center; gap:12px; border:1.5px solid var(--border); border-radius:10px;
+    padding:14px 16px; font-size:15px; cursor:pointer; background:var(--card);
+  }
+  .opt:hover{ border-color:var(--green); }
+  .opt.selected{ border-color:var(--green); background:var(--green-tint); font-weight:600; }
+  .opt .dot{ width:16px;height:16px;border-radius:50%; border:1.5px solid #C7CCC8; flex:0 0 16px; }
+  .opt.selected .dot{ border-color:var(--green); background:var(--green); box-shadow: inset 0 0 0 3px #fff; }
+
+  .nav-row{ display:flex; justify-content:space-between; align-items:center; margin-top:4px; }
+
+  .btn{
+    display:inline-block; background:var(--green); color:#fff; border:none; font-size:15px; font-weight:700;
+    padding:13px 22px; border-radius:8px; cursor:pointer;
+  }
+  .btn:hover{ background:var(--green-dark); }
+  .btn:disabled{ background:#C7CCC8; cursor:not-allowed; }
+  .btn.ghost{ background:none; color:var(--ink-soft); border:1.5px solid var(--border); font-weight:600; padding:10px 18px; font-size:13px; }
+  .btn.ghost:hover{ border-color:var(--green); background:var(--green-tint); color:var(--green-dark); }
+
+  .result-total{ background:var(--green-tint); border-radius:var(--radius); padding:18px 20px; margin-bottom:20px; }
+  .result-total .label{ font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:.06em; color:var(--green-dark); }
+  .result-total .value{ font-size:22px; font-weight:800; margin-top:4px; }
+  .result-total .note{ font-size:13px; color:var(--ink-soft); margin-top:6px; }
+
+  .sent-note{
+    display:flex; align-items:center; gap:8px; font-size:13.5px; color:var(--green-dark);
+    background:var(--green-tint); border-radius:8px; padding:10px 14px; margin-bottom:20px; font-weight:600;
+  }
+
+  .breakdown-item{ border:1px solid var(--border); border-radius:var(--radius); padding:14px 16px; margin-bottom:12px; background:var(--card); }
+  .breakdown-item h3{ font-size:14px; margin:0 0 4px; }
+  .breakdown-item .price{ font-size:14px; font-weight:700; color:var(--green-dark); margin-bottom:8px; }
+  .breakdown-item ul{ margin:0; padding-left:18px; font-size:13px; color:var(--ink-soft); }
+  .breakdown-item li{ margin-bottom:3px; }
+
+  .disclaimer{ font-size:12.5px; color:var(--ink-soft); margin-top:22px; padding-top:16px; border-top:1px solid var(--border); }
+  .cta-row{ margin-top:18px; display:flex; gap:10px; flex-wrap:wrap; }
+  .cta-row a.btn{ text-decoration:none; }
+  .hidden-form{ position:absolute; left:-9999px; top:-9999px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="eyebrow">ABO Growth · Prisuppskattning</div>
+  <h1 id="mainHeading">Vad vill ni ha hjälp med?</h1>
+  <p class="intro" id="mainIntro">Svara på några frågor om omfattning så får ni en ungefärlig prisbild direkt — och förslag på vad ett upplägg hos oss skulle kunna innehålla.</p>
+
+  <div class="progress-wrap" id="progressWrap">
+    <div class="progress-track"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+    <div class="progress-label" id="progressLabel"></div>
+  </div>
+
+  <div class="panel visible" id="panelServices">
+    <div class="service-grid" id="serviceGrid"></div>
+    <div class="nav-row">
+      <span></span>
+      <button class="btn" id="startBtn" disabled>Nästa</button>
+    </div>
+  </div>
+
+  <div class="panel" id="panelQuestion">
+    <div class="q-service-tag" id="qServiceTag"></div>
+    <div class="q-label" id="qLabel"></div>
+    <div class="opts" id="qOpts"></div>
+    <div class="nav-row">
+      <button class="btn ghost" id="backBtn">Tillbaka</button>
+      <span></span>
+    </div>
+  </div>
+
+  <div class="panel" id="panelContact">
+    <div class="q-service-tag">Sista steget</div>
+    <div class="q-label">Vart skickar vi er prisuppskattning?</div>
+    <div style="display:grid; gap:12px; margin-bottom:24px;">
+      <input type="text" id="contactName" placeholder="Namn" style="font-size:15px;padding:14px 16px;border:1.5px solid var(--border);border-radius:10px;font-family:inherit;">
+      <input type="email" id="contactEmail" placeholder="E-post" style="font-size:15px;padding:14px 16px;border:1.5px solid var(--border);border-radius:10px;font-family:inherit;">
+      <input type="text" id="contactCompany" placeholder="Företag (valfritt)" style="font-size:15px;padding:14px 16px;border:1.5px solid var(--border);border-radius:10px;font-family:inherit;">
+    </div>
+    <div class="nav-row">
+      <button class="btn ghost" id="backFromContactBtn">Tillbaka</button>
+      <button class="btn" id="submitContactBtn" disabled>Visa min prisuppskattning</button>
+    </div>
+  </div>
+
+  <div class="panel" id="panelResult">
+    <div class="sent-note">✓ Era svar är skickade till oss — vi hör av oss inom ett dygn.</div>
+    <div class="result-total">
+      <div class="label">Ungefärlig totalkostnad</div>
+      <div class="value" id="totalValue">–</div>
+      <div class="note" id="totalNote"></div>
+    </div>
+    <div id="breakdown"></div>
+    <div class="cta-row">
+      <a class="btn" id="ctaMail" href="#">Boka ett samtal direkt</a>
+      <button class="btn ghost" id="resetBtn">Börja om</button>
+    </div>
+    <div class="disclaimer">
+      Detta är en automatisk uppskattning baserad på er omfattning, inte en offert. Ni får alltid ett konkret förslag med pris innan vi börjar, och första samtalet är kostnadsfritt.
+    </div>
+  </div>
+</div>
+
+<!-- Static hidden form so Netlify detects it at deploy time. Do not remove field names. -->
+<form name="price-calc" method="POST" data-netlify="true" netlify-honeypot="bot-field" class="hidden-form" id="netlifyForm">
+  <input type="hidden" name="form-name" value="price-calc" />
+  <input type="text" name="bot-field" />
+  <input type="text" name="namn" />
+  <input type="email" name="epost" />
+  <input type="text" name="foretag" />
+  <input type="text" name="tjanster" />
+  <textarea name="svar"></textarea>
+  <input type="text" name="prisuppskattning" />
+</form>
+
+<script>
+const RATE = 500;
+
+const SERVICES = {
+  system: {
+    title: "Digitala system & AI",
+    desc: "Struktur, integration, automation",
+    questions: [
+      { id: "antal", label: "Hur många system/verktyg behöver ses över eller kopplas ihop?",
+        options: [ {label:"1–3 system",hours:6}, {label:"4–7 system",hours:16}, {label:"8 eller fler",hours:28} ] },
+      { id: "ai", label: "Hur mycket AI/automation vill ni ha hjälp med?",
+        options: [ {label:"Ingen, bara struktur",hours:0}, {label:"Några processer",hours:8}, {label:"Mycket, genomgående",hours:20} ] },
+      { id: "spridning", label: "Hur spridd/rörig är er nuvarande data och verktygsflora?",
+        options: [ {label:"Ganska samlad redan",hours:0}, {label:"Ligger på några olika ställen",hours:6}, {label:"Helt spridd, ingen överblick",hours:14} ] },
+      { id: "utbildning", label: "Behöver teamet utbildning/onboarding i de nya systemen?",
+        options: [ {label:"Nej",hours:0}, {label:"Kort genomgång räcker",hours:4}, {label:"Ja, full utbildning för flera team",hours:10} ] },
+      { id: "typ", label: "Engångsprojekt eller löpande samarbete?",
+        options: [ {label:"Engångsprojekt",type:"projekt"}, {label:"Löpande samarbete",type:"löpande"} ] }
+    ],
+    activities: (a) => {
+      const list = ["Kartläggning av nuvarande system och verktyg"];
+      if (a.antal !== "1–3 system") list.push("Konsolidering och integration mellan system");
+      if (a.ai !== "Ingen, bara struktur") list.push("Identifiering av AI-automation med tydlig tidsbesparing");
+      if (a.spridning === "Helt spridd, ingen överblick") list.push("Sanering och sammanslagning av spridd data");
+      if (a.utbildning !== "Nej") list.push("Utbildning/onboarding av teamet i nya arbetssätt");
+      if (a.typ === "Löpande samarbete") list.push("Löpande uppföljning och justering av systemfloran");
+      return list;
+    }
+  },
+  affar: {
+    title: "Affärsutveckling",
+    desc: "Tillväxtanalys och handlingsplan",
+    questions: [
+      { id: "omfattning", label: "Vad vill ni ha hjälp med?",
+        options: [ {label:"Enbart tillväxtanalys",hours:10,type:"projekt"}, {label:"Analys + handlingsplan",hours:20,type:"projekt"}, {label:"Analys, plan och löpande uppföljning",hours:20,type:"löpande"} ] },
+      { id: "storlek", label: "Ungefärlig storlek på företaget?",
+        options: [ {label:"Under 10 anställda",mult:1}, {label:"10–50 anställda",mult:1.4}, {label:"Fler än 50 anställda",mult:1.8} ] },
+      { id: "marknader", label: "Hur många marknader/segment ska analysen täcka?",
+        options: [ {label:"En marknad/ett segment",hours:0}, {label:"Ett par marknader/segment",hours:6}, {label:"Flera marknader/segment",hours:14} ] },
+      { id: "implementering", label: "Vill ni ha stöd vid genomförandet, eller bara strategin/planen?",
+        options: [ {label:"Bara strategi/plan",hours:0}, {label:"Stöd vid genomförandet",hours:12} ] }
+    ],
+    activities: (a) => {
+      const list = ["Tillväxtanalys av marknad och konkurrens"];
+      if (a.omfattning !== "Enbart tillväxtanalys") list.push("Prioriterad handlingsplan med tidslinje");
+      if (a.marknader !== "En marknad/ett segment") list.push("Jämförande analys mellan flera marknader/segment");
+      if (a.implementering === "Stöd vid genomförandet") list.push("Löpande stöd vid genomförandet av planen");
+      if (a.omfattning === "Analys, plan och löpande uppföljning") list.push("Löpande uppföljning mot tydliga mål");
+      return list;
+    }
+  },
+  kampanj: {
+    title: "Optimerade kampanjer",
+    desc: "Annonsering i rätt kanaler",
+    questions: [
+      { id: "kanaler", label: "Hur många annonskanaler?",
+        options: [ {label:"1 kanal",hours:6}, {label:"2–3 kanaler",hours:14}, {label:"4 eller fler",hours:24} ] },
+      { id: "budget", label: "Ungefärlig månadsbudget för annonsering?",
+        options: [ {label:"Under 20 000 kr",mult:1}, {label:"20 000–100 000 kr",mult:1.3}, {label:"Över 100 000 kr",mult:1.7} ] },
+      { id: "innehall", label: "Behöver ni hjälp med innehåll/kreativt (bilder, texter, video)?",
+        options: [ {label:"Nej, vi har eget material",hours:0}, {label:"Viss förproduktion",hours:8}, {label:"Ja, allt behöver produceras",hours:18} ] },
+      { id: "sparning", label: "Har ni spårning/konverteringsmätning på plats idag?",
+        options: [ {label:"Ja, allt fungerar redan",hours:0}, {label:"Delvis på plats",hours:5}, {label:"Nej, inget på plats",hours:10} ] },
+      { id: "typ", label: "Enstaka kampanj eller löpande optimering?",
+        options: [ {label:"Enstaka kampanj",type:"projekt"}, {label:"Löpande optimering",type:"löpande"} ] }
+    ],
+    activities: (a) => {
+      const list = ["Kampanjstruktur för valda kanaler", "Uppsättning av annonser, målgrupper och spårning"];
+      if (a.innehall !== "Nej, vi har eget material") list.push("Produktion av annonsmaterial (bild/text/video)");
+      if (a.sparning !== "Ja, allt fungerar redan") list.push("Uppsättning av spårning och konverteringsmätning");
+      if (a.typ === "Löpande optimering") list.push("Månadsrapport med resultat och nästa steg");
+      return list;
+    }
+  }
+};
+
+let selected = new Set();
+let answers = {};
+let flatSteps = [];
+let stepIndex = 0;
+
+const grid = document.getElementById("serviceGrid");
+Object.entries(SERVICES).forEach(([key, svc]) => {
+  const card = document.createElement("div");
+  card.className = "service-card";
+  card.innerHTML = `<div class="box"></div><div class="txt"><strong>${svc.title}</strong><span>${svc.desc}</span></div>`;
+  card.addEventListener("click", () => {
+    if (selected.has(key)) {
+      selected.delete(key);
+      card.classList.remove("active");
+      delete answers[key];
+    } else {
+      selected.add(key);
+      card.classList.add("active");
+      answers[key] = {};
+    }
+    document.getElementById("startBtn").disabled = selected.size === 0;
+  });
+  grid.appendChild(card);
+});
+
+document.getElementById("startBtn").addEventListener("click", () => {
+  flatSteps = [];
+  selected.forEach(key => {
+    SERVICES[key].questions.forEach(q => flatSteps.push({ serviceKey: key, question: q }));
+  });
+  stepIndex = 0;
+  showPanel("panelQuestion");
+  renderStep();
+});
+
+function renderStep() {
+  const step = flatSteps[stepIndex];
+  const svc = SERVICES[step.serviceKey];
+  const q = step.question;
+
+  document.getElementById("qServiceTag").textContent = svc.title;
+  document.getElementById("qLabel").textContent = q.label;
+
+  const optsDiv = document.getElementById("qOpts");
+  optsDiv.innerHTML = "";
+  const currentAnswer = answers[step.serviceKey][q.id];
+
+  q.options.forEach(opt => {
+    const optDiv = document.createElement("div");
+    optDiv.className = "opt" + (currentAnswer === opt.label ? " selected" : "");
+    optDiv.innerHTML = `<div class="dot"></div><span>${opt.label}</span>`;
+    optDiv.addEventListener("click", () => {
+      answers[step.serviceKey][q.id] = opt.label;
+      optsDiv.querySelectorAll(".opt").forEach(o => o.classList.remove("selected"));
+      optDiv.classList.add("selected");
+      setTimeout(advance, 180);
+    });
+    optsDiv.appendChild(optDiv);
+  });
+
+  updateProgress();
+}
+
+function advance() {
+  if (stepIndex < flatSteps.length - 1) {
+    stepIndex++;
+    renderStep();
+  } else {
+    document.getElementById("progressWrap").classList.remove("visible");
+    showPanel("panelContact");
+  }
+}
+
+document.getElementById("backBtn").addEventListener("click", () => {
+  if (stepIndex === 0) {
+    showPanel("panelServices");
+    document.getElementById("progressWrap").classList.remove("visible");
+  } else {
+    stepIndex--;
+    renderStep();
+  }
+});
+
+const nameInput = document.getElementById("contactName");
+const emailInput = document.getElementById("contactEmail");
+const submitContactBtn = document.getElementById("submitContactBtn");
+
+function validateContact() {
+  const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailInput.value.trim());
+  submitContactBtn.disabled = !(nameInput.value.trim().length > 1 && emailOk);
+}
+nameInput.addEventListener("input", validateContact);
+emailInput.addEventListener("input", validateContact);
+
+document.getElementById("backFromContactBtn").addEventListener("click", () => {
+  stepIndex = flatSteps.length - 1;
+  showPanel("panelQuestion");
+  renderStep();
+});
+
+document.getElementById("submitContactBtn").addEventListener("click", () => {
+  finish();
+});
+
+function updateProgress() {
+  const wrap = document.getElementById("progressWrap");
+  wrap.classList.add("visible");
+  const pct = Math.round(((stepIndex + 1) / flatSteps.length) * 100);
+  document.getElementById("progressFill").style.width = pct + "%";
+  document.getElementById("progressLabel").textContent = `Fråga ${stepIndex + 1} av ${flatSteps.length}`;
+}
+
+function findOption(svc, qId, label) {
+  const q = svc.questions.find(q => q.id === qId);
+  return q.options.find(o => o.label === label);
+}
+
+function calcService(key) {
+  const svc = SERVICES[key];
+  const a = answers[key];
+  let hours = 0, mult = 1, type = "projekt";
+  svc.questions.forEach(q => {
+    const opt = findOption(svc, q.id, a[q.id]);
+    if (opt.hours !== undefined) hours += opt.hours;
+    if (opt.mult !== undefined) mult = opt.mult;
+    if (opt.type !== undefined) type = opt.type;
+  });
+  hours = hours * mult;
+  let low, high;
+  if (type === "projekt") {
+    const raw = hours * RATE;
+    low = Math.max(10000, Math.round(raw * 0.85 / 500) * 500);
+    high = Math.max(low + 2000, Math.round(raw * 1.2 / 500) * 500);
+  } else {
+    const monthlyHours = Math.round(hours * 0.4) + 4;
+    const raw = monthlyHours * RATE;
+    low = Math.max(12500, Math.round(raw * 0.85 / 500) * 500);
+    high = Math.max(low + 1500, Math.round(raw * 1.2 / 500) * 500);
+  }
+  return { title: svc.title, type, low, high, activities: svc.activities(a) };
+}
+
+function formatKr(n) { return n.toLocaleString("sv-SE") + " kr"; }
+
+function encodeForm(data) {
+  return Object.keys(data).map(k => encodeURIComponent(k) + "=" + encodeURIComponent(data[k])).join("&");
+}
+
+function finish() {
+  const results = Array.from(selected).map(calcService);
+
+  let projektLow = 0, projektHigh = 0, lopandeLow = 0, lopandeHigh = 0;
+  results.forEach(r => {
+    if (r.type === "projekt") { projektLow += r.low; projektHigh += r.high; }
+    else { lopandeLow += r.low; lopandeHigh += r.high; }
+  });
+
+  let parts = [];
+  if (projektLow > 0) parts.push(`${formatKr(projektLow)}–${formatKr(projektHigh)} (engångsprojekt)`);
+  if (lopandeLow > 0) parts.push(`${formatKr(lopandeLow)}–${formatKr(lopandeHigh)}/mån (löpande)`);
+  document.getElementById("totalValue").textContent = parts.join("  +  ");
+  document.getElementById("totalNote").textContent = "Baserat på jämförbara uppdrag hos oss. Slutgiltigt pris sätts efter ett kort första samtal.";
+
+  const breakdown = document.getElementById("breakdown");
+  breakdown.innerHTML = "";
+  results.forEach(r => {
+    const div = document.createElement("div");
+    div.className = "breakdown-item";
+    const priceStr = r.type === "projekt" ? `${formatKr(r.low)}–${formatKr(r.high)}` : `${formatKr(r.low)}–${formatKr(r.high)} / mån`;
+    div.innerHTML = `<h3>${r.title}</h3><div class="price">${priceStr}</div><ul>${r.activities.map(a => `<li>${a}</li>`).join("")}</ul>`;
+    breakdown.appendChild(div);
+  });
+
+  let answerLines = [];
+  Array.from(selected).forEach(key => {
+    const svc = SERVICES[key];
+    answerLines.push(`${svc.title}:`);
+    svc.questions.forEach(q => { answerLines.push(`  ${q.label} -> ${answers[key][q.id]}`); });
+  });
+  const svarText = answerLines.join("\n");
+  const tjansterText = Array.from(selected).map(k => SERVICES[k].title).join(", ");
+  const prisText = parts.join(" + ");
+  const namn = nameInput.value.trim();
+  const epost = emailInput.value.trim();
+  const foretag = document.getElementById("contactCompany").value.trim();
+
+  fetch("/", {
+    method: "POST",
+    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+    body: encodeForm({
+      "form-name": "price-calc",
+      "namn": namn,
+      "epost": epost,
+      "foretag": foretag,
+      "tjanster": tjansterText,
+      "svar": svarText,
+      "prisuppskattning": prisText
+    })
+  }).catch(() => {});
+
+  document.querySelector("#panelResult .sent-note").textContent =
+    `✓ Tack ${namn}! Er uppskattning är skickad till oss — vi hör av oss på ${epost} inom ett dygn.`;
+
+  document.getElementById("ctaMail").href =
+    `mailto:alexander@aboconsult.se?subject=${encodeURIComponent("Boka samtal – prisuppskattning från abogrowth.se")}&body=${encodeURIComponent("Hej Alexander,\n\nVi fyllde precis i prisverktyget på hemsidan och vill gärna boka ett första samtal.\n\nTack!")}`;
+
+  document.getElementById("progressWrap").classList.remove("visible");
+  showPanel("panelResult");
+}
+
+document.getElementById("resetBtn").addEventListener("click", () => {
+  selected = new Set();
+  answers = {};
+  flatSteps = [];
+  stepIndex = 0;
+  document.querySelectorAll(".service-card").forEach(c => c.classList.remove("active"));
+  document.getElementById("startBtn").disabled = true;
+  nameInput.value = "";
+  emailInput.value = "";
+  document.getElementById("contactCompany").value = "";
+  submitContactBtn.disabled = true;
+  showPanel("panelServices");
+  window.scrollTo({ top: 0, behavior: "smooth" });
+});
+
+function showPanel(id) {
+  document.querySelectorAll(".panel").forEach(p => p.classList.remove("visible"));
+  document.getElementById(id).classList.add("visible");
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+</script>
+<script>
+/* Auto-höjd för inbäddning i iframe. Rapporterar dokumenthöjden till
+   föräldrasidan (/pris) så iframen kan växa/krympa utan egen scrollbar.
+   Rör inte formuläret ovan; helt fristående. */
+(function () {
+  if (window.parent === window) return; // körs bara inbäddad
+  var last = 0;
+  function report() {
+    var h = Math.ceil(document.documentElement.getBoundingClientRect().height);
+    if (h && h !== last) {
+      last = h;
+      window.parent.postMessage({ type: "abogrowth-pris-height", height: h }, "*");
+    }
+  }
+  window.addEventListener("load", report);
+  window.addEventListener("resize", report);
+  if (window.ResizeObserver) new ResizeObserver(report).observe(document.body);
+  // Panelbyten sker via klick; fånga höjdändring strax efter interaktion.
+  document.addEventListener("click", function () { setTimeout(report, 60); setTimeout(report, 260); });
+  report();
+})();
+</script>
+</body>
+</html>
