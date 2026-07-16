@@ -620,17 +620,35 @@ function Price() {
 }
 
 function Contact() {
-  const [sent, setSent] = useState(false);
+  const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">("idle");
   const [form, setForm] = useState({ name: "", email: "", message: "" });
 
-  const submit = (e: React.FormEvent) => {
+  const submit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const subject = `Kontakt från ${form.name || "webbformulär"}`;
-    const body = `Namn: ${form.name}\nE-post: ${form.email}\n\n${form.message}`;
-    const url = `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-    window.location.href = url;
-    setSent(true);
+    setStatus("sending");
+    try {
+      // Skickar till Netlify Forms (boka-samtal) via den statiska filen, inte
+      // till "/" som SSR-funktionen skulle sluka. Ingen mejlklient längre.
+      const res = await fetch("/__forms.html", {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: new URLSearchParams({
+          "form-name": "boka-samtal",
+          "bot-field": "",
+          namn: form.name,
+          epost: form.email,
+          foretag: "",
+          telefon: "",
+          meddelande: form.message,
+        }).toString(),
+      });
+      if (!res.ok) throw new Error(String(res.status));
+      setStatus("sent");
+    } catch {
+      setStatus("error");
+    }
   };
+  const sent = status === "sent";
 
   return (
     <section id="kontakt">
@@ -670,12 +688,11 @@ function Contact() {
             {sent ? (
               <div className="py-10 text-center">
                 <div className="eyebrow mb-3">Tack</div>
-                <p className="display-heading text-2xl">Din mejlklient öppnades. Skicka, så hörs vi.</p>
+                <p className="display-heading text-2xl">
+                  Tack {form.name.trim().split(" ")[0]}! Vi hör av oss inom ett dygn.
+                </p>
                 <p className="mt-4 text-sm text-ink/60">
-                  Öppnades inget? Mejla direkt till{" "}
-                  <a href={`mailto:${CONTACT_EMAIL}`} className="font-semibold border-b-2 border-brand-green">
-                    {CONTACT_EMAIL}
-                  </a>
+                  Vi svarar på {form.email.trim()}.
                 </p>
               </div>
             ) : (
@@ -695,14 +712,21 @@ function Contact() {
                     placeholder="Vad vill ni uppnå?"
                   />
                 </div>
+                {status === "error" && (
+                  <p className="text-sm text-red-700">
+                    Något gick fel. Försök igen, eller mejla direkt till{" "}
+                    <a href={`mailto:${CONTACT_EMAIL}`} className="underline">{CONTACT_EMAIL}</a>.
+                  </p>
+                )}
                 <button
                   type="submit"
-                  className="inline-flex items-center gap-2 bg-ink text-paper px-6 py-3.5 text-sm font-semibold hover:bg-brand-green transition-colors"
+                  disabled={status === "sending"}
+                  className="inline-flex items-center gap-2 bg-ink text-paper px-6 py-3.5 text-sm font-semibold hover:bg-brand-green transition-colors disabled:bg-subtle disabled:cursor-not-allowed"
                 >
-                  Skicka <ArrowUpRight className="h-4 w-4" strokeWidth={2.5} />
+                  {status === "sending" ? "Skickar…" : "Skicka"} <ArrowUpRight className="h-4 w-4" strokeWidth={2.5} />
                 </button>
                 <p className="text-xs text-subtle">
-                  Formuläret öppnar din mejlklient. Går även bra att mejla direkt till {CONTACT_EMAIL}.
+                  Vi svarar inom ett dygn. Går även bra att mejla direkt till {CONTACT_EMAIL}.
                 </p>
               </>
             )}
