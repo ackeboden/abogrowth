@@ -91,12 +91,12 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { property: "og:description", content: "Få koll på era digitala system och AI-verktyg. Struktur och ordning, från Stockholm." },
       { property: "og:type", content: "website" },
       { property: "og:locale", content: "sv_SE" },
-      { property: "og:image", content: "https://abogrowth.se/og.png" },
+      { property: "og:image", content: "https://abogrowth.se/og.png?v=2" },
       { property: "og:image:width", content: "1200" },
       { property: "og:image:height", content: "630" },
       { property: "og:image:alt", content: "ABO Growth: Ordning i era digitala system och AI" },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:image", content: "https://abogrowth.se/og.png" },
+      { name: "twitter:image", content: "https://abogrowth.se/og.png?v=2" },
     ],
     links: [
       {

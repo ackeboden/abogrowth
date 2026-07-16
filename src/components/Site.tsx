@@ -101,7 +101,7 @@ export const BOOKING_TO = "/boka";
 
 const NAV_LINKS = [
   { label: "Tjänster", to: "/", hash: "tjanster" },
-  { label: "Case", to: "/case" },
+  { label: "Pris", to: "/pris" },
   { label: "Arbetssätt", to: "/", hash: "arbetssatt" },
   { label: "Om", to: "/om" },
 ] as const;
@@ -202,9 +202,11 @@ export function Footer() {
             <li><Link to="/tjanster/digitala-system-ai" className="hover:text-paper">Digitala system & AI</Link></li>
             <li><Link to="/tjanster/affarsutveckling" className="hover:text-paper">Affärsutveckling</Link></li>
             <li><Link to="/tjanster/optimerade-kampanjer" className="hover:text-paper">Optimerade kampanjer</Link></li>
-            <li><Link to="/case" className="hover:text-paper">Case</Link></li>
+            <li><Link to="/pris" className="hover:text-paper">Prisuppskattning</Link></li>
+            <li><Link to="/boka" className="hover:text-paper">Boka ett samtal</Link></li>
             <li><Link to="/om" className="hover:text-paper">Om</Link></li>
             <li><Link to="/sa-gar-det-till" className="hover:text-paper">Så går det till</Link></li>
+            <li><Link to="/case" className="hover:text-paper">Case</Link></li>
             <li><Link to="/" hash="kontakt" className="hover:text-paper">Kontakt</Link></li>
           </ul>
         </div>
