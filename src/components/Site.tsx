@@ -119,6 +119,18 @@ export function Header() {
     };
   }, [open]);
 
+  // Sektionslänkar (#hash): är man redan på målsidan scrollar routern inte
+  // (samma route), så vi scrollar manuellt. setTimeout låter mobilmenyn stänga
+  // och body-scrolllåset släppa först. Andra länkar navigerar som vanligt.
+  const onNavClick = (l: (typeof NAV_LINKS)[number]) => (e: React.MouseEvent) => {
+    setOpen(false);
+    if ("hash" in l && l.hash && location.pathname === l.to) {
+      e.preventDefault();
+      const hash = l.hash;
+      setTimeout(() => document.getElementById(hash)?.scrollIntoView({ behavior: "smooth" }), 50);
+    }
+  };
+
   return (
     <header className="sticky top-0 z-40 bg-paper/85 backdrop-blur border-b border-line">
       <div className="mx-auto max-w-6xl px-6 h-16 flex items-center justify-between">
@@ -129,6 +141,7 @@ export function Header() {
               key={l.label}
               to={l.to}
               hash={"hash" in l ? l.hash : undefined}
+              onClick={onNavClick(l)}
               className="hover:text-brand-green transition-colors"
               activeProps={l.to !== "/" ? { className: "text-brand-green" } : undefined}
             >
@@ -164,7 +177,7 @@ export function Header() {
               key={l.label}
               to={l.to}
               hash={"hash" in l ? l.hash : undefined}
-              onClick={() => setOpen(false)}
+              onClick={onNavClick(l)}
               className="py-4 text-lg font-semibold border-b border-line hover:text-brand-green transition-colors"
             >
               {l.label}
