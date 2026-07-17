@@ -101,6 +101,7 @@ export const BOOKING_TO = "/boka";
 
 const NAV_LINKS = [
   { label: "Tjänster", to: "/", hash: "tjanster" },
+  { label: "Resan", to: "/resan" },
   { label: "Pris", to: "/pris" },
   { label: "Arbetssätt", to: "/", hash: "arbetssatt" },
   { label: "Om", to: "/om" },

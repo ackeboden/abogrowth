@@ -399,7 +399,94 @@ details[open] .faq-icon {
   animation: ai-glow-pulse 10s ease-in-out infinite;
 }
 
+/* /resan — scrolldriven film "Från kaos till ordning". Varje akt animeras när
+   den scrollas in (.resan-scene.is-visible). Chip = system/verktyg. */
+.resan-chip {
+  opacity: 0;
+  transition: opacity 0.6s ease-out;
+}
+.resan-scene.is-visible .resan-chip {
+  opacity: 1;
+}
+
+/* Kaos: chipsen darrar oroligt kring sin grundrotation (--rot per chip) */
+@keyframes resan-jitter {
+  0%, 100% { transform: rotate(var(--rot, 0deg)) translate(0, 0); }
+  25% { transform: rotate(calc(var(--rot, 0deg) + 1.4deg)) translate(1.5px, -1px); }
+  50% { transform: rotate(calc(var(--rot, 0deg) - 1.1deg)) translate(-1px, 1.5px); }
+  75% { transform: rotate(calc(var(--rot, 0deg) + 0.7deg)) translate(1px, 1px); }
+}
+.resan-scene.is-visible .resan-chip--chaos {
+  animation: resan-jitter 2.4s ease-in-out infinite;
+}
+
+/* Bortvalt verktyg tonas ner */
+.resan-chip--cut {
+  opacity: 0.35 !important;
+}
+
+/* Mjuk svävning i ordning-akten */
+@keyframes resan-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+.resan-scene.is-visible .resan-chip--calm {
+  animation: resan-float 5s ease-in-out infinite;
+}
+
+/* Mynt som läcker ut ur den spretiga verktygsfloran */
+@keyframes resan-coin {
+  0% { transform: translateY(-4px); opacity: 0; }
+  15% { opacity: 1; }
+  100% { transform: translateY(60px); opacity: 0; }
+}
+.resan-coin {
+  opacity: 0;
+}
+.resan-scene.is-visible .resan-coin {
+  animation: resan-coin 2.6s ease-in infinite;
+}
+
+/* Gröna kopplingslinjer ritas när ordning skapas */
+.resan-link {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  transition: stroke-dashoffset 1s ease-out 0.4s;
+}
+.resan-scene.is-visible .resan-link {
+  stroke-dashoffset: 0;
+}
+
+/* Figurer och brickor tonar in efter systemen */
+.resan-fade {
+  opacity: 0;
+  transition: opacity 0.7s ease-out 0.5s;
+}
+.resan-scene.is-visible .resan-fade {
+  opacity: 1;
+}
+
 @media (prefers-reduced-motion: reduce) {
+  .resan-chip,
+  .resan-fade {
+    transition: none;
+    opacity: 1;
+  }
+  .resan-chip--cut {
+    opacity: 0.35 !important;
+  }
+  .resan-scene.is-visible .resan-chip--chaos,
+  .resan-scene.is-visible .resan-chip--calm,
+  .resan-scene.is-visible .resan-coin {
+    animation: none;
+  }
+  .resan-coin {
+    opacity: 1;
+  }
+  .resan-link {
+    transition: none;
+    stroke-dashoffset: 0;
+  }
   .growth-line-path {
     animation: none;
     stroke-dashoffset: 0;

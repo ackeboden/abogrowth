@@ -229,9 +229,10 @@ function Hero() {
             >
               Boka ett samtal <ArrowUpRight className="h-4 w-4" strokeWidth={2.5} />
             </Link>
-            <a href="#tjanster" className="text-sm font-semibold border-b-2 border-brand-green pb-1 hover:text-brand-green">
-              Se vad vi gör
-            </a>
+            <Link to="/resan" className="group inline-flex items-center gap-1.5 text-sm font-semibold border-b-2 border-brand-green pb-1 hover:text-brand-green">
+              Se resan: från kaos till ordning
+              <ArrowUpRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" strokeWidth={2.5} />
+            </Link>
           </div>
         </div>
       </div>
