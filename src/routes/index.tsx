@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { ArrowUpRight, Check, Compass, Workflow, Cpu, Plus } from "lucide-react";
-import { Header, Footer, GrowthLine, Reveal, useInView, PriceEmbed, CONTACT_EMAIL } from "@/components/Site";
+import { Header, Footer, GrowthLine, Reveal, useInView, CONTACT_EMAIL } from "@/components/Site";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -109,7 +109,7 @@ const frameworks = ["Trackers", "Faser & milstolpar", "Deadlines", "Löpande upp
 const faqItems = [
   {
     q: "Vad kostar det att jobba med er?",
-    a: "Det beror på omfattningen. Ett avgränsat projekt kostar mindre än ett löpande samarbete. Ni får alltid ett konkret förslag med pris innan vi börjar, och första samtalet är kostnadsfritt. Inga överraskningar på fakturan.",
+    a: "Det beror på omfattningen. Ett avgränsat projekt kostar mindre än ett löpande samarbete. Vill ni ha en snabb prisbild direkt kan ni testa vår priskalkylator. Ni får alltid ett konkret förslag med pris innan vi börjar, och första samtalet är kostnadsfritt. Inga överraskningar på fakturan.",
   },
   {
     q: "Hur snabbt ser vi resultat?",
@@ -117,7 +117,7 @@ const faqItems = [
   },
   {
     q: "Jobbar ni med små företag?",
-    a: "Ja. Vi är själva en enskild firma och vet hur det är att växa med begränsade resurser. Upplägget skalas efter er storlek och budget. Ingen betalar för mer än de behöver.",
+    a: "Ja. Vi vet hur det är att växa med begränsade resurser, och upplägget skalas efter er storlek och budget. Ingen betalar för mer än de behöver.",
   },
   {
     q: "Måste vi köpa en massa nya system och verktyg?",
@@ -136,13 +136,6 @@ const faqItems = [
 // Orden roterar det vi skapar ordning i — besökaren ska inom sekunder förstå
 // kärnan: koll och struktur i den digitala floran.
 const rotatingWords = ["systemen", "verktygen", "AI:n", "datan"] as const;
-
-// Snabb-länkar i heron till de tre tjänsterna; spetstjänsten markeras grön.
-const heroChips = [
-  { label: "Digitala system & AI", to: "/tjanster/digitala-system-ai", featured: true },
-  { label: "Affärsutveckling", to: "/tjanster/affarsutveckling", featured: false },
-  { label: "Optimerade kampanjer", to: "/tjanster/optimerade-kampanjer", featured: false },
-] as const;
 
 // Rullande band med det vi erbjuder. Systemstrategi och struktur först,
 // affärsutveckling och kampanjer som stödtjänster sist.
@@ -164,7 +157,6 @@ function Index() {
         <Services />
         <Process />
         <Faq />
-        <Price />
         <Contact />
       </main>
       <Footer />
@@ -240,34 +232,6 @@ function Hero() {
             <a href="#tjanster" className="text-sm font-semibold border-b-2 border-brand-green pb-1 hover:text-brand-green">
               Se vad vi gör
             </a>
-          </div>
-          <div className="mt-8 flex flex-wrap gap-2 hero-rise [animation-delay:500ms]">
-            {heroChips.map((c) => (
-              <Link
-                key={c.to}
-                to={c.to}
-                className={`group inline-flex items-center gap-1.5 border px-3.5 py-2 text-xs font-semibold tracked-tight transition-colors ${
-                  c.featured
-                    ? "border-brand-green bg-brand-green/10 text-brand-green hover:bg-brand-green hover:text-paper"
-                    : "border-line bg-white/70 hover:border-brand-green hover:text-brand-green"
-                }`}
-              >
-                {c.label}
-                <ArrowUpRight
-                  className="h-3 w-3 opacity-40 transition-all duration-200 group-hover:opacity-100 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
-                  strokeWidth={2.5}
-                />
-              </Link>
-            ))}
-          </div>
-        </div>
-        {/* Statistiklådan tar för mycket plats på mobil; visas från md och uppåt */}
-        <div className="hidden md:block md:col-span-4 md:pb-2 hero-rise [animation-delay:540ms]">
-          <div className="border-l-2 border-brand-green pl-5 space-y-3 text-sm text-ink/70 bg-paper/70 backdrop-blur-sm py-2">
-            <div className="flex justify-between"><span className="tracked text-xs text-subtle">Bas</span><span>Stockholm</span></div>
-            <div className="flex justify-between"><span className="tracked text-xs text-subtle">Form</span><span>Enskild firma</span></div>
-            <div className="flex justify-between"><span className="tracked text-xs text-subtle">Fokus</span><span>Struktur & ordning</span></div>
-            <div className="flex justify-between"><span className="tracked text-xs text-subtle">Spets</span><span>Digitala system & AI</span></div>
           </div>
         </div>
       </div>
@@ -577,6 +541,13 @@ function Faq() {
             </a>{" "}
             så svarar vi inom ett dygn.
           </p>
+          <Link
+            to="/pris"
+            className="mt-8 group inline-flex items-center gap-2 bg-ink text-paper px-5 py-3 text-sm font-semibold hover:bg-brand-green transition-colors"
+          >
+            Räkna ut ett riktpris
+            <ArrowUpRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" strokeWidth={2.5} />
+          </Link>
         </Reveal>
         <div className="md:col-span-8 space-y-3">
           {faqItems.map((f, i) => (
@@ -590,29 +561,6 @@ function Faq() {
               </details>
             </Reveal>
           ))}
-        </div>
-      </div>
-    </section>
-  );
-}
-
-function Price() {
-  return (
-    <section id="pris" className="border-b border-line bg-white">
-      <div className="mx-auto max-w-3xl px-6 py-24 md:py-28">
-        <Reveal>
-          <div className="eyebrow mb-5">Prisuppskattning</div>
-          <h2 className="display-heading text-3xl md:text-5xl">
-            Vad kostar det? <span className="text-brand-green">Räkna själv.</span>
-          </h2>
-          <p className="mt-6 text-ink/70 leading-relaxed">
-            Svara på några frågor om omfattning så får ni en ungefärlig prisbild
-            direkt, plus förslag på vad ett upplägg hos oss skulle kunna
-            innehålla. Ingen offert, ingen förpliktelse.
-          </p>
-        </Reveal>
-        <div className="mt-10">
-          <PriceEmbed />
         </div>
       </div>
     </section>

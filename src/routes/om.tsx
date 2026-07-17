@@ -59,7 +59,7 @@ function Page() {
               Den ni pratar med är <span className="text-brand-green">den som levererar</span>.
             </>
           }
-          intro="ABO Growth är en enskild firma i Stockholm. Inga säljteam, inga juniorer som tar över efter kickoffen. Samma person hela vägen från första samtalet till leverans."
+          intro="ABO Growth drivs från Stockholm. Inga säljteam, inga juniorer som tar över efter kickoffen. Samma person hela vägen från första samtalet till leverans."
         />
 
         <section className="border-b border-line bg-white">
@@ -69,9 +69,8 @@ function Page() {
               <h2 className="display-heading text-3xl md:text-4xl">
                 Alexander, <span className="text-brand-green">grundare</span>.
               </h2>
-              <div className="mt-10 pt-6 border-t border-line grid grid-cols-3 gap-6">
+              <div className="mt-10 pt-6 border-t border-line grid grid-cols-2 gap-6">
                 <Stat label="Bas" value="Stockholm" />
-                <Stat label="Form" value="Enskild firma" />
                 <Stat label="Kärna" value="System & AI" />
               </div>
               <div className="mt-8 text-sm">
@@ -89,21 +88,24 @@ function Page() {
                 Tonen ska vara självsäker och saklig, inga vardagliga effektord. */}
             <Reveal className="md:col-span-7 space-y-6 text-ink/80 leading-relaxed" delay={130}>
               <p>
-                Jag driver saker i mål. Det är kärnan i ABO Growth: tydliga
-                faser, tydliga deadlines och leveranser som går att mäta. Ni
-                ska aldrig behöva undra var arbetet står eller vad som händer
-                härnäst.
+                <strong className="block text-ink font-semibold mb-1">Jag driver saker i mål.</strong>
+                Det är kärnan i ABO Growth: tydliga faser, tydliga deadlines och
+                leveranser som går att mäta. Ni ska aldrig behöva undra var
+                arbetet står eller vad som händer härnäst.
               </p>
               <p>
-                Jag ligger långt fram i den tekniska utvecklingen och
-                utvärderar varje system och AI-verktyg själv innan det når
-                mina kunder. Det som inte gör mätbar nytta rekommenderar jag
-                inte. Strategin först, tekniken sedan.
+                <strong className="block text-ink font-semibold mb-1">Strategin först, tekniken sedan.</strong>
+                Jag ligger långt fram i den tekniska utvecklingen men jag testar
+                och utvärderar varje system och AI-verktyg själv innan det når
+                era leveranser. Det som inte gör mätbar nytta rekommenderar jag
+                aldrig. Ni ska inte betala för verktyg för verktygens skull.
               </p>
               <p>
-                Och jag bygger samarbeten på verklig förståelse för er affär,
-                era kunder och er vardag. Jag lyssnar först och levererar
-                sedan. Det är därför samarbetena håller över tid.
+                <strong className="block text-ink font-semibold mb-1">Jag lyssnar först. Sen levererar jag.</strong>
+                Samarbeten som håller över tid bygger på verklig förståelse för
+                er affär, era kunder och er vardag, inte på färdiga mallar.
+                Därför börjar varje uppdrag med att förstå hur ni faktiskt
+                jobbar, innan något byggs.
               </p>
             </Reveal>
           </div>

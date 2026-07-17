@@ -402,14 +402,16 @@ function calcService(key) {
   hours = hours * mult;
   let low, high;
   if (type === "projekt") {
+    // Riktprisintervall per tjänst: håll ett engångsprojekt inom ~15–35 tkr.
     const raw = hours * RATE;
-    low = Math.max(10000, Math.round(raw * 0.85 / 500) * 500);
-    high = Math.max(low + 2000, Math.round(raw * 1.2 / 500) * 500);
+    low = Math.min(30000, Math.max(15000, Math.round(raw * 0.9 / 1000) * 1000));
+    high = Math.min(35000, Math.max(low + 5000, Math.round(raw * 1.3 / 1000) * 1000));
   } else {
+    // Löpande samarbete per tjänst: håll månadspriset inom ~10–25 tkr/mån.
     const monthlyHours = Math.round(hours * 0.4) + 4;
     const raw = monthlyHours * RATE;
-    low = Math.max(12500, Math.round(raw * 0.85 / 500) * 500);
-    high = Math.max(low + 1500, Math.round(raw * 1.2 / 500) * 500);
+    low = Math.min(20000, Math.max(10000, Math.round(raw * 0.9 / 500) * 500));
+    high = Math.min(25000, Math.max(low + 3000, Math.round(raw * 1.3 / 500) * 500));
   }
   return { title: svc.title, type, low, high, activities: svc.activities(a) };
 }
