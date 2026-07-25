@@ -1,4 +1,5 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { ArrowUpRight } from "lucide-react";
 import { Header, Footer, BookingCTA, PageHero } from "@/components/Site";
 import { IllustrationDiagram } from "@/components/Illustrations";
 
@@ -40,7 +41,7 @@ function Page() {
         <PageHero
           eyebrow="Case"
           title={<>Uppdrag som <span className="text-brand-green">visar hur vi jobbar</span>.</>}
-          intro="Utvalda case från riktiga uppdrag. Vi lägger till fler löpande. Kontakta oss om ni vill höra mer om något specifikt."
+          intro="Här samlar vi case från riktiga uppdrag löpande. Vill ni höra hur vi skulle lägga upp arbetet hos er är det snabbaste att ta ett samtal."
         />
 
         <section className="border-b border-line">
@@ -71,8 +72,8 @@ function Page() {
         </section>
 
         <BookingCTA
-          title="Vill ni höra mer om ett specifikt case?"
-          body="Vi delar detaljer i samtal när det är relevant. Boka ett möte så berättar vi."
+          title="Vill ni veta hur vi skulle göra hos er?"
+          body="Berätta hur ni jobbar idag, så skissar vi på ett upplägg. Första samtalet kostar ingenting."
         />
       </main>
       <Footer />
@@ -84,13 +85,23 @@ function EmptyState() {
   return (
     <div className="border-2 border-dashed border-line bg-white p-8 md:p-20 text-center">
       <IllustrationDiagram className="mx-auto mb-6 w-full max-w-[200px]" />
-      <div className="eyebrow mb-4">Kommer snart</div>
+      <div className="eyebrow mb-4">Publicerade case</div>
       <h2 className="display-heading text-2xl md:text-3xl max-w-xl mx-auto">
-        Vi lägger till case löpande.
+        Inga case publicerade än.
       </h2>
       <p className="mt-5 text-sm text-ink/65 max-w-md mx-auto leading-relaxed">
-        Hör gärna av er under tiden om ni vill diskutera ett liknande uppdrag eller referenser inom ett specifikt område.
+        Vi lägger upp uppdrag här när kunderna gett klartecken. Under tiden finns
+        typexempel på startsidan som visar hur ett uppdrag läggs upp och vad ni
+        får i handen.
       </p>
+      <Link
+        to="/"
+        hash="exempel"
+        className="mt-8 group inline-flex items-center gap-2 bg-ink text-paper px-5 py-3 text-sm font-semibold hover:bg-brand-green transition-colors"
+      >
+        Se hur ett uppdrag läggs upp
+        <ArrowUpRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" strokeWidth={2.5} />
+      </Link>
     </div>
   );
 }

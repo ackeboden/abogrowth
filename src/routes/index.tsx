@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { ArrowUpRight, Check, Compass, Workflow, Cpu, Plus } from "lucide-react";
+import { ArrowUpRight, Calculator, Check, Compass, Workflow, Cpu, Plus } from "lucide-react";
 import { Header, Footer, GrowthLine, Reveal, useInView, CONTACT_EMAIL } from "@/components/Site";
 
 export const Route = createFileRoute("/")({
@@ -10,7 +10,7 @@ export const Route = createFileRoute("/")({
       {
         name: "description",
         content:
-          "Nya digitala system och AI-verktyg dyker upp varje vecka. ABO Growth hjälper er få koll: struktur i systemfloran, verktyg som hänger ihop och en tydlig väg framåt. Från Stockholm.",
+          "Nya digitala system och AI-verktyg dyker upp varje vecka. ABO Growth hjälper mindre bolag få koll: struktur i systemfloran, verktyg som hänger ihop och en tydlig väg framåt. Från Stockholm.",
       },
       { name: "keywords", content: "digitala system, AI-verktyg, systemstrategi, struktur, effektivitet, automatisering, integration, affärsutveckling, Stockholm, konsult" },
       { property: "og:title", content: "ABO Growth | Ordning i era system och AI" },
@@ -113,11 +113,11 @@ const faqItems = [
   },
   {
     q: "Hur snabbt ser vi resultat?",
-    a: "Kartläggningen tar en till två veckor och de första konkreta leverablerna kommer oftast inom en månad. Sedan är vi ärliga: tillväxt är ett löpande arbete, och vi säger vad som går snabbt och vad som kräver uthållighet.",
+    a: "Kartläggningen tar en till två veckor och de första konkreta leverablerna kommer oftast inom en månad. Sedan är vi ärliga: att hålla ordning i systemen är ett löpande arbete, och vi säger vad som går snabbt och vad som kräver uthållighet.",
   },
   {
-    q: "Jobbar ni med små företag?",
-    a: "Ja. Vi vet hur det är att växa med begränsade resurser, och upplägget skalas efter er storlek och budget. Ingen betalar för mer än de behöver.",
+    q: "Vilka företag jobbar ni med?",
+    a: "Mindre bolag, från enmansföretag upp till ett femtiotal anställda, oftast utan egen IT-avdelning. Vi vet hur det är att växa med begränsade resurser, och upplägget skalas efter er storlek och budget. Ingen betalar för mer än de behöver.",
   },
   {
     q: "Måste vi köpa en massa nya system och verktyg?",
@@ -130,6 +130,55 @@ const faqItems = [
   {
     q: "Kan vi börja smått?",
     a: "Absolut. Många samarbeten börjar med ett avgränsat projekt: en kartläggning, en kampanj eller ett systemval. Fungerar det bra bygger vi vidare därifrån.",
+  },
+];
+
+// Det paketerade första steget. Håll i linje med tjänst 01 och priskalkylatorn:
+// avgränsat uppdrag, fast pris innan start.
+const mappingIncludes = [
+  "Genomgång av systemen, verktygen och licenserna ni har idag",
+  "En karta över hur allt hänger ihop, och var det glappar",
+  "Prioriterad åtgärdslista: vad som ger mest effekt först",
+  "Förslag på var automation och AI sparar tid hos just er",
+];
+
+// TYPEXEMPEL, inte riktiga kunduppdrag. De visar upplägg och leverabler.
+// VIKTIGT: märkningen i sektionen ("Typexempel ... inte specifika kunduppdrag")
+// måste stå kvar så länge det inte finns publicerbara case, och skriv aldrig
+// mätta resultat här som om de vore uppnådda hos en kund.
+const exampleCases = [
+  {
+    profile: "Konsultbolag, 12 anställda",
+    situation:
+      "Sex system i drift och kunduppgifter på tre olika ställen. Ingen visste längre vilket register som gällde.",
+    steps: [
+      "Kartläggning av system, verktyg och licenser",
+      "Ett register pekas ut som källan alla utgår från",
+      "De system som behöver dela data kopplas ihop",
+    ],
+    delivery: "Systemkarta, prioriterad åtgärdslista och slut på dubbelregistrering.",
+  },
+  {
+    profile: "Egenföretagare inom tjänster",
+    situation:
+      "Allt administrativt gjordes för hand: offerter, fakturor och uppföljning utspritt i appar och kalkylblad.",
+    steps: [
+      "Genomgång av veckans återkommande moment",
+      "Det repetitiva automatiseras, steg för steg",
+      "AI-stöd för utkast, sammanfattningar och underlag",
+    ],
+    delivery: "Automatiserade flöden, färdiga mallar och en rutin som håller över tid.",
+  },
+  {
+    profile: "Bolag med 30 anställda som vill växa",
+    situation:
+      "Systemen var i ordning, men tillväxten hade planat ut och marknadsföringen skedde ryckvis.",
+    steps: [
+      "Tillväxtanalys av marknad, kunder och konkurrens",
+      "Prioriterad plan med tidslinje och ägarskap",
+      "Kampanjer i de kanaler som passar affären",
+    ],
+    delivery: "Handlingsplan, kampanjstruktur på plats och månadsvis uppföljning.",
   },
 ];
 
@@ -154,8 +203,11 @@ function Index() {
         <Hero />
         <Marquee />
         <AiFocus />
+        <StartHere />
         <Services />
+        <Examples />
         <Process />
+        <PriceCta />
         <Faq />
         <Contact />
       </main>
@@ -234,6 +286,12 @@ function Hero() {
               <ArrowUpRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" strokeWidth={2.5} />
             </Link>
           </div>
+          {/* Svarar på besökarens första fråga: är det här för mig? */}
+          <p className="mt-8 flex items-start gap-2.5 text-sm text-subtle leading-relaxed hero-rise [animation-delay:520ms]">
+            <span aria-hidden="true" className="mt-2 h-px w-6 shrink-0 bg-brand-green" />
+            För mindre bolag, från enmansföretag upp till ett femtiotal
+            anställda, som inte har någon egen IT-avdelning.
+          </p>
         </div>
       </div>
     </section>
@@ -330,6 +388,173 @@ function AiFocus() {
             </Reveal>
           ))}
         </div>
+      </div>
+    </section>
+  );
+}
+
+/**
+ * StartHere — paketerar systemkartläggningen som ett tydligt första steg.
+ * Finns för att besökaren annars inte vet hur ett samarbete börjar eller
+ * vad som konkret landar på bordet.
+ */
+function StartHere() {
+  return (
+    <section id="borja-har" className="border-b border-line bg-white">
+      <div className="mx-auto max-w-6xl px-6 py-24 md:py-32">
+        <Reveal>
+          <div className="grid lg:grid-cols-12 gap-10 lg:gap-16 items-start">
+            <div className="lg:col-span-5">
+              <div className="eyebrow mb-5">Första steget</div>
+              <h2 className="display-heading text-3xl md:text-5xl">
+                Börja med en <span className="text-brand-green">systemkartläggning</span>.
+              </h2>
+              <p className="mt-6 text-ink/75 leading-relaxed">
+                Det naturliga första steget, och ett avgränsat uppdrag i sig. Vi
+                går igenom vad ni använder idag, var det krånglar och vad som bör
+                göras först. Ni får ett fast pris innan vi börjar, och ingenting
+                binder er vid mer än det.
+              </p>
+              <div className="mt-8 flex flex-wrap items-center gap-x-8 gap-y-3 text-sm">
+                <span>
+                  <span className="tracked text-[10px] text-subtle block mb-1">Tid</span>
+                  <span className="font-semibold">1 till 2 veckor</span>
+                </span>
+                <span>
+                  <span className="tracked text-[10px] text-subtle block mb-1">Upplägg</span>
+                  <span className="font-semibold">Avgränsat projekt, fast pris</span>
+                </span>
+              </div>
+              <div className="mt-10 flex flex-wrap items-center gap-4">
+                <Link
+                  to="/boka"
+                  className="inline-flex items-center gap-2 bg-ink text-paper px-6 py-3.5 text-sm font-semibold hover:bg-brand-green transition-colors"
+                >
+                  Boka ett samtal <ArrowUpRight className="h-4 w-4" strokeWidth={2.5} />
+                </Link>
+                <Link
+                  to="/pris"
+                  className="group inline-flex items-center gap-1.5 text-sm font-semibold border-b-2 border-brand-green pb-1 hover:text-brand-green"
+                >
+                  Se vad det kan kosta
+                  <ArrowUpRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" strokeWidth={2.5} />
+                </Link>
+              </div>
+            </div>
+
+            <div className="lg:col-span-7">
+              <div className="border border-brand-green/40 bg-paper p-5 md:p-10 shadow-sm">
+                <div className="tracked text-[10px] text-subtle mb-6">Det här får ni</div>
+                <ul className="space-y-5">
+                  {mappingIncludes.map((item) => (
+                    <li key={item} className="flex items-start gap-3.5 text-sm md:text-base text-ink/85 leading-relaxed">
+                      <Check className="h-5 w-5 mt-0.5 shrink-0 text-brand-green" strokeWidth={2.5} />
+                      {item}
+                    </li>
+                  ))}
+                </ul>
+                <p className="mt-8 pt-6 border-t border-line text-sm text-ink/65 leading-relaxed">
+                  Vill ni sedan att vi genomför åtgärderna gör vi det. Vill ni
+                  göra dem själva fungerar listan lika bra utan oss.
+                </p>
+              </div>
+            </div>
+          </div>
+        </Reveal>
+      </div>
+    </section>
+  );
+}
+
+/**
+ * Examples — typexempel på uppdrag. Fyller trovärdighetsluckan tills det finns
+ * publicerbara case. Märkningen om att de INTE är riktiga kunduppdrag är inte
+ * dekoration: ta inte bort den och skriv inte om texterna till uppnådda resultat.
+ */
+function Examples() {
+  return (
+    <section id="exempel" className="border-b border-line bg-white">
+      <div className="mx-auto max-w-6xl px-6 py-24 md:py-32">
+        <Reveal>
+          <div className="max-w-3xl">
+            <div className="eyebrow mb-5">Så kan ett uppdrag se ut</div>
+            <h2 className="display-heading text-3xl md:text-5xl">
+              Tre lägen vi <span className="text-brand-green">känner igen</span>.
+            </h2>
+            <p className="mt-6 text-ink/70 leading-relaxed max-w-2xl">
+              Typexempel som visar hur ett uppdrag läggs upp och vad ni får i
+              handen. De beskriver arbetssättet, inte specifika kunduppdrag.
+            </p>
+          </div>
+        </Reveal>
+
+        <div className="mt-16 grid gap-6 lg:grid-cols-3">
+          {exampleCases.map((c, i) => (
+            <Reveal key={c.profile} delay={i * 130}>
+              <article className="h-full bg-paper border border-line p-5 md:p-8 flex flex-col transition-all duration-300 hover:border-brand-green/40 hover:shadow-md hover:-translate-y-1">
+                <h3 className="display-heading text-lg lg:min-h-14 mb-4">{c.profile}</h3>
+                <p className="text-sm text-ink/70 leading-relaxed mb-6 lg:min-h-[6rem]">{c.situation}</p>
+                <div className="tracked text-[10px] text-subtle mb-3">Upplägget</div>
+                <ol className="space-y-2.5 mb-6">
+                  {c.steps.map((s, n) => (
+                    <li key={s} className="flex items-start gap-2.5 text-sm text-ink/80 leading-relaxed">
+                      <span className="tracked text-[10px] text-brand-green mt-1 shrink-0">0{n + 1}</span>
+                      {s}
+                    </li>
+                  ))}
+                </ol>
+                <div className="mt-auto pt-5 border-t border-line">
+                  <div className="tracked text-[10px] text-brand-green mb-2">Ni får</div>
+                  <p className="text-sm font-semibold leading-relaxed">{c.delivery}</p>
+                </div>
+              </article>
+            </Reveal>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/**
+ * PriceCta — ger priskalkylatorn en egen tydlig yta på startsidan.
+ * Kalkylatorn kräver namn och e-post innan riktpriset visas, så texten här
+ * ska inte lova något annat.
+ */
+function PriceCta() {
+  return (
+    <section className="border-b border-line">
+      <div className="mx-auto max-w-6xl px-6 py-16 md:py-20">
+        <Reveal>
+          <div className="border border-line bg-white p-5 md:p-10 shadow-sm grid md:grid-cols-12 gap-8 items-center">
+            <div className="md:col-span-8">
+              <div className="flex items-center gap-3 mb-4">
+                <span className="w-10 h-10 flex items-center justify-center bg-brand-green/10 text-brand-green shrink-0">
+                  <Calculator className="h-5 w-5" strokeWidth={2} />
+                </span>
+                <div className="eyebrow">Pris</div>
+              </div>
+              <h2 className="display-heading text-2xl md:text-4xl">
+                Undrar ni vad det <span className="text-brand-green">landar på</span>?
+              </h2>
+              <p className="mt-5 text-ink/70 leading-relaxed max-w-xl">
+                Svara på några frågor om vad ni behöver hjälp med, lämna namn och
+                mejl, och få ett riktpris direkt. Det är en uppskattning, inte en
+                offert, men den ger en ärlig storleksordning.
+              </p>
+            </div>
+            <div className="md:col-span-4 md:text-right">
+              <Link
+                to="/pris"
+                className="group inline-flex items-center gap-2 bg-ink text-paper px-6 py-3.5 text-sm font-semibold hover:bg-brand-green transition-colors"
+              >
+                Räkna ut ett riktpris
+                <ArrowUpRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" strokeWidth={2.5} />
+              </Link>
+              <div className="mt-3 text-xs text-subtle">Tar ett par minuter.</div>
+            </div>
+          </div>
+        </Reveal>
       </div>
     </section>
   );
