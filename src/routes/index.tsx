@@ -186,22 +186,12 @@ const exampleCases = [
 // kärnan: koll och struktur i den digitala floran.
 const rotatingWords = ["systemen", "verktygen", "AI:n", "datan"] as const;
 
-// Rullande band med det vi erbjuder. Systemstrategi och struktur först,
-// affärsutveckling och kampanjer som stödtjänster sist.
-const marqueeItems = [
-  "Systemstrategi", "Systemkartläggning", "Digitala system", "AI-verktyg",
-  "AI-agenter", "Automatiserade flöden", "Integrationer", "Struktur & ordning",
-  "Effektivisering", "Analys & uppföljning", "CRM",
-  "Affärsutveckling", "Optimerade kampanjer", "SEO", "Nyhetsbrev",
-] as const;
-
 function Index() {
   return (
     <div className="min-h-screen bg-paper text-ink">
       <Header />
       <main>
         <Hero />
-        <Marquee />
         <AiFocus />
         <StartHere />
         <Services />
@@ -293,34 +283,6 @@ function Hero() {
             anställda, som inte har någon egen IT-avdelning.
           </p>
         </div>
-      </div>
-    </section>
-  );
-}
-
-/**
- * Marquee — rullande band med konkreta kompetenser.
- * Gör startsidan levande OCH svarar direkt på "vad gör ni?".
- * Listan dubbleras för sömlös loop; pausar vid hover och står
- * still vid prefers-reduced-motion (styrs i CSS).
- */
-function Marquee() {
-  const row = (hidden: boolean) => (
-    <div className="flex shrink-0 items-center" aria-hidden={hidden || undefined}>
-      {marqueeItems.map((item) => (
-        <span key={item} className="flex items-center">
-          <span className="tracked text-xs text-ink/60 whitespace-nowrap px-5 py-4">{item}</span>
-          <span className="h-1.5 w-1.5 bg-brand-green/60 rounded-full shrink-0" />
-        </span>
-      ))}
-    </div>
-  );
-  // Bandet döljs på mobil: tog för mycket plats direkt under heron.
-  return (
-    <section aria-label="Kompetenser och kanaler" className="marquee hidden md:block border-b border-line bg-white/60 overflow-hidden">
-      <div className="marquee-track">
-        {row(false)}
-        {row(true)}
       </div>
     </section>
   );

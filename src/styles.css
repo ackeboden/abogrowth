@@ -223,23 +223,6 @@
   transform: none;
 }
 
-/* Marquee — rullande kompetensband. Spåret innehåller listan två gånger;
-   att flytta -50% ger därför en sömlös loop. Pausar vid hover. */
-@keyframes marquee-scroll {
-  from { transform: translateX(0); }
-  to { transform: translateX(-50%); }
-}
-
-.marquee-track {
-  display: flex;
-  width: max-content;
-  animation: marquee-scroll 42s linear infinite;
-}
-
-.marquee:hover .marquee-track {
-  animation-play-state: paused;
-}
-
 /* Processlinje — kurva som ritas genom de fyra arbetssätts-stegen när
    sektionen scrollas in. pathLength=1 på pathen gör att dasharray/-offset
    kan vara 1 oavsett kurvans verkliga längd. */
@@ -511,16 +494,6 @@ details[open] .faq-icon {
   }
   .ai-glow {
     animation: none;
-  }
-  .marquee-track {
-    animation: none;
-    flex-wrap: wrap;
-    width: 100%;
-  }
-  /* Bandets dublettrad finns bara för den sömlösa loopen; när bandet står
-     stilla ska den döljas, annars visas allt innehåll två gånger staplat. */
-  .marquee-track > [aria-hidden="true"] {
-    display: none;
   }
   .process-line-path,
   .sysmap-link {
