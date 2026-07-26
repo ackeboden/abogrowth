@@ -58,7 +58,7 @@ function Page() {
               Den ni pratar med är <span className="text-brand-green">den som levererar</span>.
             </>
           }
-          intro="ABO Growth drivs från Stockholm. Inga säljteam, inga juniorer som tar över efter kickoffen. Samma person hela vägen från första samtalet till leverans."
+          intro="ABO Growth hjälper mindre bolag att få ordning i sina digitala system och AI-verktyg. Affärsutveckling och kampanjer bygger vidare på samma grund. Allt drivs från Stockholm."
         />
 
         <section className="border-b border-line bg-white">
