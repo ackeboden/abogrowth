@@ -102,7 +102,66 @@ const services: Service[] = [
   },
 ];
 
-const frameworks = ["Trackers", "Faser & milstolpar", "Deadlines", "Löpande uppföljning"];
+const frameworks = ["Systemkarta", "Åtgärdslista", "Faser & deadlines", "Mätbar uppföljning"];
+
+// Arbetssättet utgår från SYSTEMEN, inte från affärsutveckling. Håll den
+// vinkeln: kartlägg systemfloran, prioritera efter effekt, koppla ihop och
+// automatisera, följ upp att det används.
+const processSteps = [
+  {
+    step: "01",
+    title: "Kartlägg",
+    body: "Vi går igenom system, verktyg, licenser och flöden. Var ligger datan, var dubbelarbetas det och var glappar kedjan?",
+  },
+  {
+    step: "02",
+    title: "Prioritera",
+    body: "Vi rangordnar efter effekt och insats. Det som ger mest tid tillbaka, eller mest affär, görs först.",
+  },
+  {
+    step: "03",
+    title: "Genomför",
+    body: "Vi rensar, kopplar ihop och automatiserar. Tydliga faser, deadlines och ägarskap hela vägen fram.",
+  },
+  {
+    step: "04",
+    title: "Följ upp",
+    body: "Vi mäter att det används och håller över tid, och bygger vidare där nästa effekt finns.",
+  },
+];
+
+// Samma fyra steg översatta per tjänst. Systemen är märkta som grunden;
+// de andra två bygger vidare på den.
+const methodPerService = [
+  {
+    service: "Digitala system & AI",
+    primary: true,
+    flow: [
+      "Systemfloran kartläggs",
+      "Struktur och källa till sanning sätts",
+      "Integrationer och automation byggs",
+      "Användning och tidsvinst följs upp",
+    ],
+  },
+  {
+    service: "Affärsutveckling",
+    flow: [
+      "Nuläge, marknad och kunder analyseras",
+      "Initiativ prioriteras efter effekt",
+      "Planen genomförs i faser",
+      "Utfallet mäts mot målen",
+    ],
+  },
+  {
+    service: "Optimerade kampanjer",
+    flow: [
+      "Målgrupp och mätning på plats",
+      "Kanaler och budskap väljs",
+      "Kampanjer byggs och lanseras",
+      "Resultatet optimeras löpande",
+    ],
+  },
+];
 
 // Vanliga frågor — visas i FAQ-sektionen OCH i FAQPage-schemat (SEO).
 // Håll frågor och svar identiska på båda ställena, annars kan Google straffa sidan.
@@ -142,46 +201,6 @@ const mappingIncludes = [
   "Förslag på var automation och AI sparar tid hos just er",
 ];
 
-// TYPEXEMPEL, inte riktiga kunduppdrag. De visar upplägg och leverabler.
-// VIKTIGT: märkningen i sektionen ("Typexempel ... inte specifika kunduppdrag")
-// måste stå kvar så länge det inte finns publicerbara case, och skriv aldrig
-// mätta resultat här som om de vore uppnådda hos en kund.
-const exampleCases = [
-  {
-    profile: "Konsultbolag, 12 anställda",
-    situation:
-      "Sex system i drift och kunduppgifter på tre olika ställen. Ingen visste längre vilket register som gällde.",
-    steps: [
-      "Kartläggning av system, verktyg och licenser",
-      "Ett register pekas ut som källan alla utgår från",
-      "De system som behöver dela data kopplas ihop",
-    ],
-    delivery: "Systemkarta, prioriterad åtgärdslista och slut på dubbelregistrering.",
-  },
-  {
-    profile: "Egenföretagare inom tjänster",
-    situation:
-      "Allt administrativt gjordes för hand: offerter, fakturor och uppföljning utspritt i appar och kalkylblad.",
-    steps: [
-      "Genomgång av veckans återkommande moment",
-      "Det repetitiva automatiseras, steg för steg",
-      "AI-stöd för utkast, sammanfattningar och underlag",
-    ],
-    delivery: "Automatiserade flöden, färdiga mallar och en rutin som håller över tid.",
-  },
-  {
-    profile: "Bolag med 30 anställda som vill växa",
-    situation:
-      "Systemen var i ordning, men tillväxten hade planat ut och marknadsföringen skedde ryckvis.",
-    steps: [
-      "Tillväxtanalys av marknad, kunder och konkurrens",
-      "Prioriterad plan med tidslinje och ägarskap",
-      "Kampanjer i de kanaler som passar affären",
-    ],
-    delivery: "Handlingsplan, kampanjstruktur på plats och månadsvis uppföljning.",
-  },
-];
-
 // Orden roterar det vi skapar ordning i — besökaren ska inom sekunder förstå
 // kärnan: koll och struktur i den digitala floran.
 const rotatingWords = ["systemen", "verktygen", "AI:n", "datan"] as const;
@@ -195,7 +214,6 @@ function Index() {
         <AiFocus />
         <StartHere />
         <Services />
-        <Examples />
         <Process />
         <PriceCta />
         <Faq />
@@ -429,63 +447,13 @@ function StartHere() {
 }
 
 /**
- * Examples — typexempel på uppdrag. Fyller trovärdighetsluckan tills det finns
- * publicerbara case. Märkningen om att de INTE är riktiga kunduppdrag är inte
- * dekoration: ta inte bort den och skriv inte om texterna till uppnådda resultat.
- */
-function Examples() {
-  return (
-    <section id="exempel" className="border-b border-line bg-white">
-      <div className="mx-auto max-w-6xl px-6 py-24 md:py-32">
-        <Reveal>
-          <div className="max-w-3xl">
-            <div className="eyebrow mb-5">Så kan ett uppdrag se ut</div>
-            <h2 className="display-heading text-3xl md:text-5xl">
-              Tre lägen vi <span className="text-brand-green">känner igen</span>.
-            </h2>
-            <p className="mt-6 text-ink/70 leading-relaxed max-w-2xl">
-              Typexempel som visar hur ett uppdrag läggs upp och vad ni får i
-              handen. De beskriver arbetssättet, inte specifika kunduppdrag.
-            </p>
-          </div>
-        </Reveal>
-
-        <div className="mt-16 grid gap-6 lg:grid-cols-3">
-          {exampleCases.map((c, i) => (
-            <Reveal key={c.profile} delay={i * 130}>
-              <article className="h-full bg-paper border border-line p-5 md:p-8 flex flex-col transition-all duration-300 hover:border-brand-green/40 hover:shadow-md hover:-translate-y-1">
-                <h3 className="display-heading text-lg lg:min-h-14 mb-4">{c.profile}</h3>
-                <p className="text-sm text-ink/70 leading-relaxed mb-6 lg:min-h-[6rem]">{c.situation}</p>
-                <div className="tracked text-[10px] text-subtle mb-3">Upplägget</div>
-                <ol className="space-y-2.5 mb-6">
-                  {c.steps.map((s, n) => (
-                    <li key={s} className="flex items-start gap-2.5 text-sm text-ink/80 leading-relaxed">
-                      <span className="tracked text-[10px] text-brand-green mt-1 shrink-0">0{n + 1}</span>
-                      {s}
-                    </li>
-                  ))}
-                </ol>
-                <div className="mt-auto pt-5 border-t border-line">
-                  <div className="tracked text-[10px] text-brand-green mb-2">Ni får</div>
-                  <p className="text-sm font-semibold leading-relaxed">{c.delivery}</p>
-                </div>
-              </article>
-            </Reveal>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
-
-/**
  * PriceCta — ger priskalkylatorn en egen tydlig yta på startsidan.
  * Kalkylatorn kräver namn och e-post innan riktpriset visas, så texten här
  * ska inte lova något annat.
  */
 function PriceCta() {
   return (
-    <section className="border-b border-line">
+    <section className="border-b border-line bg-white">
       <div className="mx-auto max-w-6xl px-6 py-16 md:py-20">
         <Reveal>
           <div className="border border-line bg-white p-5 md:p-10 shadow-sm grid md:grid-cols-12 gap-8 items-center">
@@ -524,7 +492,7 @@ function PriceCta() {
 
 function Services() {
   return (
-    <section id="tjanster" className="border-b border-line">
+    <section id="tjanster" className="border-b border-line bg-mist">
       <div className="mx-auto max-w-6xl px-6 py-24 md:py-32">
         <Reveal>
           <div className="max-w-3xl">
@@ -625,12 +593,12 @@ function Process() {
           <div className="max-w-3xl">
             <div className="eyebrow mb-5 text-brand-green">Hur vi jobbar</div>
             <h2 className="display-heading text-3xl md:text-5xl text-paper">
-              Struktur som syns <span className="text-brand-green">i resultatet.</span>
+              Fyra steg. <span className="text-brand-green">Varje uppdrag.</span>
             </h2>
             <p className="mt-6 text-paper/70 max-w-2xl leading-relaxed">
-              Vi jobbar med en tydlig metod och konkreta leverabler: trackers,
-              faser, deadlines. Strategin är inget värd utan en plan för hur den
-              ska genomföras.
+              Vi börjar alltid i nuläget: hur ni faktiskt arbetar och vilka
+              system som bär verksamheten. Systemen är grunden, och när den
+              sitter följer allt annat samma fyra steg.
             </p>
           </div>
 
@@ -644,12 +612,7 @@ function Process() {
         <ProcessLine />
 
         <div className="mt-16 md:mt-5 grid gap-px bg-paper/10 md:grid-cols-4 border border-paper/10">
-          {[
-            { step: "01", title: "Kartlägg", body: "Vi förstår affären, marknaden och vad som faktiskt bromsar tillväxten." },
-            { step: "02", title: "Prioritera", body: "Vi väljer de initiativ som ger störst effekt inom rimlig tid." },
-            { step: "03", title: "Leverera", body: "Vi driver arbetet, med tidslinjer, ägarskap och konkreta leverabler." },
-            { step: "04", title: "Följ upp", body: "Vi mäter, justerar och skalar det som fungerar." },
-          ].map((p, i) => (
+          {processSteps.map((p, i) => (
             <Reveal key={p.step} delay={i * 110} className="bg-ink">
               <div className="h-full p-5 md:p-8 transition-colors duration-300 hover:bg-white/5">
                 <div className="tracked text-xs text-brand-green mb-6">{p.step}</div>
@@ -659,6 +622,35 @@ function Process() {
             </Reveal>
           ))}
         </div>
+
+        {/* Visar att samma metod bär alla tre tjänsterna, med systemen som grund. */}
+        <Reveal delay={120}>
+          <div className="mt-16">
+            <div className="tracked text-[10px] text-brand-green mb-6">Samma metod, per tjänst</div>
+            <div className="grid gap-px bg-paper/10 border border-paper/10 md:grid-cols-3">
+              {methodPerService.map((m) => (
+                <div key={m.service} className="bg-ink p-5 md:p-8">
+                  <h3 className="display-heading text-base mb-4 text-paper">
+                    {m.service}
+                    {m.primary && (
+                      <span className="ml-2 align-middle text-[10px] tracked bg-brand-green text-paper px-2 py-0.5">
+                        Grunden
+                      </span>
+                    )}
+                  </h3>
+                  <ol className="space-y-2">
+                    {m.flow.map((f, n) => (
+                      <li key={f} className="flex items-start gap-2.5 text-sm text-paper/65 leading-relaxed">
+                        <span className="tracked text-[10px] text-brand-green mt-1 shrink-0">0{n + 1}</span>
+                        {f}
+                      </li>
+                    ))}
+                  </ol>
+                </div>
+              ))}
+            </div>
+          </div>
+        </Reveal>
       </div>
     </section>
   );
@@ -712,7 +704,7 @@ function ProcessLine() {
 
 function Faq() {
   return (
-    <section id="faq" className="border-b border-line bg-white">
+    <section id="faq" className="border-b border-line bg-mist">
       <div className="mx-auto max-w-6xl px-6 py-24 md:py-32 grid md:grid-cols-12 gap-12 items-start">
         <Reveal className="md:col-span-4">
           <div className="eyebrow mb-5">Vanliga frågor</div>

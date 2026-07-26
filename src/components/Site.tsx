@@ -1,9 +1,13 @@
 import { Link, useRouterState } from "@tanstack/react-router";
 import { useEffect, useId, useRef, useState } from "react";
-import { ArrowUpRight, Menu, X } from "lucide-react";
+import { ArrowUpRight, Linkedin, Menu, X } from "lucide-react";
 import { Logo } from "./Logo";
 
 export const CONTACT_EMAIL = "alexander@aboconsult.se";
+
+// Alexanders LinkedIn-profil. Adressen innehåller "é" som måste vara
+// procentkodad (%C3%A9) för att länken ska hålla i alla webbläsare och klienter.
+export const LINKEDIN_URL = "https://www.linkedin.com/in/alexander-bod%C3%A9n-b5057b203";
 
 /**
  * PriceEmbed — bäddar in det fristående prisverktyget (public/prisberakning.html)
@@ -230,6 +234,16 @@ export function Footer() {
             <li><a href={`mailto:${CONTACT_EMAIL}`} className="hover:text-paper">{CONTACT_EMAIL}</a></li>
             <li>Stockholm, Sverige</li>
           </ul>
+          <a
+            href={LINKEDIN_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Alexander Bodén på LinkedIn (öppnas i ny flik)"
+            className="mt-5 inline-flex items-center gap-2 border border-paper/25 px-3 py-2 text-sm transition-colors hover:border-brand-green hover:text-paper"
+          >
+            <Linkedin className="h-4 w-4 text-brand-green" strokeWidth={2} />
+            LinkedIn
+          </a>
         </div>
       </div>
       <div className="border-t border-paper/10">

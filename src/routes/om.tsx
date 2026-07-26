@@ -1,7 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ArrowUpRight, Compass, ListChecks, ClipboardList, Handshake } from "lucide-react";
-import { Header, Footer, BookingCTA, PageHero, Reveal, CONTACT_EMAIL } from "@/components/Site";
-import { IllustrationKompass } from "@/components/Illustrations";
+import { ArrowUpRight, Compass, ListChecks, ClipboardList, Handshake, Linkedin } from "lucide-react";
+import { Header, Footer, BookingCTA, PageHero, Reveal, CONTACT_EMAIL, LINKEDIN_URL } from "@/components/Site";
 
 export const Route = createFileRoute("/om")({
   head: () => ({
@@ -82,7 +81,19 @@ function Page() {
                   {CONTACT_EMAIL}
                 </a>
               </div>
-              <IllustrationKompass className="mt-10 w-full max-w-[240px]" />
+              <div className="mt-8">
+                <div className="tracked text-[10px] text-subtle mb-2">LinkedIn</div>
+                <a
+                  href={LINKEDIN_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group inline-flex items-center gap-2.5 border border-line bg-paper px-4 py-2.5 text-sm font-semibold transition-colors hover:border-brand-green hover:text-brand-green"
+                >
+                  <Linkedin className="h-4 w-4 text-brand-green" strokeWidth={2} />
+                  Alexander Bodén
+                  <ArrowUpRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" strokeWidth={2.5} />
+                </a>
+              </div>
             </Reveal>
             {/* Jag-form medvetet: personligast på hela sajten, resten behåller vi-form.
                 Tonen ska vara självsäker och saklig, inga vardagliga effektord. */}

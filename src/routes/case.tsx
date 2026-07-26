@@ -90,16 +90,15 @@ function EmptyState() {
         Inga case publicerade än.
       </h2>
       <p className="mt-5 text-sm text-ink/65 max-w-md mx-auto leading-relaxed">
-        Vi lägger upp uppdrag här när kunderna gett klartecken. Under tiden finns
-        typexempel på startsidan som visar hur ett uppdrag läggs upp och vad ni
-        får i handen.
+        Vi lägger upp uppdrag här när kunderna gett klartecken. Under tiden visar
+        arbetssättet på startsidan hur ett uppdrag drivs, steg för steg.
       </p>
       <Link
         to="/"
-        hash="exempel"
+        hash="arbetssatt"
         className="mt-8 group inline-flex items-center gap-2 bg-ink text-paper px-5 py-3 text-sm font-semibold hover:bg-brand-green transition-colors"
       >
-        Se hur ett uppdrag läggs upp
+        Se hur vi jobbar
         <ArrowUpRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" strokeWidth={2.5} />
       </Link>
     </div>

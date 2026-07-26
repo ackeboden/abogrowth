@@ -8,37 +8,6 @@
 const INK = "#1A1D1F";
 const GREEN = "#1F8A5C";
 
-/** Kompass med nålen mot nordost: riktning före rörelse. Om-sidan. */
-export function IllustrationKompass({ className = "" }: { className?: string }) {
-  return (
-    <svg
-      aria-hidden="true"
-      className={className}
-      viewBox="0 0 220 170"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      {/* Bakgrundsrutnät */}
-      <path d="M20 140 H200 M20 105 H200 M20 70 H200" stroke={INK} strokeOpacity="0.06" strokeWidth="1" />
-      {/* Kompassens ringar */}
-      <circle cx="110" cy="85" r="58" stroke={INK} strokeOpacity="0.2" strokeWidth="1.5" />
-      <circle cx="110" cy="85" r="46" stroke={INK} strokeOpacity="0.1" strokeWidth="1" />
-      {/* Gradstreck */}
-      <path d="M110 27 v8 M110 135 v8 M52 85 h8 M160 85 h8" stroke={INK} strokeOpacity="0.35" strokeWidth="1.5" strokeLinecap="round" />
-      <path d="M69 44 l5.5 5.5 M145.5 120.5 l5.5 5.5 M69 126 l5.5 -5.5 M145.5 49.5 l5.5 -5.5" stroke={INK} strokeOpacity="0.15" strokeWidth="1.5" strokeLinecap="round" />
-      {/* Nålen: grön halva mot nordost, ink-skugga mot sydväst */}
-      <path d="M110 85 L138 57 L118 77 Z" fill={GREEN} />
-      <path d="M110 85 L82 113 L102 93 Z" fill={INK} fillOpacity="0.25" />
-      <circle cx="110" cy="85" r="4" fill={INK} />
-      <circle cx="110" cy="85" r="1.5" fill="#FAF9F7" />
-      {/* Målpunkten utanför kompassen */}
-      <circle cx="182" cy="30" r="4" fill={GREEN} fillOpacity="0.2" />
-      <circle cx="182" cy="30" r="2" fill={GREEN} />
-      <path d="M144 51 C 156 44, 166 38, 176 33" stroke={GREEN} strokeOpacity="0.45" strokeWidth="1.5" strokeLinecap="round" strokeDasharray="1 5" />
-    </svg>
-  );
-}
-
 /** Två samtalsbubblor: er berättelse och vårt svar. Så går det till-sidan. */
 export function IllustrationSamtal({ className = "" }: { className?: string }) {
   return (

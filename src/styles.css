@@ -34,6 +34,7 @@
   /* Brand tokens */
   --color-ink: var(--ink);
   --color-paper: var(--paper);
+  --color-mist: var(--mist);
   --color-brand-green: var(--brand-green);
   --color-brand-blue: var(--brand-blue);
   --color-line: var(--line);
@@ -49,6 +50,9 @@
   /* Brand palette */
   --ink: #1A1D1F;
   --paper: #FAF9F7;
+  /* Tredje ljusa nivån. Finns för att paper och vitt låg för nära varandra:
+     sektionerna flöt ihop. Rytmen på sidorna är vit → mist → mörk. */
+  --mist: #ECF1EE;
   --brand-green: #1F8A5C;
   --brand-blue: #5B7B9A;
   --line: #E7E5E2;
@@ -79,6 +83,7 @@
 .dark {
   --background: #1A1D1F;
   --foreground: #FAF9F7;
+  --mist: #22262A;
   --card: #22262A;
   --card-foreground: #FAF9F7;
   --popover: #22262A;
