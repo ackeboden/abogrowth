@@ -383,11 +383,13 @@ function StartHere() {
     <section id="borja-har" className="border-b border-line bg-white">
       <div className="mx-auto max-w-6xl px-6 py-24 md:py-32">
         <Reveal>
-          <div className="grid lg:grid-cols-12 gap-10 lg:gap-16 items-start">
-            <div className="lg:col-span-5">
+          {/* items-stretch (default) + h-full på kortet gör att kolumnernas
+              underkanter hamnar i linje i stället för att sluta olika högt. */}
+          <div className="grid lg:grid-cols-12 gap-10 lg:gap-16">
+            <div className="lg:col-span-5 flex flex-col">
               <div className="eyebrow mb-5">Första steget</div>
               <h2 className="display-heading text-3xl md:text-5xl">
-                Börja med en <span className="text-brand-green">systemkartläggning</span>.
+                Börja med en <span className="text-brand-green">systemkartläggning</span>
               </h2>
               <p className="mt-6 text-ink/75 leading-relaxed">
                 Det naturliga första steget, och ett avgränsat uppdrag i sig. Vi
@@ -405,7 +407,8 @@ function StartHere() {
                   <span className="font-semibold">Avgränsat projekt, fast pris</span>
                 </span>
               </div>
-              <div className="mt-10 flex flex-wrap items-center gap-4">
+              {/* mt-auto trycker ned knapparna så de möter kortets underkant */}
+              <div className="mt-auto pt-10 flex flex-wrap items-center gap-4">
                 <Link
                   to="/boka"
                   className="inline-flex items-center gap-2 bg-ink text-paper px-6 py-3.5 text-sm font-semibold hover:bg-brand-green transition-colors"
@@ -422,8 +425,8 @@ function StartHere() {
               </div>
             </div>
 
-            <div className="lg:col-span-7">
-              <div className="border border-brand-green/40 bg-paper p-5 md:p-10 shadow-sm">
+            <div className="lg:col-span-7 flex">
+              <div className="w-full h-full flex flex-col border border-brand-green/40 bg-paper p-5 md:p-10 shadow-sm">
                 <div className="tracked text-[10px] text-subtle mb-6">Det här får ni</div>
                 <ul className="space-y-5">
                   {mappingIncludes.map((item) => (
@@ -433,7 +436,8 @@ function StartHere() {
                     </li>
                   ))}
                 </ul>
-                <p className="mt-8 pt-6 border-t border-line text-sm text-ink/65 leading-relaxed">
+                <p className="mt-auto pt-8 text-sm text-ink/65 leading-relaxed">
+                  <span className="block mb-6 h-px w-full bg-line" aria-hidden="true" />
                   Vill ni sedan att vi genomför åtgärderna gör vi det. Vill ni
                   göra dem själva fungerar listan lika bra utan oss.
                 </p>
