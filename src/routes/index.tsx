@@ -203,7 +203,7 @@ const mappingIncludes = [
 
 // Orden roterar det vi skapar ordning i — besökaren ska inom sekunder förstå
 // kärnan: koll och struktur i den digitala floran.
-const rotatingWords = ["systemen", "verktygen", "AI:n", "datan"] as const;
+const rotatingWords = ["systemen", "verktygen", "marknadsföringen", "försäljningen"] as const;
 
 function Index() {
   return (
@@ -251,9 +251,10 @@ function RotatingWord() {
       className="relative inline-grid align-baseline text-brand-green"
       aria-live="polite"
     >
-      {/* Sizer: reserverar plats för det längsta ordet så rubriken inte hoppar */}
+      {/* Sizer: reserverar plats för det längsta ordet så rubriken inte hoppar.
+          Måste vara det längsta ordet i rotatingWords, annars börjar den hoppa. */}
       <span aria-hidden="true" className="invisible col-start-1 row-start-1 whitespace-nowrap">
-        verktygen
+        marknadsföringen
       </span>
       <span
         key={current}
@@ -271,9 +272,14 @@ function Hero() {
       <div className="hero-ambient" aria-hidden="true" />
       <GrowthLine />
       <div className="relative mx-auto max-w-6xl px-6 pt-14 pb-16 md:pt-32 md:pb-40 grid md:grid-cols-12 gap-8 md:gap-12 items-end">
-        <div className="md:col-span-8">
+        {/* Full bredd: faktarutan som låg till höger är borttagen, och det
+            längsta roterande ordet (marknadsföringen) behöver plats för att
+            rubriken ska hålla sig på två rader. */}
+        <div className="md:col-span-12">
           <div className="eyebrow mb-8 hero-rise">ABO Growth · Digitala system & AI</div>
-          <h1 className="display-heading text-[44px] leading-[1.02] md:text-[clamp(44px,5.8vw,76px)] hero-rise [animation-delay:120ms]">
+          {/* Mobilstorleken skalar med skärmen: annars klipps det längsta
+              roterande ordet (marknadsföringen), som inte kan radbrytas. */}
+          <h1 className="display-heading text-[clamp(30px,9vw,44px)] leading-[1.02] md:text-[clamp(44px,5.8vw,76px)] hero-rise [animation-delay:120ms]">
             Få koll på <RotatingWord />
             <br />i den digitala djungeln.
           </h1>
