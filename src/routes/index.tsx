@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { ArrowDown, ArrowUpRight, Check, Plus } from "lucide-react";
 import { Header, Footer, GrowthLine, Reveal, useInView, useIsMobile, CONTACT_EMAIL } from "@/components/Site";
 
@@ -254,31 +254,28 @@ function RotatingWord() {
       <span aria-hidden="true" className="invisible col-start-1 row-start-1 whitespace-nowrap">
         marknadsföringen
       </span>
-      {/* Skärmläsare får hela ordet; bokstäverna nedan är bara visuella */}
-      <span className="sr-only">{current}</span>
+      {/* Rubriken bär sr-only-meningen; här är allt rent visuellt */}
       <span
         key={current}
         aria-hidden="true"
         className="col-start-1 row-start-1 whitespace-nowrap"
       >
-        {current.split("").map((bokstav, i) => (
-          <span key={i} className="hero-letter" style={{ animationDelay: `${i * 0.045}s` }}>
-            {bokstav}
-          </span>
-        ))}
+        <Bokstavsrad text={current} bas={0.3} steg={0.05} />
       </span>
     </span>
   );
 }
 
-// Hero-djungelns noder (% av heroytan). Chips är små verktygsboxar med
-// namn, dots är punkter. Alla driver i egna banor (--dx/--dy + duration)
-// och binds ihop av kopplingar som ritas och släcks. Deterministiskt.
-// Chips ligger i höger halva och ytterkanterna; endast tre visas på mobil
-// (mobile: true) så texten får luft.
+// Hero-djungelns noder (% av heroytan). Chips är verktygsboxar med namn,
+// resten punkter. x/y = ordnad plats, cx/cy/crot = kaosstart för intro-
+// sekvensen (klustrade kring mitten, roterade). Alla driver sedan i egna
+// banor (--dx/--dy + duration). Deterministiskt, ingen slump.
 type HeroNode = {
   x: number;
   y: number;
+  cx: number;
+  cy: number;
+  crot?: number;
   chip?: string;
   rot?: number;
   mobile?: boolean;
@@ -288,22 +285,22 @@ type HeroNode = {
 };
 
 const heroNodes: HeroNode[] = [
-  { x: 71, y: 16, chip: "CRM", rot: -5, mobile: true, dx: 9, dy: -13, dur: 9 },
-  { x: 88, y: 30, chip: "Analys", rot: 4, dx: -11, dy: 9, dur: 11 },
-  { x: 65, y: 46, chip: "AI", rot: -3, mobile: true, dx: 13, dy: 7, dur: 8 },
-  { x: 91, y: 60, chip: "Ekonomi", rot: 6, dx: -8, dy: -11, dur: 12 },
-  { x: 76, y: 78, chip: "Nyhetsbrev", rot: -4, mobile: true, dx: 10, dy: 10, dur: 10 },
-  { x: 57, y: 12, chip: "Kalkyl", rot: 3, dx: -9, dy: 11, dur: 13 },
-  { x: 60, y: 66, dx: 8, dy: -9, dur: 7, mobile: true },
-  { x: 82, y: 12, dx: -7, dy: 12, dur: 9.5 },
-  { x: 96, y: 44, dx: -10, dy: -8, dur: 8.5, mobile: true },
-  { x: 68, y: 30, dx: 11, dy: 8, dur: 10.5 },
-  { x: 86, y: 86, dx: -9, dy: -10, dur: 11.5, mobile: true },
-  { x: 52, y: 82, dx: 10, dy: -7, dur: 9 },
+  { x: 71, y: 16, cx: 62, cy: 42, crot: -16, chip: "CRM", rot: -5, mobile: true, dx: 9, dy: -13, dur: 9 },
+  { x: 88, y: 30, cx: 72, cy: 55, crot: 12, chip: "Analys", rot: 4, dx: -11, dy: 9, dur: 11 },
+  { x: 65, y: 46, cx: 58, cy: 60, crot: -9, chip: "AI", rot: -3, mobile: true, dx: 13, dy: 7, dur: 8 },
+  { x: 91, y: 60, cx: 76, cy: 38, crot: 18, chip: "Ekonomi", rot: 6, dx: -8, dy: -11, dur: 12 },
+  { x: 76, y: 78, cx: 66, cy: 50, crot: -14, chip: "Nyhetsbrev", rot: -4, mobile: true, dx: 10, dy: 10, dur: 10 },
+  { x: 57, y: 12, cx: 70, cy: 62, crot: 10, chip: "Kalkyl", rot: 3, dx: -9, dy: 11, dur: 13 },
+  { x: 60, y: 66, cx: 64, cy: 46, dx: 8, dy: -9, dur: 7, mobile: true },
+  { x: 82, y: 12, cx: 74, cy: 58, dx: -7, dy: 12, dur: 9.5 },
+  { x: 96, y: 44, cx: 78, cy: 48, dx: -10, dy: -8, dur: 8.5, mobile: true },
+  { x: 68, y: 30, cx: 60, cy: 52, dx: 11, dy: 8, dur: 10.5 },
+  { x: 86, y: 86, cx: 72, cy: 44, dx: -9, dy: -10, dur: 11.5, mobile: true },
+  { x: 52, y: 82, cx: 68, cy: 56, dx: 10, dy: -7, dur: 9 },
 ];
 
 // [frånNod, tillNod, startfördröjning i sekunder]. Cykeln är 7 s, så med
-// tio linjer i förskjutning ritas det alltid något någonstans.
+// linjerna i förskjutning ritas det alltid något någonstans.
 const heroLinks: [number, number, number][] = [
   [0, 9, 0],
   [9, 2, 0.7],
@@ -319,12 +316,53 @@ const heroLinks: [number, number, number][] = [
   [2, 4, 5.2],
 ];
 
+// Bokstäver som landar en i taget, lätt vridna ur trasslet. Delas av
+// rubrikens statiska delar och det roterande ordet.
+function Bokstavsrad({ text, bas, steg = 0.03 }: { text: string; bas: number; steg?: number }) {
+  return (
+    <>
+      {text.split("").map((b, i) => (
+        <span
+          key={i}
+          className="hero-letter"
+          style={{
+            animationDelay: `${bas + i * steg}s`,
+            ["--lr" as string]: `${(i % 2 ? -1 : 1) * (5 + (i % 3) * 4)}deg`,
+            ["--lx" as string]: `${((i % 3) - 1) * 0.06}em`,
+            whiteSpace: b === " " ? "pre" : undefined,
+          }}
+        >
+          {b}
+        </span>
+      ))}
+    </>
+  );
+}
+
+// useLayoutEffect på klienten (kaospositionerna måste sättas före första
+// målningen, annars blinkar den ordnade vyn förbi), useEffect vid SSR.
+const useKlientLayoutEffect = typeof window !== "undefined" ? useLayoutEffect : useEffect;
+
 function Hero() {
   const ref = useRef<HTMLElement>(null);
+  const layerRef = useRef<HTMLDivElement>(null);
+  const raySvgRef = useRef<SVGSVGElement>(null);
+  const cursorRef = useRef<HTMLDivElement>(null);
+  const nodeRefs = useRef<(HTMLSpanElement | null)[]>([]);
+  // "still" = SSR/utan JS (ordnad, stilla). Intro: kaos → ordning.
+  const [scen, setScen] = useState<"still" | "kaos" | "ordning">("still");
 
-  // Musparallax: --par-x/--par-y (-1..1) sätts på sektionen och läses av
-  // .hero-par-lagren i CSS. Bara för fin pekare och utan reduced motion;
-  // på mobil står lagren stilla och egenrörelsen i cykeln bär i stället.
+  useKlientLayoutEffect(() => {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      setScen("ordning");
+      return;
+    }
+    setScen("kaos");
+    const t = setTimeout(() => setScen("ordning"), 550);
+    return () => clearTimeout(t);
+  }, []);
+
+  // Musparallax + ljuskägla: --par-x/--par-y (-1..1) och --mx/--my (%).
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
@@ -336,7 +374,6 @@ function Hero() {
       const ny = (e.clientY - r.top) / r.height;
       el.style.setProperty("--par-x", ((nx - 0.5) * 2).toFixed(3));
       el.style.setProperty("--par-y", ((ny - 0.5) * 2).toFixed(3));
-      // Ljuskäglan följer pekaren (procent av heroytan)
       el.style.setProperty("--mx", (nx * 100).toFixed(1));
       el.style.setProperty("--my", (ny * 100).toFixed(1));
     };
@@ -352,22 +389,98 @@ function Hero() {
     };
   }, []);
 
+  // Pekaren blir en nod: linjer ritas live från närliggande noder till
+  // pekaren, och chips som kommer nära tänds (is-near). Uppdateras
+  // imperativt i en rAF-loop, ingen React-state per frame.
+  useEffect(() => {
+    const hero = ref.current;
+    const layer = layerRef.current;
+    const svgEl = raySvgRef.current;
+    const cursor = cursorRef.current;
+    if (!hero || !layer || !svgEl || !cursor) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    if (!window.matchMedia("(pointer: fine)").matches) return;
+
+    const RACKVIDD = 300;
+    const NARA = 170;
+    let raf = 0;
+    let px = 0;
+    let py = 0;
+    let aktiv = false;
+
+    const rita = () => {
+      const lr = layer.getBoundingClientRect();
+      cursor.style.left = `${px}px`;
+      cursor.style.top = `${py}px`;
+      const linjer = svgEl.children;
+      heroNodes.forEach((_, i) => {
+        const el = nodeRefs.current[i];
+        const ln = linjer[i] as SVGLineElement | undefined;
+        if (!el || !ln) return;
+        if (getComputedStyle(el).display === "none") {
+          ln.style.opacity = "0";
+          return;
+        }
+        const r = el.getBoundingClientRect();
+        const nx = r.left + r.width / 2 - lr.left;
+        const ny = r.top + r.height / 2 - lr.top;
+        const d = Math.hypot(nx - px, ny - py);
+        ln.setAttribute("x1", String(px));
+        ln.setAttribute("y1", String(py));
+        ln.setAttribute("x2", String(nx));
+        ln.setAttribute("y2", String(ny));
+        ln.style.opacity = d < RACKVIDD ? (0.55 * (1 - d / RACKVIDD)).toFixed(2) : "0";
+        el.classList.toggle("is-near", d < NARA);
+      });
+      if (aktiv) raf = requestAnimationFrame(rita);
+    };
+    const onMove = (e: PointerEvent) => {
+      const lr = layer.getBoundingClientRect();
+      px = e.clientX - lr.left;
+      py = e.clientY - lr.top;
+      if (!aktiv) {
+        aktiv = true;
+        layer.classList.add("is-live");
+        raf = requestAnimationFrame(rita);
+      }
+    };
+    const onLeave = () => {
+      aktiv = false;
+      cancelAnimationFrame(raf);
+      layer.classList.remove("is-live");
+      for (const c of svgEl.children) (c as SVGElement).style.opacity = "0";
+      nodeRefs.current.forEach((el) => el?.classList.remove("is-near"));
+    };
+    hero.addEventListener("pointermove", onMove);
+    hero.addEventListener("pointerleave", onLeave);
+    return () => {
+      onLeave();
+      hero.removeEventListener("pointermove", onMove);
+      hero.removeEventListener("pointerleave", onLeave);
+    };
+  }, []);
+
+  const kaos = scen === "kaos";
+
   return (
-    <section ref={ref} id="top" className="relative border-b border-line overflow-hidden">
+    <section ref={ref} id="top" className="relative bg-ink text-paper border-b border-paper/10 overflow-hidden">
       <div className="hero-par hero-par-1 absolute inset-0" aria-hidden="true">
-        <div className="hero-ambient" />
+        <div className="ai-glow" />
       </div>
       <div className="hero-par hero-par-2 absolute inset-0" aria-hidden="true">
-        <GrowthLine />
+        <GrowthLine className="opacity-80" />
       </div>
-      {/* Hero-djungeln: svävande verktygschips och punkter i egna driftbanor,
-          bundna av kopplingar som ritas och släcks. */}
-      <div className="hero-par hero-par-3 absolute inset-0" aria-hidden="true">
+      {/* Hero-djungeln: verktygschips som tumlar in i kaos och snäpper till
+          ordning, driver i egna banor och binds av kopplingar. hero-net är
+          även hemvist för pekarens strålar och markörnod. */}
+      <div ref={layerRef} className="hero-net hero-par hero-par-3 absolute inset-0" aria-hidden="true">
         <svg className="absolute inset-0 h-full w-full" viewBox="0 0 100 100" preserveAspectRatio="none" fill="none">
           {heroLinks.map(([a, b, delay]) => (
             <line
               key={`hl-${a}-${b}`}
-              className={`hero-link ${heroNodes[a].mobile && heroNodes[b].mobile ? "" : "hidden md:block"}`}
+              className={`${scen === "ordning" ? "hero-link" : "opacity-0"} ${
+                heroNodes[a].mobile && heroNodes[b].mobile ? "" : "hidden md:block"
+              }`}
               pathLength={1}
               x1={heroNodes[a].x}
               y1={heroNodes[a].y}
@@ -381,23 +494,34 @@ function Hero() {
             />
           ))}
         </svg>
+        {/* Pekarens strålar: pixelkoordinater, uppdateras i rAF-loopen */}
+        <svg ref={raySvgRef} className="absolute inset-0 h-full w-full" fill="none">
+          {heroNodes.map((_, i) => (
+            <line key={`ray-${i}`} x1="0" y1="0" x2="0" y2="0" stroke="#1F8A5C" strokeWidth="1" style={{ opacity: 0 }} />
+          ))}
+        </svg>
         {heroNodes.map((nd, i) => (
           <span
             key={`hn-${i}`}
-            className={`hero-drift absolute ${nd.mobile ? "" : "hidden md:block"}`}
+            ref={(el) => {
+              nodeRefs.current[i] = el;
+            }}
+            className={`hero-node absolute ${kaos ? "hero-node-snap" : ""} ${
+              scen === "ordning" ? "hero-drift" : ""
+            } ${nd.mobile ? "" : "hidden md:block"}`}
             style={{
-              left: `${nd.x}%`,
-              top: `${nd.y}%`,
+              left: `${kaos ? nd.cx : nd.x}%`,
+              top: `${kaos ? nd.cy : nd.y}%`,
               ["--dx" as string]: `${nd.dx}px`,
               ["--dy" as string]: `${nd.dy}px`,
               animationDuration: `${nd.dur}s`,
-              animationDelay: `${i * 0.4}s`,
+              animationDelay: `${1 + i * 0.3}s`,
             }}
           >
             {nd.chip ? (
               <span
-                className="block -translate-x-1/2 -translate-y-1/2 whitespace-nowrap bg-white/90 border border-line shadow-sm px-2.5 py-1 text-[11px] font-semibold text-ink/60"
-                style={{ rotate: `${nd.rot ?? 0}deg` }}
+                className="hero-chip-box block -translate-x-1/2 -translate-y-1/2 whitespace-nowrap bg-white/5 border border-paper/15 shadow-sm px-2.5 py-1 text-[11px] font-semibold text-paper/60"
+                style={{ rotate: `${kaos ? (nd.crot ?? 0) : (nd.rot ?? 0)}deg` }}
               >
                 {nd.chip}
               </span>
@@ -406,30 +530,34 @@ function Hero() {
             )}
           </span>
         ))}
+        {/* Besökarens egen nod: följer pekaren, med pulsring */}
+        <div ref={cursorRef} className="hero-cursor" />
       </div>
       {/* Ljuskägla som följer musen (döljs på pekskärm och vid reduced motion) */}
       <div className="hero-spot" aria-hidden="true" />
       <div className="relative mx-auto max-w-6xl px-6 pt-14 pb-16 md:pt-32 md:pb-40 grid md:grid-cols-12 gap-8 md:gap-12 items-end">
-        {/* Full bredd: faktarutan som låg till höger är borttagen, och det
-            längsta roterande ordet (marknadsföringen) behöver plats för att
-            rubriken ska hålla sig på två rader. */}
         <div className="md:col-span-12">
           <div className="eyebrow mb-8 hero-rise">ABO Growth · Digitala system & AI</div>
-          {/* Mobilstorleken skalar med skärmen: annars klipps det längsta
+          {/* Skärmläsare får hela meningen; bokstavsspelet är rent visuellt.
+              Mobilstorleken skalar med skärmen: annars klipps det längsta
               roterande ordet (marknadsföringen), som inte kan radbrytas. */}
-          <h1 className="display-heading text-[clamp(30px,9vw,44px)] leading-[1.02] md:text-[clamp(44px,5.8vw,76px)] hero-rise [animation-delay:120ms]">
-            Få koll på <RotatingWord />
-            <br />i den digitala djungeln.
+          <h1 className="display-heading text-paper text-[clamp(30px,9vw,44px)] leading-[1.02] md:text-[clamp(44px,5.8vw,76px)]">
+            <span className="sr-only">Få koll på {rotatingWords[0]} i den digitala djungeln.</span>
+            <span aria-hidden="true">
+              <Bokstavsrad text="Få koll på " bas={0.15} />
+              <RotatingWord />
+              <br />
+              <Bokstavsrad text="i den digitala djungeln." bas={0.55} />
+            </span>
           </h1>
-          {/* En sats, inte tre: rubriken och målgruppsraden bär resten. */}
-          <p className="mt-8 max-w-xl text-lg text-ink/75 leading-relaxed hero-rise [animation-delay:260ms]">
+          <p className="mt-8 max-w-xl text-lg text-paper/70 leading-relaxed hero-rise [animation-delay:700ms]">
             Jag skapar ordning: en systemflora som hänger ihop, mindre
             dubbelarbete och en tydlig väg framåt.
           </p>
-          <div className="mt-10 flex flex-wrap items-center gap-4 hero-rise [animation-delay:400ms]">
+          <div className="mt-10 flex flex-wrap items-center gap-4 hero-rise [animation-delay:850ms]">
             <Link
               to="/boka"
-              className="inline-flex items-center gap-2 bg-ink text-paper px-6 py-3.5 text-sm font-semibold hover:bg-brand-green transition-colors"
+              className="inline-flex items-center gap-2 bg-brand-green text-paper px-6 py-3.5 text-sm font-semibold hover:bg-paper hover:text-ink transition-colors"
             >
               Boka ett samtal <ArrowUpRight className="h-4 w-4" strokeWidth={2.5} />
             </Link>
@@ -439,7 +567,7 @@ function Hero() {
             </a>
           </div>
           {/* Svarar på besökarens första fråga: är det här för mig? */}
-          <p className="mt-8 flex items-start gap-2.5 text-sm text-subtle leading-relaxed hero-rise [animation-delay:520ms]">
+          <p className="mt-8 flex items-start gap-2.5 text-sm text-paper/50 leading-relaxed hero-rise [animation-delay:1000ms]">
             <span aria-hidden="true" className="mt-2 h-px w-6 shrink-0 bg-brand-green" />
             För mindre bolag, från enmansföretag upp till ett femtiotal
             anställda, som inte har någon egen IT-avdelning.
