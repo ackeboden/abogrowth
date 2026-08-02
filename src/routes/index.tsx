@@ -209,8 +209,10 @@ function Index() {
     <div className="min-h-screen bg-paper text-ink">
       <Header />
       <main>
-        <Hero />
-        <JungleTest />
+        <MorkScen>
+          <Hero />
+          <JungleTest />
+        </MorkScen>
         <StartHere />
         <Services />
         <Process />
@@ -343,6 +345,48 @@ function Bokstavsrad({ text, bas, steg = 0.03 }: { text: string; bas: number; st
 // målningen, annars blinkar den ordnade vyn förbi), useEffect vid SSR.
 const useKlientLayoutEffect = typeof window !== "undefined" ? useLayoutEffect : useEffect;
 
+/**
+ * MorkScen — sidbytes-scrollen. Heron (första barnet) är sticky och
+ * Djungeltestet glider upp över den som en ny sida. Här mäts hur långt
+ * täckningen kommit (--covp 0..1) så heron kan krympa och tona i CSS.
+ * Scrollen kapas aldrig: allt är native scroll + sticky + snap.
+ */
+function MorkScen({ children }: { children: React.ReactNode }) {
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    let raf = 0;
+    const uppdatera = () => {
+      raf = 0;
+      const r = el.getBoundingClientRect();
+      const hero = el.firstElementChild as HTMLElement | null;
+      const h = hero?.offsetHeight || window.innerHeight;
+      const p = Math.min(1, Math.max(0, -r.top / h));
+      el.style.setProperty("--covp", p.toFixed(3));
+    };
+    const onScroll = () => {
+      if (!raf) raf = requestAnimationFrame(uppdatera);
+    };
+    uppdatera();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll);
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+      cancelAnimationFrame(raf);
+    };
+  }, []);
+
+  return (
+    <div ref={ref}>
+      {children}
+    </div>
+  );
+}
+
 function Hero() {
   const ref = useRef<HTMLElement>(null);
   const layerRef = useRef<HTMLDivElement>(null);
@@ -463,7 +507,10 @@ function Hero() {
   const kaos = scen === "kaos";
 
   return (
-    <section ref={ref} id="top" className="relative bg-ink text-paper border-b border-paper/10 overflow-hidden">
+    // Sticky + z-0: Djungeltestet (z-10) glider upp över heron som en ny
+    // sida. stack-cover-target krymper och tonar innehållet via --covp.
+    <section ref={ref} id="top" className="snap-start sticky top-0 z-0 bg-ink text-paper overflow-hidden">
+      <div className="stack-cover-target relative min-h-svh flex items-center">
       <div className="hero-par hero-par-1 absolute inset-0" aria-hidden="true">
         <div className="ai-glow" />
       </div>
@@ -535,7 +582,8 @@ function Hero() {
       </div>
       {/* Ljuskägla som följer musen (döljs på pekskärm och vid reduced motion) */}
       <div className="hero-spot" aria-hidden="true" />
-      <div className="relative mx-auto max-w-6xl px-6 pt-14 pb-16 md:pt-32 md:pb-40 grid md:grid-cols-12 gap-8 md:gap-12 items-end">
+      {/* Vertikalt centrerat i skärmhöjden; pt klarar headern ovanpå */}
+      <div className="relative w-full mx-auto max-w-6xl px-6 pt-24 pb-14 md:pt-28 md:pb-20 grid md:grid-cols-12 gap-8 md:gap-12 items-end">
         <div className="md:col-span-12">
           <div className="eyebrow mb-8 hero-rise">ABO Growth · Digitala system & AI</div>
           {/* Skärmläsare får hela meningen; bokstavsspelet är rent visuellt.
@@ -573,6 +621,7 @@ function Hero() {
             anställda, som inte har någon egen IT-avdelning.
           </p>
         </div>
+      </div>
       </div>
     </section>
   );
@@ -698,7 +747,7 @@ function JungleTest() {
   if (n >= 5) for (let i = 0; i < n; i += 2) tangle.push([i, (i + 3) % n]);
 
   return (
-    <section id="djungeltestet" className="relative bg-ink text-paper overflow-hidden">
+    <section id="djungeltestet" className="snap-start relative z-10 min-h-svh bg-ink text-paper overflow-hidden">
       <div className="ai-glow" aria-hidden="true" />
       <div className="relative mx-auto max-w-6xl px-6 py-24 md:py-32">
         <Reveal>
@@ -959,7 +1008,7 @@ function JungleTest() {
  */
 function StartHere() {
   return (
-    <section id="borja-har" className="border-b border-line bg-white">
+    <section id="borja-har" className="snap-start border-b border-line bg-white">
       <div className="mx-auto max-w-6xl px-6 py-24 md:py-32">
         <Reveal>
           {/* items-stretch (default) + h-full på kortet gör att kolumnernas

@@ -108,6 +108,9 @@
 
   html {
     scroll-behavior: smooth;
+    /* Mjukt snäpp mot sektioner som bär .snap-start. proximity i stället
+       för mandatory: långa sektioner (FAQ, kontakt) scrollar fritt. */
+    scroll-snap-type: y proximity;
   }
 
   body {
@@ -175,6 +178,20 @@
   transform-box: fill-box;
   opacity: 0;
   animation: growth-dot-in 0.4s ease-out 2.6s forwards;
+}
+
+/* Sidbytes-scroll: heron är sticky och Djungeltestet glider upp över den.
+   --covp (0..1, sätts av MorkScen via scroll) krymper och tonar heron
+   medan den täcks, så bytet känns som att en ny sida läggs ovanpå. */
+.snap-start {
+  scroll-snap-align: start;
+}
+
+.stack-cover-target {
+  transform: scale(calc(1 - var(--covp, 0) * 0.06));
+  opacity: calc(1 - var(--covp, 0) * 0.55);
+  transform-origin: 50% 30%;
+  will-change: transform, opacity;
 }
 
 /* Parallaxlager i heron. --par-x/--par-y (-1..1) sätts på sektionen vid
@@ -793,5 +810,9 @@ details[open] .faq-icon {
   .hero-node,
   .hero-chip-box {
     transition: none;
+  }
+  .stack-cover-target {
+    transform: none;
+    opacity: 1;
   }
 }
