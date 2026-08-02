@@ -337,6 +337,8 @@ const jungleTools: JungleTool[] = [
 
 // Vilka system som hör ihop i verkligheten. En koppling ritas bara när
 // besökaren valt BÅDA verktygen i paret. Deterministisk lista, ingen slump.
+// AI-assistenten finns INTE här: den kopplas till ALLA valda verktyg och
+// ritas som ett eget, lättare lager i komponenten.
 const jungleRelations: [string, string][] = [
   ["crm", "nyhetsbrev"], // kontakterna styr utskicken
   ["crm", "mejl"], // mejlen loggas på kunden
@@ -344,7 +346,6 @@ const jungleRelations: [string, string][] = [
   ["socialt", "analys"], // resultatet mäts
   ["nyhetsbrev", "analys"], // öppningar och klick mäts
   ["kalkyl", "ekonomi"], // kalkylen hämtar siffrorna
-  ["ai", "crm"], // AI:n skriver utkast ur kunddatan
   ["projekt", "mejl"], // deadlines hamnar i kalendern
   ["lagring", "projekt"], // filerna kopplas till projekten
 ];
@@ -387,7 +388,12 @@ function JungleTest() {
   const sysLinks = jungleRelations
     .map(([a, b]) => [tools.findIndex((t) => t.id === a), tools.findIndex((t) => t.id === b)] as [number, number])
     .filter(([a, b]) => a !== -1 && b !== -1);
-  const k = sysLinks.length;
+  // AI-assistenten kopplas till allt: ett lättare lager av bågar till varje
+  // annat valt verktyg, plus en förstärkt navlinje (analys + AI + er affär
+  // hänger alltid ihop när båda är valda).
+  const aiIdx = tools.findIndex((t) => t.id === "ai");
+  const aiLinks = aiIdx === -1 ? [] : tools.map((_, i) => i).filter((i) => i !== aiIdx);
+  const k = sysLinks.length + aiLinks.length;
 
   // Mjuk båge mellan två ordnade noder som buktar UTÅT från navet, så att
   // kopplingarna läses som medvetna och aldrig korsar navlinjerna i mitten.
@@ -505,8 +511,8 @@ function JungleTest() {
                       x2={orderedPos(i).x}
                       y2={orderedPos(i).y}
                       stroke="#1F8A5C"
-                      strokeOpacity="0.35"
-                      strokeWidth="1.25"
+                      strokeOpacity={t.id === "ai" ? "0.7" : "0.35"}
+                      strokeWidth={t.id === "ai" ? "1.75" : "1.25"}
                       vectorEffect="non-scaling-stroke"
                       style={{ transitionDelay: `${0.55 + i * 0.08}s` }}
                     />
@@ -525,6 +531,23 @@ function JungleTest() {
                       fill="none"
                       vectorEffect="non-scaling-stroke"
                       style={{ transitionDelay: `${1.35 + j * 0.14}s` }}
+                    />
+                  ))}
+                  {/* AI-lagret: assistenten når allt. Tunnare och ljusare än
+                      systemkopplingarna så det läses som ett stödskikt,
+                      inte som nytt trassel. Tredje vågen. */}
+                  {aiLinks.map((i, j) => (
+                    <path
+                      key={`ai-${tools[i].id}`}
+                      className="sysmap-link"
+                      pathLength={1}
+                      d={arcPath(aiIdx, i).d}
+                      stroke="#1F8A5C"
+                      strokeOpacity="0.3"
+                      strokeWidth="0.75"
+                      fill="none"
+                      vectorEffect="non-scaling-stroke"
+                      style={{ transitionDelay: `${1.8 + j * 0.1}s` }}
                     />
                   ))}
                 </svg>
