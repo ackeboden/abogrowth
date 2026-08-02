@@ -254,37 +254,69 @@ function RotatingWord() {
       <span aria-hidden="true" className="invisible col-start-1 row-start-1 whitespace-nowrap">
         marknadsföringen
       </span>
+      {/* Skärmläsare får hela ordet; bokstäverna nedan är bara visuella */}
+      <span className="sr-only">{current}</span>
       <span
         key={current}
-        className="word-rotate col-start-1 row-start-1 whitespace-nowrap"
+        aria-hidden="true"
+        className="col-start-1 row-start-1 whitespace-nowrap"
       >
-        {current}
+        {current.split("").map((bokstav, i) => (
+          <span key={i} className="hero-letter" style={{ animationDelay: `${i * 0.045}s` }}>
+            {bokstav}
+          </span>
+        ))}
       </span>
     </span>
   );
 }
 
-// Hero-djungelns noder och kopplingar (% av heroytan). Ligger till höger,
-// utanför textens huvudyta, och andas i långsam cykel. Deterministiskt.
-const heroNodes = [
-  { x: 57, y: 16 },
-  { x: 72, y: 26 },
-  { x: 88, y: 14 },
-  { x: 64, y: 46 },
-  { x: 80, y: 56 },
-  { x: 93, y: 38 },
-  { x: 70, y: 74 },
+// Hero-djungelns noder (% av heroytan). Chips är små verktygsboxar med
+// namn, dots är punkter. Alla driver i egna banor (--dx/--dy + duration)
+// och binds ihop av kopplingar som ritas och släcks. Deterministiskt.
+// Chips ligger i höger halva och ytterkanterna; endast tre visas på mobil
+// (mobile: true) så texten får luft.
+type HeroNode = {
+  x: number;
+  y: number;
+  chip?: string;
+  rot?: number;
+  mobile?: boolean;
+  dx: number;
+  dy: number;
+  dur: number;
+};
+
+const heroNodes: HeroNode[] = [
+  { x: 71, y: 16, chip: "CRM", rot: -5, mobile: true, dx: 9, dy: -13, dur: 9 },
+  { x: 88, y: 30, chip: "Analys", rot: 4, dx: -11, dy: 9, dur: 11 },
+  { x: 65, y: 46, chip: "AI", rot: -3, mobile: true, dx: 13, dy: 7, dur: 8 },
+  { x: 91, y: 60, chip: "Ekonomi", rot: 6, dx: -8, dy: -11, dur: 12 },
+  { x: 76, y: 78, chip: "Nyhetsbrev", rot: -4, mobile: true, dx: 10, dy: 10, dur: 10 },
+  { x: 57, y: 12, chip: "Kalkyl", rot: 3, dx: -9, dy: 11, dur: 13 },
+  { x: 60, y: 66, dx: 8, dy: -9, dur: 7, mobile: true },
+  { x: 82, y: 12, dx: -7, dy: 12, dur: 9.5 },
+  { x: 96, y: 44, dx: -10, dy: -8, dur: 8.5, mobile: true },
+  { x: 68, y: 30, dx: 11, dy: 8, dur: 10.5 },
+  { x: 86, y: 86, dx: -9, dy: -10, dur: 11.5, mobile: true },
+  { x: 52, y: 82, dx: 10, dy: -7, dur: 9 },
 ];
 
-// [frånNod, tillNod, startfördröjning i sekunder]
+// [frånNod, tillNod, startfördröjning i sekunder]. Cykeln är 7 s, så med
+// tio linjer i förskjutning ritas det alltid något någonstans.
 const heroLinks: [number, number, number][] = [
-  [0, 1, 0],
-  [1, 2, 1.5],
-  [1, 3, 3],
-  [3, 4, 4.5],
-  [4, 5, 6],
-  [3, 6, 7.5],
-  [5, 2, 9],
+  [0, 9, 0],
+  [9, 2, 0.7],
+  [0, 7, 1.4],
+  [1, 8, 2.1],
+  [2, 6, 2.8],
+  [3, 8, 3.5],
+  [4, 10, 4.2],
+  [5, 0, 4.9],
+  [6, 11, 5.6],
+  [3, 4, 6.3],
+  [1, 0, 3.2],
+  [2, 4, 5.2],
 ];
 
 function Hero() {
@@ -300,8 +332,13 @@ function Hero() {
     if (!window.matchMedia("(pointer: fine)").matches) return;
     const onMove = (e: PointerEvent) => {
       const r = el.getBoundingClientRect();
-      el.style.setProperty("--par-x", (((e.clientX - r.left) / r.width - 0.5) * 2).toFixed(3));
-      el.style.setProperty("--par-y", (((e.clientY - r.top) / r.height - 0.5) * 2).toFixed(3));
+      const nx = (e.clientX - r.left) / r.width;
+      const ny = (e.clientY - r.top) / r.height;
+      el.style.setProperty("--par-x", ((nx - 0.5) * 2).toFixed(3));
+      el.style.setProperty("--par-y", ((ny - 0.5) * 2).toFixed(3));
+      // Ljuskäglan följer pekaren (procent av heroytan)
+      el.style.setProperty("--mx", (nx * 100).toFixed(1));
+      el.style.setProperty("--my", (ny * 100).toFixed(1));
     };
     const onLeave = () => {
       el.style.setProperty("--par-x", "0");
@@ -323,20 +360,21 @@ function Hero() {
       <div className="hero-par hero-par-2 absolute inset-0" aria-hidden="true">
         <GrowthLine />
       </div>
-      {/* Hero-djungeln: noder som andas och kopplingar som ritas och släcks */}
+      {/* Hero-djungeln: svävande verktygschips och punkter i egna driftbanor,
+          bundna av kopplingar som ritas och släcks. */}
       <div className="hero-par hero-par-3 absolute inset-0" aria-hidden="true">
         <svg className="absolute inset-0 h-full w-full" viewBox="0 0 100 100" preserveAspectRatio="none" fill="none">
           {heroLinks.map(([a, b, delay]) => (
             <line
               key={`hl-${a}-${b}`}
-              className="hero-link"
+              className={`hero-link ${heroNodes[a].mobile && heroNodes[b].mobile ? "" : "hidden md:block"}`}
               pathLength={1}
               x1={heroNodes[a].x}
               y1={heroNodes[a].y}
               x2={heroNodes[b].x}
               y2={heroNodes[b].y}
               stroke="#1F8A5C"
-              strokeOpacity="0.45"
+              strokeOpacity="0.55"
               strokeWidth="1"
               vectorEffect="non-scaling-stroke"
               style={{ animationDelay: `${delay}s` }}
@@ -345,12 +383,32 @@ function Hero() {
         </svg>
         {heroNodes.map((nd, i) => (
           <span
-            key={`hd-${i}`}
-            className="hero-dot"
-            style={{ left: `${nd.x}%`, top: `${nd.y}%`, animationDelay: `${i * 0.8}s` }}
-          />
+            key={`hn-${i}`}
+            className={`hero-drift absolute ${nd.mobile ? "" : "hidden md:block"}`}
+            style={{
+              left: `${nd.x}%`,
+              top: `${nd.y}%`,
+              ["--dx" as string]: `${nd.dx}px`,
+              ["--dy" as string]: `${nd.dy}px`,
+              animationDuration: `${nd.dur}s`,
+              animationDelay: `${i * 0.4}s`,
+            }}
+          >
+            {nd.chip ? (
+              <span
+                className="block -translate-x-1/2 -translate-y-1/2 whitespace-nowrap bg-white/90 border border-line shadow-sm px-2.5 py-1 text-[11px] font-semibold text-ink/60"
+                style={{ rotate: `${nd.rot ?? 0}deg` }}
+              >
+                {nd.chip}
+              </span>
+            ) : (
+              <span className="hero-dot" style={{ animationDelay: `${i * 0.7}s` }} />
+            )}
+          </span>
         ))}
       </div>
+      {/* Ljuskägla som följer musen (döljs på pekskärm och vid reduced motion) */}
+      <div className="hero-spot" aria-hidden="true" />
       <div className="relative mx-auto max-w-6xl px-6 pt-14 pb-16 md:pt-32 md:pb-40 grid md:grid-cols-12 gap-8 md:gap-12 items-end">
         {/* Full bredd: faktarutan som låg till höger är borttagen, och det
             längsta roterande ordet (marknadsföringen) behöver plats för att

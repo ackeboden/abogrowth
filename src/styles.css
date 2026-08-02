@@ -186,15 +186,56 @@
 }
 
 .hero-par-1 {
-  transform: translate(calc(var(--par-x, 0) * 6px), calc(var(--par-y, 0) * 4px));
+  transform: translate(calc(var(--par-x, 0) * 10px), calc(var(--par-y, 0) * 7px));
 }
 
 .hero-par-2 {
-  transform: translate(calc(var(--par-x, 0) * 12px), calc(var(--par-y, 0) * 8px));
+  transform: translate(calc(var(--par-x, 0) * 22px), calc(var(--par-y, 0) * 14px));
 }
 
 .hero-par-3 {
-  transform: translate(calc(var(--par-x, 0) * 18px), calc(var(--par-y, 0) * 12px));
+  transform: translate(calc(var(--par-x, 0) * 34px), calc(var(--par-y, 0) * 22px));
+}
+
+/* Grön ljuskägla som följer muspekaren över heron. Döljs på pekskärm. */
+.hero-spot {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(
+    260px circle at calc(var(--mx, 70) * 1%) calc(var(--my, 35) * 1%),
+    rgba(31, 138, 92, 0.13),
+    transparent 70%
+  );
+}
+
+@media (pointer: coarse) {
+  .hero-spot {
+    display: none;
+  }
+}
+
+/* Varje nod driver långsamt i sin egen bana: riktning via --dx/--dy och
+   takt via animation-duration per element. */
+@keyframes hero-drift {
+  0%, 100% { translate: 0 0; }
+  50% { translate: var(--dx, 8px) var(--dy, -12px); }
+}
+
+.hero-drift {
+  animation: hero-drift 9s ease-in-out infinite;
+}
+
+/* Bokstäverna i det roterande ordet landar en i taget, lätt vridna,
+   som att ordet rätar upp sig ur trasslet. */
+@keyframes hero-letter {
+  from { opacity: 0; transform: translateY(0.45em) rotate(7deg); }
+  to { opacity: 1; transform: none; }
+}
+
+.hero-letter {
+  display: inline-block;
+  animation: hero-letter 0.5s cubic-bezier(0.2, 0.7, 0.3, 1) both;
 }
 
 /* Hero-djungeln: tunna kopplingar som ritas fram, vilar och släcks i en
@@ -212,7 +253,7 @@
   stroke-dasharray: 1;
   stroke-dashoffset: 1;
   opacity: 0;
-  animation: hero-link-cycle 10.5s ease-in-out infinite;
+  animation: hero-link-cycle 7s ease-in-out infinite;
 }
 
 @keyframes hero-dot-breathe {
@@ -663,5 +704,15 @@ details[open] .faq-icon {
   .hero-dot {
     animation: none;
     opacity: 0.35;
+  }
+  .hero-drift {
+    animation: none;
+    translate: 0 0;
+  }
+  .hero-letter {
+    animation: none;
+  }
+  .hero-spot {
+    display: none;
   }
 }
