@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { ArrowUpRight, Calculator, Check, Compass, Workflow, Cpu, Plus } from "lucide-react";
-import { Header, Footer, GrowthLine, Reveal, useInView, CONTACT_EMAIL } from "@/components/Site";
+import { ArrowUpRight, Check, Plus } from "lucide-react";
+import { Header, Footer, GrowthLine, Reveal, useInView, useIsMobile, CONTACT_EMAIL } from "@/components/Site";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -102,7 +102,6 @@ const services: Service[] = [
   },
 ];
 
-const frameworks = ["Systemkarta", "Åtgärdslista", "Faser & deadlines", "Mätbar uppföljning"];
 
 // Arbetssättet utgår från SYSTEMEN, inte från affärsutveckling. Håll den
 // vinkeln: kartlägg systemfloran, prioritera efter effekt, koppla ihop och
@@ -211,11 +210,10 @@ function Index() {
       <Header />
       <main>
         <Hero />
-        <AiFocus />
+        <JungleTest />
         <StartHere />
         <Services />
         <Process />
-        <PriceCta />
         <Faq />
         <Contact />
       </main>
@@ -283,10 +281,10 @@ function Hero() {
             Få koll på <RotatingWord />
             <br />i den digitala djungeln.
           </h1>
+          {/* En sats, inte tre: rubriken och målgruppsraden bär resten. */}
           <p className="mt-8 max-w-xl text-lg text-ink/75 leading-relaxed hero-rise [animation-delay:260ms]">
-            Nya system och AI-verktyg dyker upp varje vecka, och det är lätt
-            att tappa greppet. Jag hjälper er skapa ordning: en systemflora
-            som hänger ihop, mindre dubbelarbete och en tydlig väg framåt.
+            Jag skapar ordning: en systemflora som hänger ihop, mindre
+            dubbelarbete och en tydlig väg framåt.
           </p>
           <div className="mt-10 flex flex-wrap items-center gap-4 hero-rise [animation-delay:400ms]">
             <Link
@@ -312,68 +310,271 @@ function Hero() {
   );
 }
 
-function AiFocus() {
-  const points = [
-    {
-      icon: Compass,
-      title: "Strategi & verktygsval",
-      body: "Jag utgår från affärsmålet, inte från tekniken. Vilka system och verktyg ni behöver, och varför.",
-    },
-    {
-      icon: Cpu,
-      title: "System som hänger ihop",
-      body: "CRM, analys och innehåll som faktiskt pratar med varandra, i stället för fyra silos som ingen underhåller.",
-    },
-    {
-      icon: Workflow,
-      title: "Automation & AI där det ger nytta",
-      body: "Kapa manuellt klickande och låt AI göra tunga lyft, men bara där det faktiskt sparar tid.",
-    },
-  ];
+// Djungeltestets verktyg. Kaospositionerna (sx/sy/sr) är spridda och roterade
+// så kartan känns rörig innan ordningen läggs. Allt är deterministiskt: ingen
+// slump, samma karta vid varje besök och inga SSR-problem.
+type JungleTool = {
+  id: string;
+  label: string;
+  labelShort?: string;
+  sx: number;
+  sy: number;
+  sr: number;
+};
+
+const jungleTools: JungleTool[] = [
+  { id: "crm", label: "CRM", sx: 30, sy: 26, sr: -9 },
+  { id: "mejl", label: "Mejl & kalender", labelShort: "Mejl", sx: 63, sy: 22, sr: 7 },
+  { id: "ekonomi", label: "Ekonomi", sx: 45, sy: 50, sr: -6 },
+  { id: "kalkyl", label: "Kalkylblad", sx: 71, sy: 55, sr: 11 },
+  { id: "projekt", label: "Projektverktyg", labelShort: "Projekt", sx: 25, sy: 62, sr: 8 },
+  { id: "socialt", label: "Sociala medier", labelShort: "Socialt", sx: 55, sy: 35, sr: -12 },
+  { id: "nyhetsbrev", label: "Nyhetsbrev", sx: 38, sy: 76, sr: 6 },
+  { id: "ai", label: "AI-assistent", labelShort: "AI", sx: 66, sy: 78, sr: -8 },
+  { id: "analys", label: "Analys", sx: 21, sy: 41, sr: -5 },
+  { id: "lagring", label: "Fillagring", labelShort: "Lagring", sx: 50, sy: 66, sr: 9 },
+];
+
+/**
+ * JungleTest — sajtens signaturfunktion. Besökaren väljer sina verktyg,
+ * ser sin egen röriga karta växa fram och trycker sedan på knappen som gör
+ * det tjänsten gör: skapar ordning. Bygger på sysmap-tekniken från
+ * tjänstesidorna; is-visible styrs här av knappen i stället för scroll.
+ */
+function JungleTest() {
+  const [selected, setSelected] = useState<string[]>([]);
+  const [ordered, setOrdered] = useState(false);
+  const mobil = useIsMobile();
+
+  const tools = selected
+    .map((id) => jungleTools.find((t) => t.id === id))
+    .filter((t): t is JungleTool => !!t);
+  const n = tools.length;
+  const hub = { x: 50, y: mobil ? 48 : 47 };
+  const rx = mobil ? 34 : 38;
+  const ry = mobil ? 36 : 33;
+
+  // Ordnade platser: jämnt fördelade på en ellips runt affären, start rakt
+  // uppåt. Beräknas ur index, så layouten är deterministisk.
+  const orderedPos = (i: number) => {
+    const vinkel = -Math.PI / 2 + (i * 2 * Math.PI) / Math.max(n, 1);
+    return { x: hub.x + rx * Math.cos(vinkel), y: hub.y + ry * Math.sin(vinkel) };
+  };
+  const pos = (t: JungleTool, i: number) => (ordered ? orderedPos(i) : { x: t.sx, y: t.sy });
+
+  const toggla = (id: string) =>
+    setSelected((s) => (s.includes(id) ? s.filter((x) => x !== id) : [...s, id]));
+  const reset = () => {
+    setSelected([]);
+    setOrdered(false);
+  };
+
+  // Trasslet i kaosläget: en kedja genom alla valda plus korsande genvägar.
+  // Linjerna ligger kvar i DOM efter ordningen och tonas ut via CSS.
+  const tangle: [number, number][] = [];
+  for (let i = 0; i < n - 1; i++) tangle.push([i, i + 1]);
+  if (n >= 3) tangle.push([n - 1, 0]);
+  if (n >= 5) for (let i = 0; i < n; i += 2) tangle.push([i, (i + 3) % n]);
 
   return (
     <section className="relative bg-ink text-paper overflow-hidden">
       <div className="ai-glow" aria-hidden="true" />
       <div className="relative mx-auto max-w-6xl px-6 py-24 md:py-32">
         <Reveal>
-          <div className="grid md:grid-cols-12 gap-10 items-end">
-            <div className="md:col-span-8">
-              <div className="eyebrow mb-5">Huvudtjänst · Digitala system & AI</div>
-              <h2 className="display-heading text-3xl md:text-5xl text-paper">
-                Ordning i <span className="text-brand-green">djungeln</span>.
-              </h2>
-              <p className="mt-6 text-paper/70 leading-relaxed max-w-2xl">
-                Nya system och AI-verktyg dyker upp varje vecka. Alla säger sig
-                vara oumbärliga, konkurrenterna verkar redan köra igång, och er
-                data ligger spridd på fem ställen. Jag reder ut floran, kopplar
-                ihop det som ska prata med varandra och visar var AI faktiskt gör
-                nytta, så att ni får koll i stället för fler flikar.
-              </p>
-            </div>
-            <div className="md:col-span-4 md:text-right">
-              <Link
-                to="/tjanster/digitala-system-ai"
-                className="inline-flex items-center gap-2 bg-brand-green text-paper px-6 py-3.5 text-sm font-semibold hover:bg-paper hover:text-ink transition-colors"
-              >
-                Utforska tjänsten <ArrowUpRight className="h-4 w-4" strokeWidth={2.5} />
-              </Link>
-            </div>
+          <div className="max-w-3xl">
+            <div className="eyebrow mb-5">Huvudtjänst · Digitala system & AI</div>
+            <h2 className="display-heading text-3xl md:text-5xl text-paper">
+              Hur ser er <span className="text-brand-green">djungel</span> ut?
+            </h2>
+            <p className="mt-6 text-paper/70 leading-relaxed max-w-2xl">
+              Klicka i verktygen ni använder idag och se er egen karta växa
+              fram. Gör sedan det jag gör i varje uppdrag: skapa ordning.
+            </p>
           </div>
         </Reveal>
 
-        <div className="mt-14 grid gap-6 lg:grid-cols-3">
-          {points.map((p, i) => (
-            <Reveal key={p.title} delay={i * 130}>
-              <div className="h-full border border-paper/15 bg-white/5 p-5 md:p-8 transition-all duration-300 hover:border-brand-green/50 hover:bg-white/[0.08] hover:-translate-y-1">
-                <div className="w-10 h-10 flex items-center justify-center bg-brand-green/15 text-brand-green mb-6">
-                  <p.icon className="h-5 w-5" strokeWidth={2} />
-                </div>
-                <h3 className="display-heading text-lg mb-3 text-paper">{p.title}</h3>
-                <p className="text-sm text-paper/65 leading-relaxed">{p.body}</p>
+        <Reveal delay={120}>
+          <div className="mt-10 flex flex-wrap gap-2" role="group" aria-label="Välj era verktyg">
+            {jungleTools.map((t) => {
+              const vald = selected.includes(t.id);
+              return (
+                <button
+                  key={t.id}
+                  type="button"
+                  aria-pressed={vald}
+                  onClick={() => toggla(t.id)}
+                  className={`px-3.5 py-2 text-xs md:text-sm font-semibold border transition-colors ${
+                    vald
+                      ? "bg-brand-green border-brand-green text-paper"
+                      : "border-paper/25 text-paper/75 hover:border-brand-green/60 hover:text-paper"
+                  }`}
+                >
+                  {t.label}
+                </button>
+              );
+            })}
+          </div>
+
+          <div
+            className={`sysmap relative mt-8 h-[21rem] md:h-96 border border-paper/10 bg-white/[0.03] ${
+              ordered ? "is-visible" : ""
+            }`}
+          >
+            {n === 0 ? (
+              <p className="absolute inset-0 flex items-center justify-center px-8 text-center text-sm text-paper/40">
+                Välj verktygen ovan, så byggs er karta här.
+              </p>
+            ) : (
+              <>
+                <svg
+                  className="absolute inset-0 h-full w-full"
+                  viewBox="0 0 100 100"
+                  preserveAspectRatio="none"
+                  fill="none"
+                  aria-hidden="true"
+                >
+                  {tangle.map(([a, b]) => (
+                    <line
+                      key={`t-${tools[a].id}-${tools[b].id}`}
+                      className="jungle-tangle"
+                      x1={tools[a].sx}
+                      y1={tools[a].sy}
+                      x2={tools[b].sx}
+                      y2={tools[b].sy}
+                      stroke="#8A8D90"
+                      strokeWidth="1"
+                      vectorEffect="non-scaling-stroke"
+                    />
+                  ))}
+                  {ordered &&
+                    tools.map((t, i) => (
+                      <line
+                        key={`o-${t.id}`}
+                        className="sysmap-link"
+                        pathLength={1}
+                        x1={hub.x}
+                        y1={hub.y}
+                        x2={orderedPos(i).x}
+                        y2={orderedPos(i).y}
+                        stroke="#1F8A5C"
+                        strokeOpacity="0.4"
+                        strokeWidth="1"
+                        vectorEffect="non-scaling-stroke"
+                        style={{ transitionDelay: `${0.55 + i * 0.08}s` }}
+                      />
+                    ))}
+                </svg>
+                {ordered && (
+                  <span className="sysmap-hub-ring" style={{ left: `${hub.x}%`, top: `${hub.y}%` }} />
+                )}
+                {ordered &&
+                  tools.slice(0, 5).map((t, i) => (
+                    <span
+                      key={`p-${t.id}`}
+                      className={`sysmap-pulse ${i % 2 === 1 ? "flow-back" : ""}`}
+                      style={{
+                        ["--hx" as string]: `${hub.x}%`,
+                        ["--hy" as string]: `${hub.y}%`,
+                        ["--nx" as string]: `${orderedPos(i).x}%`,
+                        ["--ny" as string]: `${orderedPos(i).y}%`,
+                        animationDelay: `${1.6 + i * 0.5}s`,
+                      }}
+                    />
+                  ))}
+                {ordered && (
+                  <div
+                    className="jungle-late absolute"
+                    style={{
+                      left: `${hub.x}%`,
+                      top: `${hub.y}%`,
+                      transform: "translate(-50%, -50%)",
+                      transitionDelay: "0.45s",
+                      zIndex: 2,
+                    }}
+                  >
+                    <div className="sysmap-node-box bg-brand-green text-paper shadow-md whitespace-nowrap px-4 py-2 md:px-5 md:py-2.5 text-xs md:text-sm font-semibold">
+                      Er affär
+                    </div>
+                  </div>
+                )}
+                {tools.map((t, i) => {
+                  const p = pos(t, i);
+                  return (
+                    <div
+                      key={t.id}
+                      className="sysmap-node absolute"
+                      style={{
+                        left: `${p.x}%`,
+                        top: `${p.y}%`,
+                        transform: `translate(-50%, -50%) rotate(${ordered ? 0 : t.sr}deg)`,
+                        zIndex: 1,
+                      }}
+                    >
+                      <div className="jungle-pop sysmap-node-box whitespace-nowrap bg-white/95 border border-line text-ink/80 shadow-sm px-2.5 py-1.5 md:px-4 md:py-2 text-[11px] md:text-sm font-semibold">
+                        {t.labelShort ? (
+                          <>
+                            <span className="md:hidden">{t.labelShort}</span>
+                            <span className="hidden md:inline">{t.label}</span>
+                          </>
+                        ) : (
+                          t.label
+                        )}
+                      </div>
+                    </div>
+                  );
+                })}
+              </>
+            )}
+          </div>
+
+          <div className="mt-8 min-h-14">
+            {!ordered ? (
+              <div className="flex flex-wrap items-center gap-4">
+                <button
+                  type="button"
+                  onClick={() => setOrdered(true)}
+                  disabled={n < 2}
+                  className="inline-flex items-center gap-2 bg-brand-green text-paper px-6 py-3.5 text-sm font-semibold transition-colors hover:bg-paper hover:text-ink disabled:opacity-40 disabled:pointer-events-none"
+                >
+                  Skapa ordning <ArrowUpRight className="h-4 w-4" strokeWidth={2.5} />
+                </button>
+                <span className="text-sm text-paper/50" aria-live="polite">
+                  {n < 2 ? "Välj minst två verktyg." : `${n} verktyg valda.`}
+                </span>
               </div>
-            </Reveal>
-          ))}
-        </div>
+            ) : (
+              <div className="jungle-result is-visible grid md:grid-cols-12 gap-6 items-center">
+                <div className="jungle-late md:col-span-7" style={{ transitionDelay: "0.9s" }}>
+                  <p className="display-heading text-xl md:text-2xl text-paper">
+                    {n} verktyg. <span className="text-brand-green">Ett system.</span>
+                  </p>
+                  <p className="mt-2 text-sm text-paper/65 leading-relaxed">
+                    Så här ser det ut när allt utgår från affären i stället för
+                    från apparna. Första steget dit: en systemkartläggning.
+                  </p>
+                </div>
+                <div
+                  className="jungle-late md:col-span-5 flex flex-wrap items-center gap-4 md:justify-end"
+                  style={{ transitionDelay: "1.05s" }}
+                >
+                  <Link
+                    to="/boka"
+                    className="inline-flex items-center gap-2 bg-brand-green text-paper px-6 py-3.5 text-sm font-semibold hover:bg-paper hover:text-ink transition-colors"
+                  >
+                    Boka ett samtal <ArrowUpRight className="h-4 w-4" strokeWidth={2.5} />
+                  </Link>
+                  <button
+                    type="button"
+                    onClick={reset}
+                    className="text-sm text-paper/50 hover:text-paper underline underline-offset-4"
+                  >
+                    Börja om
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
+        </Reveal>
       </div>
     </section>
   );
@@ -448,50 +649,6 @@ function StartHere() {
                   göra dem själva fungerar listan lika bra utan mig.
                 </p>
               </div>
-            </div>
-          </div>
-        </Reveal>
-      </div>
-    </section>
-  );
-}
-
-/**
- * PriceCta — ger priskalkylatorn en egen tydlig yta på startsidan.
- * Kalkylatorn kräver namn och e-post innan riktpriset visas, så texten här
- * ska inte lova något annat.
- */
-function PriceCta() {
-  return (
-    <section className="border-b border-line bg-white">
-      <div className="mx-auto max-w-6xl px-6 py-16 md:py-20">
-        <Reveal>
-          <div className="border border-line bg-white p-5 md:p-10 shadow-sm grid md:grid-cols-12 gap-8 items-center">
-            <div className="md:col-span-8">
-              <div className="flex items-center gap-3 mb-4">
-                <span className="w-10 h-10 flex items-center justify-center bg-brand-green/10 text-brand-green shrink-0">
-                  <Calculator className="h-5 w-5" strokeWidth={2} />
-                </span>
-                <div className="eyebrow">Pris</div>
-              </div>
-              <h2 className="display-heading text-2xl md:text-4xl">
-                Undrar ni vad det <span className="text-brand-green">landar på</span>?
-              </h2>
-              <p className="mt-5 text-ink/70 leading-relaxed max-w-xl">
-                Svara på några frågor om vad ni behöver hjälp med, lämna namn och
-                mejl, och få ett riktpris direkt. Det är en uppskattning, inte en
-                offert, men den ger en ärlig storleksordning.
-              </p>
-            </div>
-            <div className="md:col-span-4 md:text-right">
-              <Link
-                to="/pris"
-                className="group inline-flex items-center gap-2 bg-ink text-paper px-6 py-3.5 text-sm font-semibold hover:bg-brand-green transition-colors"
-              >
-                Räkna ut ett riktpris
-                <ArrowUpRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" strokeWidth={2.5} />
-              </Link>
-              <div className="mt-3 text-xs text-subtle">Tar ett par minuter.</div>
             </div>
           </div>
         </Reveal>
@@ -610,12 +767,6 @@ function Process() {
               system som bär verksamheten. Systemen är grunden, och när den
               sitter följer allt annat samma fyra steg.
             </p>
-          </div>
-
-          <div className="mt-12 flex flex-wrap gap-2">
-            {frameworks.map((f) => (
-              <span key={f} className="text-xs tracked-tight border border-paper/25 px-3 py-2">{f}</span>
-            ))}
           </div>
         </Reveal>
 
