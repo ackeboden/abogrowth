@@ -177,6 +177,59 @@
   animation: growth-dot-in 0.4s ease-out 2.6s forwards;
 }
 
+/* Parallaxlager i heron. --par-x/--par-y (-1..1) sätts på sektionen vid
+   musrörelse; lagren glider olika långt så djupet känns. Transitionen ger
+   mjuk efterföljning utan rAF-loop. */
+.hero-par {
+  transition: transform 0.35s ease-out;
+  will-change: transform;
+}
+
+.hero-par-1 {
+  transform: translate(calc(var(--par-x, 0) * 6px), calc(var(--par-y, 0) * 4px));
+}
+
+.hero-par-2 {
+  transform: translate(calc(var(--par-x, 0) * 12px), calc(var(--par-y, 0) * 8px));
+}
+
+.hero-par-3 {
+  transform: translate(calc(var(--par-x, 0) * 18px), calc(var(--par-y, 0) * 12px));
+}
+
+/* Hero-djungeln: tunna kopplingar som ritas fram, vilar och släcks i en
+   långsam cykel, som ett andetag av kartan i Djungeltestet längre ner. */
+@keyframes hero-link-cycle {
+  0% { stroke-dashoffset: 1; opacity: 0; }
+  12% { opacity: 1; }
+  38% { stroke-dashoffset: 0; }
+  62% { opacity: 1; stroke-dashoffset: 0; }
+  78% { opacity: 0; stroke-dashoffset: 0; }
+  100% { opacity: 0; stroke-dashoffset: 1; }
+}
+
+.hero-link {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  opacity: 0;
+  animation: hero-link-cycle 10.5s ease-in-out infinite;
+}
+
+@keyframes hero-dot-breathe {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 0.65; }
+}
+
+.hero-dot {
+  position: absolute;
+  width: 5px;
+  height: 5px;
+  margin: -2.5px 0 0 -2.5px;
+  border-radius: 9999px;
+  background: var(--brand-green);
+  animation: hero-dot-breathe 6s ease-in-out infinite;
+}
+
 /* Subtle, slow-moving ambient gradient for hero background */
 @keyframes hero-glow-drift {
   0%, 100% { transform: translate3d(-4%, -2%, 0); }
@@ -593,5 +646,22 @@ details[open] .faq-icon {
   .jungle-pop,
   .sysmap.is-visible .jungle-syspulse {
     animation: none;
+  }
+  .hero-par,
+  .hero-par-1,
+  .hero-par-2,
+  .hero-par-3 {
+    transition: none;
+    transform: none;
+  }
+  /* Stillbild i stället för cykel: svaga men synliga kopplingar och punkter */
+  .hero-link {
+    animation: none;
+    stroke-dashoffset: 0;
+    opacity: 0.3;
+  }
+  .hero-dot {
+    animation: none;
+    opacity: 0.35;
   }
 }

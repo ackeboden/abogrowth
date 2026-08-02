@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
-import { ArrowUpRight, Check, Plus } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { ArrowDown, ArrowUpRight, Check, Plus } from "lucide-react";
 import { Header, Footer, GrowthLine, Reveal, useInView, useIsMobile, CONTACT_EMAIL } from "@/components/Site";
 
 export const Route = createFileRoute("/")({
@@ -264,11 +264,93 @@ function RotatingWord() {
   );
 }
 
+// Hero-djungelns noder och kopplingar (% av heroytan). Ligger till höger,
+// utanför textens huvudyta, och andas i långsam cykel. Deterministiskt.
+const heroNodes = [
+  { x: 57, y: 16 },
+  { x: 72, y: 26 },
+  { x: 88, y: 14 },
+  { x: 64, y: 46 },
+  { x: 80, y: 56 },
+  { x: 93, y: 38 },
+  { x: 70, y: 74 },
+];
+
+// [frånNod, tillNod, startfördröjning i sekunder]
+const heroLinks: [number, number, number][] = [
+  [0, 1, 0],
+  [1, 2, 1.5],
+  [1, 3, 3],
+  [3, 4, 4.5],
+  [4, 5, 6],
+  [3, 6, 7.5],
+  [5, 2, 9],
+];
+
 function Hero() {
+  const ref = useRef<HTMLElement>(null);
+
+  // Musparallax: --par-x/--par-y (-1..1) sätts på sektionen och läses av
+  // .hero-par-lagren i CSS. Bara för fin pekare och utan reduced motion;
+  // på mobil står lagren stilla och egenrörelsen i cykeln bär i stället.
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    if (!window.matchMedia("(pointer: fine)").matches) return;
+    const onMove = (e: PointerEvent) => {
+      const r = el.getBoundingClientRect();
+      el.style.setProperty("--par-x", (((e.clientX - r.left) / r.width - 0.5) * 2).toFixed(3));
+      el.style.setProperty("--par-y", (((e.clientY - r.top) / r.height - 0.5) * 2).toFixed(3));
+    };
+    const onLeave = () => {
+      el.style.setProperty("--par-x", "0");
+      el.style.setProperty("--par-y", "0");
+    };
+    el.addEventListener("pointermove", onMove);
+    el.addEventListener("pointerleave", onLeave);
+    return () => {
+      el.removeEventListener("pointermove", onMove);
+      el.removeEventListener("pointerleave", onLeave);
+    };
+  }, []);
+
   return (
-    <section id="top" className="relative border-b border-line overflow-hidden">
-      <div className="hero-ambient" aria-hidden="true" />
-      <GrowthLine />
+    <section ref={ref} id="top" className="relative border-b border-line overflow-hidden">
+      <div className="hero-par hero-par-1 absolute inset-0" aria-hidden="true">
+        <div className="hero-ambient" />
+      </div>
+      <div className="hero-par hero-par-2 absolute inset-0" aria-hidden="true">
+        <GrowthLine />
+      </div>
+      {/* Hero-djungeln: noder som andas och kopplingar som ritas och släcks */}
+      <div className="hero-par hero-par-3 absolute inset-0" aria-hidden="true">
+        <svg className="absolute inset-0 h-full w-full" viewBox="0 0 100 100" preserveAspectRatio="none" fill="none">
+          {heroLinks.map(([a, b, delay]) => (
+            <line
+              key={`hl-${a}-${b}`}
+              className="hero-link"
+              pathLength={1}
+              x1={heroNodes[a].x}
+              y1={heroNodes[a].y}
+              x2={heroNodes[b].x}
+              y2={heroNodes[b].y}
+              stroke="#1F8A5C"
+              strokeOpacity="0.45"
+              strokeWidth="1"
+              vectorEffect="non-scaling-stroke"
+              style={{ animationDelay: `${delay}s` }}
+            />
+          ))}
+        </svg>
+        {heroNodes.map((nd, i) => (
+          <span
+            key={`hd-${i}`}
+            className="hero-dot"
+            style={{ left: `${nd.x}%`, top: `${nd.y}%`, animationDelay: `${i * 0.8}s` }}
+          />
+        ))}
+      </div>
       <div className="relative mx-auto max-w-6xl px-6 pt-14 pb-16 md:pt-32 md:pb-40 grid md:grid-cols-12 gap-8 md:gap-12 items-end">
         {/* Full bredd: faktarutan som låg till höger är borttagen, och det
             längsta roterande ordet (marknadsföringen) behöver plats för att
@@ -293,10 +375,10 @@ function Hero() {
             >
               Boka ett samtal <ArrowUpRight className="h-4 w-4" strokeWidth={2.5} />
             </Link>
-            <Link to="/resan" className="group inline-flex items-center gap-1.5 text-sm font-semibold border-b-2 border-brand-green pb-1 hover:text-brand-green">
-              Se resan: från kaos till ordning
-              <ArrowUpRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" strokeWidth={2.5} />
-            </Link>
+            <a href="#djungeltestet" className="group inline-flex items-center gap-1.5 text-sm font-semibold border-b-2 border-brand-green pb-1 hover:text-brand-green">
+              Testa er djungel
+              <ArrowDown className="h-3.5 w-3.5 transition-transform group-hover:translate-y-0.5" strokeWidth={2.5} />
+            </a>
           </div>
           {/* Svarar på besökarens första fråga: är det här för mig? */}
           <p className="mt-8 flex items-start gap-2.5 text-sm text-subtle leading-relaxed hero-rise [animation-delay:520ms]">
@@ -430,7 +512,7 @@ function JungleTest() {
   if (n >= 5) for (let i = 0; i < n; i += 2) tangle.push([i, (i + 3) % n]);
 
   return (
-    <section className="relative bg-ink text-paper overflow-hidden">
+    <section id="djungeltestet" className="relative bg-ink text-paper overflow-hidden">
       <div className="ai-glow" aria-hidden="true" />
       <div className="relative mx-auto max-w-6xl px-6 py-24 md:py-32">
         <Reveal>
