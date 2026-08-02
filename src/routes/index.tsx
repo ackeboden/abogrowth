@@ -335,6 +335,20 @@ const jungleTools: JungleTool[] = [
   { id: "lagring", label: "Fillagring", labelShort: "Lagring", sx: 50, sy: 66, sr: 9 },
 ];
 
+// Vilka system som hör ihop i verkligheten. En koppling ritas bara när
+// besökaren valt BÅDA verktygen i paret. Deterministisk lista, ingen slump.
+const jungleRelations: [string, string][] = [
+  ["crm", "nyhetsbrev"], // kontakterna styr utskicken
+  ["crm", "mejl"], // mejlen loggas på kunden
+  ["crm", "ekonomi"], // offert blir faktura
+  ["socialt", "analys"], // resultatet mäts
+  ["nyhetsbrev", "analys"], // öppningar och klick mäts
+  ["kalkyl", "ekonomi"], // kalkylen hämtar siffrorna
+  ["ai", "crm"], // AI:n skriver utkast ur kunddatan
+  ["projekt", "mejl"], // deadlines hamnar i kalendern
+  ["lagring", "projekt"], // filerna kopplas till projekten
+];
+
 /**
  * JungleTest — sajtens signaturfunktion. Besökaren väljer sina verktyg,
  * ser sin egen röriga karta växa fram och trycker sedan på knappen som gör
@@ -367,6 +381,39 @@ function JungleTest() {
   const reset = () => {
     setSelected([]);
     setOrdered(false);
+  };
+
+  // Systemkopplingar: relationer där besökaren valt båda verktygen.
+  const sysLinks = jungleRelations
+    .map(([a, b]) => [tools.findIndex((t) => t.id === a), tools.findIndex((t) => t.id === b)] as [number, number])
+    .filter(([a, b]) => a !== -1 && b !== -1);
+  const k = sysLinks.length;
+
+  // Mjuk båge mellan två ordnade noder som buktar UTÅT från navet, så att
+  // kopplingarna läses som medvetna och aldrig korsar navlinjerna i mitten.
+  // apx/apy är bågens topp (kvadratisk Bezier vid t=0,5) och styr pulsen.
+  const arcPath = (ai: number, bi: number) => {
+    const A = orderedPos(ai);
+    const B = orderedPos(bi);
+    const mx = (A.x + B.x) / 2;
+    const my = (A.y + B.y) / 2;
+    let dx = mx - hub.x;
+    let dy = my - hub.y;
+    let len = Math.hypot(dx, dy);
+    if (len < 1) {
+      // Paret sitter mittemot varandra: bukta vinkelrätt mot kordan i stället.
+      dx = -(B.y - A.y);
+      dy = B.x - A.x;
+      len = Math.hypot(dx, dy) || 1;
+    }
+    const bulge = 13;
+    const cx = mx + (dx / len) * bulge;
+    const cy = my + (dy / len) * bulge;
+    return {
+      d: `M ${A.x} ${A.y} Q ${cx} ${cy} ${B.x} ${B.y}`,
+      apx: (A.x + 2 * cx + B.x) / 4,
+      apy: (A.y + 2 * cy + B.y) / 4,
+    };
   };
 
   // Trasslet i kaosläget: en kedja genom alla valda plus korsande genvägar.
@@ -446,57 +493,90 @@ function JungleTest() {
                       vectorEffect="non-scaling-stroke"
                     />
                   ))}
-                  {ordered &&
-                    tools.map((t, i) => (
-                      <line
-                        key={`o-${t.id}`}
-                        className="sysmap-link"
-                        pathLength={1}
-                        x1={hub.x}
-                        y1={hub.y}
-                        x2={orderedPos(i).x}
-                        y2={orderedPos(i).y}
-                        stroke="#1F8A5C"
-                        strokeOpacity="0.4"
-                        strokeWidth="1"
-                        vectorEffect="non-scaling-stroke"
-                        style={{ transitionDelay: `${0.55 + i * 0.08}s` }}
-                      />
-                    ))}
-                </svg>
-                {ordered && (
-                  <span className="sysmap-hub-ring" style={{ left: `${hub.x}%`, top: `${hub.y}%` }} />
-                )}
-                {ordered &&
-                  tools.slice(0, 5).map((t, i) => (
-                    <span
-                      key={`p-${t.id}`}
-                      className={`sysmap-pulse ${i % 2 === 1 ? "flow-back" : ""}`}
-                      style={{
-                        ["--hx" as string]: `${hub.x}%`,
-                        ["--hy" as string]: `${hub.y}%`,
-                        ["--nx" as string]: `${orderedPos(i).x}%`,
-                        ["--ny" as string]: `${orderedPos(i).y}%`,
-                        animationDelay: `${1.6 + i * 0.5}s`,
-                      }}
+                  {/* Nav- och systemlinjer renderas alltid men är dolda tills
+                      is-visible sätts: så spelas ritanimationen upp korrekt. */}
+                  {tools.map((t, i) => (
+                    <line
+                      key={`o-${t.id}`}
+                      className="sysmap-link"
+                      pathLength={1}
+                      x1={hub.x}
+                      y1={hub.y}
+                      x2={orderedPos(i).x}
+                      y2={orderedPos(i).y}
+                      stroke="#1F8A5C"
+                      strokeOpacity="0.35"
+                      strokeWidth="1.25"
+                      vectorEffect="non-scaling-stroke"
+                      style={{ transitionDelay: `${0.55 + i * 0.08}s` }}
                     />
                   ))}
-                {ordered && (
-                  <div
-                    className="jungle-late absolute"
+                  {/* Systemkopplingarna: tunnare, klarare gröna bågar som buktar
+                      utåt. Ritas som andra våg, efter navlinjerna. */}
+                  {sysLinks.map(([a, b], j) => (
+                    <path
+                      key={`s-${tools[a].id}-${tools[b].id}`}
+                      className="sysmap-link"
+                      pathLength={1}
+                      d={arcPath(a, b).d}
+                      stroke="#1F8A5C"
+                      strokeOpacity="0.8"
+                      strokeWidth="1"
+                      fill="none"
+                      vectorEffect="non-scaling-stroke"
+                      style={{ transitionDelay: `${1.35 + j * 0.14}s` }}
+                    />
+                  ))}
+                </svg>
+                <span className="sysmap-hub-ring" style={{ left: `${hub.x}%`, top: `${hub.y}%` }} />
+                {tools.slice(0, 5).map((t, i) => (
+                  <span
+                    key={`p-${t.id}`}
+                    className={`sysmap-pulse ${i % 2 === 1 ? "flow-back" : ""}`}
                     style={{
-                      left: `${hub.x}%`,
-                      top: `${hub.y}%`,
-                      transform: "translate(-50%, -50%)",
-                      transitionDelay: "0.45s",
-                      zIndex: 2,
+                      ["--hx" as string]: `${hub.x}%`,
+                      ["--hy" as string]: `${hub.y}%`,
+                      ["--nx" as string]: `${orderedPos(i).x}%`,
+                      ["--ny" as string]: `${orderedPos(i).y}%`,
+                      animationDelay: `${1.6 + i * 0.5}s`,
                     }}
-                  >
-                    <div className="sysmap-node-box bg-brand-green text-paper shadow-md whitespace-nowrap px-4 py-2 md:px-5 md:py-2.5 text-xs md:text-sm font-semibold">
-                      Er affär
-                    </div>
+                  />
+                ))}
+                {/* En puls som följer första systemkopplingens båge */}
+                {sysLinks.slice(0, 2).map(([a, b], j) => {
+                  const arc = arcPath(a, b);
+                  const A = orderedPos(a);
+                  const B = orderedPos(b);
+                  return (
+                    <span
+                      key={`sp-${tools[a].id}-${tools[b].id}`}
+                      className="jungle-syspulse"
+                      style={{
+                        ["--ax" as string]: `${A.x}%`,
+                        ["--ay" as string]: `${A.y}%`,
+                        ["--mx" as string]: `${arc.apx}%`,
+                        ["--my" as string]: `${arc.apy}%`,
+                        ["--bx" as string]: `${B.x}%`,
+                        ["--by" as string]: `${B.y}%`,
+                        animationDelay: `${2.4 + j * 1.1}s`,
+                      }}
+                    />
+                  );
+                })}
+                <div
+                  className="jungle-late absolute"
+                  style={{
+                    left: `${hub.x}%`,
+                    top: `${hub.y}%`,
+                    transform: "translate(-50%, -50%)",
+                    transitionDelay: "0.45s",
+                    zIndex: 2,
+                  }}
+                >
+                  <div className="sysmap-node-box bg-brand-green text-paper shadow-md whitespace-nowrap px-4 py-2 md:px-5 md:py-2.5 text-xs md:text-sm font-semibold">
+                    Er affär
                   </div>
-                )}
+                </div>
                 {tools.map((t, i) => {
                   const p = pos(t, i);
                   return (
@@ -549,8 +629,9 @@ function JungleTest() {
                     {n} verktyg. <span className="text-brand-green">Ett system.</span>
                   </p>
                   <p className="mt-2 text-sm text-paper/65 leading-relaxed">
-                    Så här ser det ut när allt utgår från affären i stället för
-                    från apparna. Första steget dit: en systemkartläggning.
+                    {k > 0
+                      ? `${k} ${k === 1 ? "koppling" : "kopplingar"} som jobbar åt er, i stället för ${n} öar. Första steget dit: en systemkartläggning.`
+                      : "Så här ser det ut när allt utgår från affären i stället för från apparna. Första steget dit: en systemkartläggning."}
                   </p>
                 </div>
                 <div

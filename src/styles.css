@@ -388,6 +388,31 @@
   transform: none;
 }
 
+/* Puls som vandrar längs en systemkoppling (böjd linje): tre stopp,
+   där mittstoppet ligger på bågens topp så rörelsen följer kurvan. */
+@keyframes jungle-syspulse {
+  0% { left: var(--ax); top: var(--ay); opacity: 0; }
+  15% { opacity: 1; }
+  50% { left: var(--mx); top: var(--my); }
+  85% { opacity: 1; }
+  100% { left: var(--bx); top: var(--by); opacity: 0; }
+}
+
+.jungle-syspulse {
+  position: absolute;
+  width: 5px;
+  height: 5px;
+  margin: -2.5px 0 0 -2.5px;
+  border-radius: 9999px;
+  background: var(--brand-green);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.sysmap.is-visible .jungle-syspulse {
+  animation: jungle-syspulse 3.6s ease-in-out infinite;
+}
+
 .sysmap .sysmap-node-box:hover {
   border-color: rgba(31, 138, 92, 0.55);
   box-shadow: 0 4px 14px rgba(31, 138, 92, 0.16);
@@ -565,7 +590,8 @@ details[open] .faq-icon {
   .jungle-late {
     transform: none;
   }
-  .jungle-pop {
+  .jungle-pop,
+  .sysmap.is-visible .jungle-syspulse {
     animation: none;
   }
 }
