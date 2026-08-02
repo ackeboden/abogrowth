@@ -9,7 +9,7 @@ export const Route = createFileRoute("/tjanster/optimerade-kampanjer")({
       {
         name: "description",
         content:
-          "Kampanjer på rätt kanaler, med rätt budskap, löpande optimerade mot resultat. Vi hittar var er målgrupp finns och maximerar effekten.",
+          "Kampanjer på rätt kanaler, med rätt budskap, löpande optimerade mot resultat. Jag hittar var er målgrupp finns och maximerar effekten.",
       },
       { property: "og:title", content: "Optimerade kampanjer | ABO Growth" },
       { property: "og:description", content: "Rätt budskap på rätt kanaler, optimerat löpande mot resultat." },
@@ -62,7 +62,7 @@ function KanalMap() {
             Budgeten ska ligga <span className="text-brand-green">där den gör nytta</span>.
           </h2>
           <p className="mt-6 text-ink/75 leading-relaxed">
-            Vi följer varje kanal mot samma mål. Det som levererar får mer
+            Jag följer varje kanal mot samma mål. Det som levererar får mer
             budget, det som tvekar justeras och det som inte bär pausas.
             Besluten ser ni i rapporten varje månad.
           </p>
@@ -148,11 +148,11 @@ function KanalMap() {
 }
 
 const deliverables = [
-  { t: "Kanalstrategi", b: "Vi väljer kanaler där er målgrupp faktiskt finns, inte där det låter modernt." },
+  { t: "Kanalstrategi", b: "Jag väljer kanaler där er målgrupp faktiskt finns, inte där det låter modernt." },
   { t: "Målgrupp & segment", b: "Konkreta segment som styr budskap, format och budget." },
   { t: "Kampanjstruktur & uppsättning", b: "Konton, spårning, kampanjer och målgrupper riggade rätt från start." },
   { t: "Annonsmaterial & budskap", b: "Bilder, video och copy anpassade per kanal och steg i kundresan." },
-  { t: "Löpande optimering", b: "A/B-tester på budskap, målgrupper och format. Vi skalar det som fungerar." },
+  { t: "Löpande optimering", b: "A/B-tester på budskap, målgrupper och format. Jag skalar det som fungerar." },
   { t: "Rapportering & uppföljning", b: "Tydliga rapporter mot affärsmål, inte fåfängemått." },
 ];
 
@@ -170,7 +170,7 @@ function Page() {
         <PageHero
           eyebrow="Tjänst 03 · Optimerade kampanjer"
           title={<>Rätt budskap, på rätt kanaler, <span className="text-brand-green">optimerat löpande</span>.</>}
-          intro="En stödtjänst som drar nytta av era ihopkopplade system. Vi börjar i affärsmålet, hittar var er målgrupp finns och väljer kanaler därefter. Sedan optimerar vi mot resultat, inte mot att synas för synandets skull."
+          intro="En stödtjänst som drar nytta av era ihopkopplade system. Jag börjar i affärsmålet, hittar var er målgrupp finns och väljer kanaler därefter. Sedan optimerar jag mot resultat, inte mot att synas för synandets skull."
         />
 
         <KanalMap />

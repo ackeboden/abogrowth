@@ -70,7 +70,7 @@ const services: Service[] = [
     title: "Digitala system & AI-verktyg",
     tag: "Huvudtjänst",
     featured: true,
-    body: "Vi hjälper er få koll: kartlägger systemfloran, rensar bland verktygen och kopplar ihop det som ska hänga samman. Sedan visar vi var AI gör verklig nytta.",
+    body: "Jag hjälper er få koll: kartlägger systemfloran, rensar bland verktygen och kopplar ihop det som ska hänga samman. Sedan visar jag var AI gör verklig nytta.",
     href: "/tjanster/digitala-system-ai",
     deliverables: [
       "Kartläggning av era system och verktyg",
@@ -81,7 +81,7 @@ const services: Service[] = [
   {
     num: "02",
     title: "Affärsutveckling & tillväxtstrategi",
-    body: "Vi kartlägger var tillväxten faktiskt finns och bygger en plan som går att genomföra, med prioriterade initiativ som flyttar affären framåt.",
+    body: "Jag kartlägger var tillväxten faktiskt finns och bygger en plan som går att genomföra, med prioriterade initiativ som flyttar affären framåt.",
     href: "/tjanster/affarsutveckling",
     deliverables: [
       "Tillväxtanalys av marknad & konkurrens",
@@ -92,7 +92,7 @@ const services: Service[] = [
   {
     num: "03",
     title: "Optimerade kampanjer",
-    body: "Rätt budskap, i rätt kanal, till rätt målgrupp. Vi bygger, mäter och skruvar löpande så att budgeten jobbar för er, inte tvärtom.",
+    body: "Rätt budskap, i rätt kanal, till rätt målgrupp. Jag bygger, mäter och skruvar löpande så att budgeten jobbar för er, inte tvärtom.",
     href: "/tjanster/optimerade-kampanjer",
     deliverables: [
       "Kampanjstruktur för passande kanaler",
@@ -111,22 +111,22 @@ const processSteps = [
   {
     step: "01",
     title: "Kartlägg",
-    body: "Vi går igenom system, verktyg, licenser och flöden. Var ligger datan, var dubbelarbetas det och var glappar kedjan?",
+    body: "Jag går igenom system, verktyg, licenser och flöden. Var ligger datan, var dubbelarbetas det och var glappar kedjan?",
   },
   {
     step: "02",
     title: "Prioritera",
-    body: "Vi rangordnar efter effekt och insats. Det som ger mest tid tillbaka, eller mest affär, görs först.",
+    body: "Jag rangordnar efter effekt och insats. Det som ger mest tid tillbaka, eller mest affär, görs först.",
   },
   {
     step: "03",
     title: "Genomför",
-    body: "Vi rensar, kopplar ihop och automatiserar. Tydliga faser, deadlines och ägarskap hela vägen fram.",
+    body: "Jag rensar, kopplar ihop och automatiserar. Tydliga faser, deadlines och ägarskap hela vägen fram.",
   },
   {
     step: "04",
     title: "Följ upp",
-    body: "Vi mäter att det används och håller över tid, och bygger vidare där nästa effekt finns.",
+    body: "Jag mäter att det används och håller över tid, och bygger vidare där nästa effekt finns.",
   },
 ];
 
@@ -167,28 +167,28 @@ const methodPerService = [
 // Håll frågor och svar identiska på båda ställena, annars kan Google straffa sidan.
 const faqItems = [
   {
-    q: "Vad kostar det att jobba med er?",
-    a: "Det beror på omfattningen. Ett avgränsat projekt kostar mindre än ett löpande samarbete. Vill ni ha en snabb prisbild direkt kan ni testa vår priskalkylator. Ni får alltid ett konkret förslag med pris innan vi börjar, och första samtalet är kostnadsfritt. Inga överraskningar på fakturan.",
+    q: "Vad kostar det att jobba med dig?",
+    a: "Det beror på omfattningen. Ett avgränsat projekt kostar mindre än ett löpande samarbete. Vill ni ha en snabb prisbild direkt kan ni testa min priskalkylator. Ni får alltid ett konkret förslag med pris innan jag börjar, och första samtalet är kostnadsfritt. Inga överraskningar på fakturan.",
   },
   {
     q: "Hur snabbt ser vi resultat?",
-    a: "Kartläggningen tar en till två veckor och de första konkreta leverablerna kommer oftast inom en månad. Sedan är vi ärliga: att hålla ordning i systemen är ett löpande arbete, och vi säger vad som går snabbt och vad som kräver uthållighet.",
+    a: "Kartläggningen tar en till två veckor och de första konkreta leverablerna kommer oftast inom en månad. Sedan är jag ärlig: att hålla ordning i systemen är ett löpande arbete, och jag säger vad som går snabbt och vad som kräver uthållighet.",
   },
   {
-    q: "Vilka företag jobbar ni med?",
-    a: "Mindre bolag, från enmansföretag upp till ett femtiotal anställda, oftast utan egen IT-avdelning. Vi vet hur det är att växa med begränsade resurser, och upplägget skalas efter er storlek och budget. Ingen betalar för mer än de behöver.",
+    q: "Vilka företag jobbar du med?",
+    a: "Mindre bolag, från enmansföretag upp till ett femtiotal anställda, oftast utan egen IT-avdelning. Jag vet hur det är att växa med begränsade resurser, och upplägget skalas efter er storlek och budget. Ingen betalar för mer än de behöver.",
   },
   {
     q: "Måste vi köpa en massa nya system och verktyg?",
-    a: "Nej. Vi börjar alltid i strategin: vad ni behöver och varför. Ofta räcker verktygen ni redan har, rätt ihopkopplade. Nya system föreslår vi bara när de löser ett verkligt problem, och vi tjänar ingenting på att ni köper fler licenser.",
+    a: "Nej. Jag börjar alltid i strategin: vad ni behöver och varför. Ofta räcker verktygen ni redan har, rätt ihopkopplade. Nya system föreslår jag bara när de löser ett verkligt problem, och jag tjänar ingenting på att ni köper fler licenser.",
   },
   {
     q: "Är det här mer AI-hype?",
-    a: "Nej. AI är ett verktyg bland flera. Vi använder det där det faktiskt sparar tid och hoppar över det där det inte gör det. Strategin och helheten kommer först, tekniken väljs därefter.",
+    a: "Nej. AI är ett verktyg bland flera. Jag använder det där det faktiskt sparar tid och hoppar över det där det inte gör det. Strategin och helheten kommer först, tekniken väljs därefter.",
   },
   {
     q: "Kan vi börja smått?",
-    a: "Absolut. Många samarbeten börjar med ett avgränsat projekt: en kartläggning, en kampanj eller ett systemval. Fungerar det bra bygger vi vidare därifrån.",
+    a: "Absolut. Många samarbeten börjar med ett avgränsat projekt: en kartläggning, en kampanj eller ett systemval. Fungerar det bra växer samarbetet därifrån.",
   },
 ];
 
@@ -285,7 +285,7 @@ function Hero() {
           </h1>
           <p className="mt-8 max-w-xl text-lg text-ink/75 leading-relaxed hero-rise [animation-delay:260ms]">
             Nya system och AI-verktyg dyker upp varje vecka, och det är lätt
-            att tappa greppet. Vi hjälper er skapa ordning: en systemflora
+            att tappa greppet. Jag hjälper er skapa ordning: en systemflora
             som hänger ihop, mindre dubbelarbete och en tydlig väg framåt.
           </p>
           <div className="mt-10 flex flex-wrap items-center gap-4 hero-rise [animation-delay:400ms]">
@@ -317,7 +317,7 @@ function AiFocus() {
     {
       icon: Compass,
       title: "Strategi & verktygsval",
-      body: "Vi utgår från affärsmålet, inte från tekniken. Vilka system och verktyg ni behöver, och varför.",
+      body: "Jag utgår från affärsmålet, inte från tekniken. Vilka system och verktyg ni behöver, och varför.",
     },
     {
       icon: Cpu,
@@ -345,7 +345,7 @@ function AiFocus() {
               <p className="mt-6 text-paper/70 leading-relaxed max-w-2xl">
                 Nya system och AI-verktyg dyker upp varje vecka. Alla säger sig
                 vara oumbärliga, konkurrenterna verkar redan köra igång, och er
-                data ligger spridd på fem ställen. Vi reder ut floran, kopplar
+                data ligger spridd på fem ställen. Jag reder ut floran, kopplar
                 ihop det som ska prata med varandra och visar var AI faktiskt gör
                 nytta, så att ni får koll i stället för fler flikar.
               </p>
@@ -398,9 +398,9 @@ function StartHere() {
                 Börja med en <span className="text-brand-green">systemkartläggning</span>
               </h2>
               <p className="mt-6 text-ink/75 leading-relaxed">
-                Det naturliga första steget, och ett avgränsat uppdrag i sig. Vi
+                Det naturliga första steget, och ett avgränsat uppdrag i sig. Jag
                 går igenom vad ni använder idag, var det krånglar och vad som bör
-                göras först. Ni får ett fast pris innan vi börjar, och ingenting
+                göras först. Ni får ett fast pris innan jag börjar, och ingenting
                 binder er vid mer än det.
               </p>
               <div className="mt-8 flex flex-wrap items-center gap-x-8 gap-y-3 text-sm">
@@ -444,8 +444,8 @@ function StartHere() {
                 </ul>
                 <p className="mt-auto pt-8 text-sm text-ink/65 leading-relaxed">
                   <span className="block mb-6 h-px w-full bg-line" aria-hidden="true" />
-                  Vill ni sedan att vi genomför åtgärderna gör vi det. Vill ni
-                  göra dem själva fungerar listan lika bra utan oss.
+                  Vill ni sedan att jag genomför åtgärderna gör jag det. Vill ni
+                  göra dem själva fungerar listan lika bra utan mig.
                 </p>
               </div>
             </div>
@@ -506,7 +506,7 @@ function Services() {
       <div className="mx-auto max-w-6xl px-6 py-24 md:py-32">
         <Reveal>
           <div className="max-w-3xl">
-            <div className="eyebrow mb-5">Vad vi gör</div>
+            <div className="eyebrow mb-5">Vad jag gör</div>
             <h2 className="display-heading text-3xl md:text-5xl">
               En grund. <span className="text-brand-green">Två som bygger vidare.</span>
             </h2>
@@ -601,12 +601,12 @@ function Process() {
       <div className="relative mx-auto max-w-6xl px-6 py-24 md:py-32">
         <Reveal>
           <div className="max-w-3xl">
-            <div className="eyebrow mb-5 text-brand-green">Hur vi jobbar</div>
+            <div className="eyebrow mb-5 text-brand-green">Hur jag jobbar</div>
             <h2 className="display-heading text-3xl md:text-5xl text-paper">
               Fyra steg. <span className="text-brand-green">Varje uppdrag.</span>
             </h2>
             <p className="mt-6 text-paper/70 max-w-2xl leading-relaxed">
-              Vi börjar alltid i nuläget: hur ni faktiskt arbetar och vilka
+              Jag börjar alltid i nuläget: hur ni faktiskt arbetar och vilka
               system som bär verksamheten. Systemen är grunden, och när den
               sitter följer allt annat samma fyra steg.
             </p>
@@ -727,9 +727,9 @@ function Faq() {
               href={`mailto:${CONTACT_EMAIL}`}
               className="font-semibold border-b-2 border-brand-green pb-0.5 hover:text-brand-green"
             >
-              Mejla oss
+              Mejla mig
             </a>{" "}
-            så svarar vi inom ett dygn.
+            så svarar jag inom ett dygn.
           </p>
           <Link
             to="/pris"
@@ -797,7 +797,7 @@ function Contact() {
             Berätta vad ni <span className="text-brand-green">vill uppnå</span>.
           </h2>
           <p className="mt-6 text-ink/75 leading-relaxed">
-            Några rader räcker. Vi svarar inom ett dygn och föreslår ett kort
+            Några rader räcker. Jag svarar inom ett dygn och föreslår ett kort
             första samtal, utan förpliktelser.
           </p>
           <div className="mt-10 space-y-4 text-sm">
@@ -827,10 +827,10 @@ function Contact() {
               <div className="py-10 text-center">
                 <div className="eyebrow mb-3">Tack</div>
                 <p className="display-heading text-2xl">
-                  Tack {form.name.trim().split(" ")[0]}! Vi hör av oss inom ett dygn.
+                  Tack {form.name.trim().split(" ")[0]}! Jag hör av mig inom ett dygn.
                 </p>
                 <p className="mt-4 text-sm text-ink/60">
-                  Vi svarar på {form.email.trim()}.
+                  Jag svarar på {form.email.trim()}.
                 </p>
               </div>
             ) : (
@@ -864,7 +864,7 @@ function Contact() {
                   {status === "sending" ? "Skickar…" : "Skicka"} <ArrowUpRight className="h-4 w-4" strokeWidth={2.5} />
                 </button>
                 <p className="text-xs text-subtle">
-                  Vi svarar inom ett dygn. Går även bra att mejla direkt till {CONTACT_EMAIL}.
+                  Jag svarar inom ett dygn. Går även bra att mejla direkt till {CONTACT_EMAIL}.
                 </p>
               </>
             )}

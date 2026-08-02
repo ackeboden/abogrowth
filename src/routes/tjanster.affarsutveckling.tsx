@@ -9,7 +9,7 @@ export const Route = createFileRoute("/tjanster/affarsutveckling")({
       {
         name: "description",
         content:
-          "Nulägesanalys, positionering och tillväxtstrategi. Vi bygger en konkret plan för hur ert företag växer: analys, prioritering och genomförande.",
+          "Nulägesanalys, positionering och tillväxtstrategi. Jag bygger en konkret plan för hur ert företag växer: analys, prioritering och genomförande.",
       },
       { property: "og:title", content: "Affärsutveckling & tillväxtstrategi | ABO Growth" },
       { property: "og:description", content: "Konkret tillväxtstrategi som går att genomföra." },
@@ -59,7 +59,7 @@ function PlanMap() {
             Rätt initiativ, <span className="text-brand-green">i rätt ordning</span>.
           </h2>
           <p className="mt-6 text-ink/75 leading-relaxed">
-            En tillväxtplan är en sekvens, inte en önskelista. Vi lägger varje
+            En tillväxtplan är en sekvens, inte en önskelista. Jag lägger varje
             initiativ där det gör störst nytta och ger varje fas ett tydligt
             mål att leverera mot.
           </p>
@@ -152,7 +152,7 @@ const deliverables = [
 const steps = [
   { n: "01", t: "Kartläggning", b: "1–2 veckor. Intervjuer, datainsamling, hypoteser." },
   { n: "02", t: "Analys & strategi", b: "2–4 veckor. Analys, positionering, prioriterad plan." },
-  { n: "03", t: "Genomförande", b: "Löpande. Vi driver eller stöttar exekveringen." },
+  { n: "03", t: "Genomförande", b: "Löpande. Jag driver eller stöttar exekveringen." },
 ];
 
 function Page() {
@@ -163,7 +163,7 @@ function Page() {
         <PageHero
           eyebrow="Tjänst 02 · Affärsutveckling"
           title={<>Analys, strategi och en <span className="text-brand-green">plan som håller</span>.</>}
-          intro="En stödtjänst som bygger vidare på ordningen i era system. Vi hjälper er förstå var affären står idag, var potentialen finns och hur ni tar er dit. Tydlig metod, konkreta leverabler, ingen konsultjargong."
+          intro="En stödtjänst som bygger vidare på ordningen i era system. Jag hjälper er förstå var affären står idag, var potentialen finns och hur ni tar er dit. Tydlig metod, konkreta leverabler, ingen konsultjargong."
         />
 
         <PlanMap />
@@ -212,7 +212,7 @@ function Page() {
 
         <BookingCTA
           title="Vill ni börja med en nulägesanalys?"
-          body="Ett första möte räcker för att se om upplägget passar. Vi förbereder frågor, ni delar sammanhang."
+          body="Ett första möte räcker för att se om upplägget passar. Jag förbereder frågor, ni delar sammanhang."
         />
 
         <section className="border-b border-line">

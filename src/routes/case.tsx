@@ -40,8 +40,8 @@ function Page() {
       <main>
         <PageHero
           eyebrow="Case"
-          title={<>Uppdrag som <span className="text-brand-green">visar hur vi jobbar</span>.</>}
-          intro="Här samlar vi case från riktiga uppdrag löpande. Vill ni höra hur vi skulle lägga upp arbetet hos er är det snabbaste att ta ett samtal."
+          title={<>Uppdrag som <span className="text-brand-green">visar hur jag jobbar</span>.</>}
+          intro="Här samlar jag case från riktiga uppdrag löpande. Vill ni höra hur jag skulle lägga upp arbetet hos er är det snabbaste att ta ett samtal."
         />
 
         <section className="border-b border-line">
@@ -72,8 +72,8 @@ function Page() {
         </section>
 
         <BookingCTA
-          title="Vill ni veta hur vi skulle göra hos er?"
-          body="Berätta hur ni jobbar idag, så skissar vi på ett upplägg. Första samtalet kostar ingenting."
+          title="Vill ni veta hur jag skulle göra hos er?"
+          body="Berätta hur ni jobbar idag, så skissar jag på ett upplägg. Första samtalet kostar ingenting."
         />
       </main>
       <Footer />
@@ -90,7 +90,7 @@ function EmptyState() {
         Inga case publicerade än.
       </h2>
       <p className="mt-5 text-sm text-ink/65 max-w-md mx-auto leading-relaxed">
-        Vi lägger upp uppdrag här när kunderna gett klartecken. Under tiden visar
+        Jag lägger upp uppdrag här när kunderna gett klartecken. Under tiden visar
         arbetssättet på startsidan hur ett uppdrag drivs, steg för steg.
       </p>
       <Link
@@ -98,7 +98,7 @@ function EmptyState() {
         hash="arbetssatt"
         className="mt-8 group inline-flex items-center gap-2 bg-ink text-paper px-5 py-3 text-sm font-semibold hover:bg-brand-green transition-colors"
       >
-        Se hur vi jobbar
+        Se hur jag jobbar
         <ArrowUpRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" strokeWidth={2.5} />
       </Link>
     </div>

@@ -9,7 +9,7 @@ export const Route = createFileRoute("/pris")({
       {
         name: "description",
         content:
-          "Få en ungefärlig prisbild direkt. Svara på några frågor om omfattning så räknar vårt verktyg fram ett riktpris, och vad ett upplägg hos oss skulle kunna innehålla.",
+          "Få en ungefärlig prisbild direkt. Svara på några frågor om omfattning så räknar verktyget fram ett riktpris, och vad ett upplägg hos mig skulle kunna innehålla.",
       },
       { property: "og:title", content: "Prisuppskattning | ABO Growth" },
       { property: "og:description", content: "Räkna fram en ungefärlig prisbild för ert upplägg direkt." },
@@ -30,7 +30,7 @@ function Page() {
         <PageHero
           eyebrow="Prisuppskattning"
           title={<>Vad kostar det? <span className="text-brand-green">Räkna själv.</span></>}
-          intro="Svara på några frågor om omfattning så får ni en ungefärlig prisbild direkt, plus förslag på vad ett upplägg hos oss skulle kunna innehålla. Ingen offert, ingen förpliktelse."
+          intro="Svara på några frågor om omfattning så får ni en ungefärlig prisbild direkt, plus förslag på vad ett upplägg hos mig skulle kunna innehålla. Ingen offert, ingen förpliktelse."
         />
 
         <section className="border-b border-line">

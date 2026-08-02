@@ -9,7 +9,7 @@ export const Route = createFileRoute("/om")({
       {
         name: "description",
         content:
-          "ABO Growth drivs av Alexander från Stockholm. En person, inga mellanhänder. Strategin först, tekniken sedan och ärliga besked hela vägen.",
+          "ABO Growth drivs av Alexander från Stockholm. Jag hjälper mindre bolag få ordning i sina digitala system och AI-verktyg. Strategin först, tekniken sedan och ärliga besked hela vägen.",
       },
       { property: "og:title", content: "Om ABO Growth" },
       { property: "og:description", content: "Den ni pratar med är den som levererar. Digitala system, AI och struktur, från Stockholm." },
@@ -27,7 +27,7 @@ const principles = [
   {
     icon: Compass,
     title: "Strategin först, tekniken sedan",
-    body: "Vi börjar i affären: mål, flöden, flaskhalsar. Vilka system och verktyg som behövs är en följdfråga, aldrig utgångspunkten.",
+    body: "Jag börjar i affären: mål, flöden, flaskhalsar. Vilka system och verktyg som behövs är en följdfråga, aldrig utgångspunkten.",
   },
   {
     icon: ListChecks,
@@ -37,12 +37,12 @@ const principles = [
   {
     icon: ClipboardList,
     title: "Projektledning som metod",
-    body: "Faser, deadlines och tydligt ägarskap. Strategin är inget värd förrän den är genomförd, så vi driver den hela vägen.",
+    body: "Faser, deadlines och tydligt ägarskap. Strategin är inget värd förrän den är genomförd, så jag driver den hela vägen.",
   },
   {
     icon: Handshake,
     title: "Ärliga besked",
-    body: "Vi säger vad som går snabbt och vad som kräver uthållighet. Och om vi inte är rätt hjälp för er säger vi det också.",
+    body: "Jag säger vad som går snabbt och vad som kräver uthållighet. Och om jag inte är rätt hjälp för er säger jag det också.",
   },
 ];
 
@@ -95,8 +95,8 @@ function Page() {
                 </a>
               </div>
             </Reveal>
-            {/* Jag-form medvetet: personligast på hela sajten, resten behåller vi-form.
-                Tonen ska vara självsäker och saklig, inga vardagliga effektord. */}
+            {/* Hela sajten är i jag-form. Tonen ska vara självsäker och saklig,
+                inga vardagliga effektord. */}
             <Reveal className="md:col-span-7 space-y-6 text-ink/80 leading-relaxed" delay={130}>
               <p>
                 <strong className="block text-ink font-semibold mb-1">Jag driver saker i mål.</strong>
@@ -127,7 +127,7 @@ function Page() {
           <div className="relative mx-auto max-w-6xl px-6 py-24 md:py-32">
             <Reveal>
               <div className="max-w-3xl">
-                <div className="eyebrow mb-5">Så jobbar vi</div>
+                <div className="eyebrow mb-5">Så jobbar jag</div>
                 <h2 className="display-heading text-3xl md:text-5xl text-paper">
                   Fyra principer. <span className="text-brand-green">Inga undantag.</span>
                 </h2>
@@ -157,7 +157,7 @@ function Page() {
               <ArrowUpRight className="h-4 w-4 text-brand-green" strokeWidth={2.5} />
             </Link>
             <Link to="/" hash="tjanster" className="text-sm text-subtle hover:text-ink">
-              Se våra tjänster →
+              Se mina tjänster →
             </Link>
           </div>
         </section>

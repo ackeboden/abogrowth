@@ -127,7 +127,7 @@
 <div class="wrap">
   <div class="eyebrow">ABO Growth · Prisuppskattning</div>
   <h1 id="mainHeading">Vad vill ni ha hjälp med?</h1>
-  <p class="intro" id="mainIntro">Svara på några frågor om omfattning så får ni en ungefärlig prisbild direkt — och förslag på vad ett upplägg hos oss skulle kunna innehålla.</p>
+  <p class="intro" id="mainIntro">Svara på några frågor om omfattning så får ni en ungefärlig prisbild direkt — och förslag på vad ett upplägg hos mig skulle kunna innehålla.</p>
 
   <div class="progress-wrap" id="progressWrap">
     <div class="progress-track"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
@@ -154,7 +154,7 @@
 
   <div class="panel" id="panelContact">
     <div class="q-service-tag">Sista steget</div>
-    <div class="q-label">Vart skickar vi er prisuppskattning?</div>
+    <div class="q-label">Vart skickar jag er prisuppskattning?</div>
     <div style="display:grid; gap:12px; margin-bottom:24px;">
       <input type="text" id="contactName" placeholder="Namn" style="font-size:15px;padding:14px 16px;border:1.5px solid var(--border);border-radius:10px;font-family:inherit;">
       <input type="email" id="contactEmail" placeholder="E-post" style="font-size:15px;padding:14px 16px;border:1.5px solid var(--border);border-radius:10px;font-family:inherit;">
@@ -167,7 +167,7 @@
   </div>
 
   <div class="panel" id="panelResult">
-    <div class="sent-note">✓ Era svar är skickade till oss — vi hör av oss inom ett dygn.</div>
+    <div class="sent-note">✓ Era svar är skickade. Jag hör av mig inom ett dygn.</div>
     <div class="result-total">
       <div class="label">Ungefärlig totalkostnad</div>
       <div class="value" id="totalValue">–</div>
@@ -179,7 +179,7 @@
       <button class="btn ghost" id="resetBtn">Börja om</button>
     </div>
     <div class="disclaimer">
-      Detta är en automatisk uppskattning baserad på er omfattning, inte en offert. Ni får alltid ett konkret förslag med pris innan vi börjar, och första samtalet är kostnadsfritt.
+      Detta är en automatisk uppskattning baserad på er omfattning, inte en offert. Ni får alltid ett konkret förslag med pris innan jag börjar, och första samtalet är kostnadsfritt.
     </div>
   </div>
 </div>
@@ -435,7 +435,7 @@ function finish() {
   if (projektLow > 0) parts.push(`${formatKr(projektLow)}–${formatKr(projektHigh)} (engångsprojekt)`);
   if (lopandeLow > 0) parts.push(`${formatKr(lopandeLow)}–${formatKr(lopandeHigh)}/mån (löpande)`);
   document.getElementById("totalValue").textContent = parts.join("  +  ");
-  document.getElementById("totalNote").textContent = "Baserat på jämförbara uppdrag hos oss. Slutgiltigt pris sätts efter ett kort första samtal.";
+  document.getElementById("totalNote").textContent = "Baserat på jämförbara uppdrag hos mig. Slutgiltigt pris sätts efter ett kort första samtal.";
 
   const breakdown = document.getElementById("breakdown");
   breakdown.innerHTML = "";
@@ -478,7 +478,7 @@ function finish() {
   }).catch(() => {});
 
   document.querySelector("#panelResult .sent-note").textContent =
-    `✓ Tack ${namn}! Er uppskattning är skickad till oss — vi hör av oss på ${epost} inom ett dygn.`;
+    `✓ Tack ${namn}! Er uppskattning är skickad. Jag hör av mig på ${epost} inom ett dygn.`;
 
   // "Boka ett samtal direkt" leder till /boka (target=_top navigerar hela
   // sidan, inte iframen). Ingen mejlklient längre.

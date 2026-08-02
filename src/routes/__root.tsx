@@ -53,7 +53,7 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
       <div className="max-w-md text-center">
         <h1 className="display-heading text-2xl text-ink">Sidan kunde inte laddas</h1>
         <p className="mt-2 text-sm text-ink/65">
-          Något gick fel hos oss. Prova att ladda om sidan eller gå tillbaka till startsidan.
+          Något gick fel hos mig. Prova att ladda om sidan eller gå tillbaka till startsidan.
         </p>
         <div className="mt-6 flex flex-wrap justify-center gap-2">
           <button

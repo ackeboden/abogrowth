@@ -19,7 +19,7 @@ export function renderErrorPage(): string {
   <body>
     <div class="card">
       <h1>Sidan kunde inte laddas</h1>
-      <p>Något gick fel hos oss. Prova att ladda om sidan eller gå tillbaka till startsidan.</p>
+      <p>Något gick fel hos mig. Prova att ladda om sidan eller gå tillbaka till startsidan.</p>
       <div class="actions">
         <button class="primary" onclick="location.reload()">Försök igen</button>
         <a class="secondary" href="/">Till startsidan</a>

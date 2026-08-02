@@ -10,7 +10,7 @@ export const Route = createFileRoute("/boka")({
       {
         name: "description",
         content:
-          "Boka ett kort första samtal med ABO Growth. Kostnadsfritt och utan förpliktelser. Vi svarar inom ett dygn.",
+          "Boka ett kort första samtal med ABO Growth. Kostnadsfritt och utan förpliktelser. Jag svarar inom ett dygn.",
       },
       { property: "og:title", content: "Boka ett samtal | ABO Growth" },
       { property: "og:description", content: "Boka ett kort första samtal. Kostnadsfritt, svar inom ett dygn." },
@@ -25,8 +25,8 @@ export const Route = createFileRoute("/boka")({
 
 const loften = [
   "Kostnadsfritt och utan förpliktelser",
-  "Vi svarar inom ett dygn",
-  "Inget säljmanus – vi lyssnar först",
+  "Jag svarar inom ett dygn",
+  "Inget säljmanus, jag lyssnar först",
 ];
 
 function encodeForm(data: Record<string, string>) {
@@ -73,7 +73,7 @@ function BookingForm() {
         </div>
         <h2 className="display-heading text-2xl mb-3">Tack {form.namn.trim().split(" ")[0]}!</h2>
         <p className="text-ink/75 leading-relaxed">
-          Er förfrågan är skickad. Vi hör av oss på {form.epost.trim()} inom ett dygn med förslag på tider.
+          Er förfrågan är skickad. Jag hör av mig på {form.epost.trim()} inom ett dygn med förslag på tider.
         </p>
         <div className="mt-8">
           <Link to="/" className="text-sm text-subtle hover:text-ink">← Tillbaka till startsidan</Link>
@@ -119,7 +119,7 @@ function BookingForm() {
         <ArrowUpRight className="h-4 w-4" strokeWidth={2.5} />
       </button>
       <p className="text-xs text-subtle">
-        Vi svarar inom ett dygn. Går även bra att mejla direkt till {CONTACT_EMAIL}.
+        Jag svarar inom ett dygn. Går även bra att mejla direkt till {CONTACT_EMAIL}.
       </p>
     </form>
   );
@@ -161,7 +161,7 @@ function Page() {
         <PageHero
           eyebrow="Boka ett samtal"
           title={<>Låt oss <span className="text-brand-green">ta ett första samtal</span>.</>}
-          intro="Fyll i formuläret så hör vi av oss inom ett dygn med förslag på tider. Ett kort samtal där vi lyssnar, ställer frågor och ser om vi kan hjälpa till."
+          intro="Fyll i formuläret så hör jag av mig inom ett dygn med förslag på tider. Ett kort samtal där jag lyssnar, ställer frågor och ser om jag kan hjälpa till."
         />
 
         <section className="border-b border-line">

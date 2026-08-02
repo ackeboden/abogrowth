@@ -3,7 +3,7 @@ import { useEffect, useId, useRef, useState } from "react";
 import { ArrowUpRight, Linkedin, Menu, X } from "lucide-react";
 import { Logo } from "./Logo";
 
-export const CONTACT_EMAIL = "alexander@aboconsult.se";
+export const CONTACT_EMAIL = "alexander@abogrowth.se";
 
 // Alexanders LinkedIn-profil. Adressen innehåller "é" som måste vara
 // procentkodad (%C3%A9) för att länken ska hålla i alla webbläsare och klienter.
@@ -210,7 +210,7 @@ export function Footer() {
         <div>
           <Logo inverted />
           <p className="mt-4 text-sm text-paper/60 max-w-xs">
-            Vi hjälper er få ordning i era digitala system och AI-verktyg.
+            Jag hjälper er få ordning i era digitala system och AI-verktyg.
             Struktur, effektivitet och en tydlig väg framåt, från Stockholm.
           </p>
         </div>
@@ -257,7 +257,7 @@ export function Footer() {
 
 export function BookingCTA({
   title = "Redo att växa?",
-  body = "Boka ett kort första samtal. Vi lyssnar, ställer frågor och föreslår ett upplägg.",
+  body = "Boka ett kort första samtal. Jag lyssnar, ställer frågor och föreslår ett upplägg.",
 }: { title?: string; body?: string }) {
   return (
     <section className="bg-ink text-paper">

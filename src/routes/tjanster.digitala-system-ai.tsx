@@ -9,7 +9,7 @@ export const Route = createFileRoute("/tjanster/digitala-system-ai")({
       {
         name: "description",
         content:
-          "Strategin först, tekniken sedan. Vi hjälper företag att välja och införa rätt digitala system och AI-verktyg: en helhet som hänger ihop, utan teknikskuld.",
+          "Strategin först, tekniken sedan. Jag hjälper företag att välja och införa rätt digitala system och AI-verktyg: en helhet som hänger ihop, utan teknikskuld.",
       },
       { property: "og:title", content: "Digitala system & AI-verktyg | ABO Growth" },
       { property: "og:description", content: "Strategin först, sedan rätt system, rätt införda." },
@@ -24,8 +24,8 @@ export const Route = createFileRoute("/tjanster/digitala-system-ai")({
 
 const deliverables = [
   { t: "Systemstrategi", b: "En samlad bild av vilka system ni behöver, hur de hänger ihop och i vilken ordning de ska på plats." },
-  { t: "Arbetsflödesanalys", b: "Vi kartlägger hur arbetet faktiskt görs, inte hur det borde göras enligt processkartan." },
-  { t: "Behovsdefinition", b: "Vad ska lösas, av vem, och hur mäter vi att det fungerar?" },
+  { t: "Arbetsflödesanalys", b: "Jag kartlägger hur arbetet faktiskt görs, inte hur det borde göras enligt processkartan." },
+  { t: "Behovsdefinition", b: "Vad ska lösas, av vem, och hur mäter jag att det fungerar?" },
   { t: "Val av verktyg", b: "Objektiv jämförelse av system och AI-verktyg utifrån behov, budget och integration." },
   { t: "Införande & integration", b: "Konfiguration, integrationer, dataflytt och rollout i etapper, plus utbildning av teamet." },
   { t: "Uppföljning", b: "Adoption, effektmätning och iteration efter go-live." },
@@ -62,7 +62,7 @@ function SystemMap() {
             Från spridda verktyg till <span className="text-brand-green">ett system</span>.
           </h2>
           <p className="mt-6 text-ink/75 leading-relaxed">
-            Så här tänker vi: affären i mitten, verktygen runt omkring, valda
+            Så här tänker jag: affären i mitten, verktygen runt omkring, valda
             för att de löser er uppgift och pratar med varandra. I praktiken
             betyder det att ett lead från sajten hamnar direkt i CRM:et,
             att mejlen loggas automatiskt och att månadsrapporten i princip
@@ -148,9 +148,9 @@ function SystemMap() {
 // Samma tre-fas-upplägg som övriga tjänstesidor, så ett uppdrag känns igen
 // oavsett vilken tjänst man läser om.
 const steps = [
-  { n: "01", t: "Kartläggning", b: "1–2 veckor. Vi går igenom era arbetsflöden och system: vad ni har, vad som faktiskt används och var tiden läcker." },
+  { n: "01", t: "Kartläggning", b: "1–2 veckor. Jag går igenom era arbetsflöden och system: vad ni har, vad som faktiskt används och var tiden läcker." },
   { n: "02", t: "Systemstrategi & val", b: "1–2 veckor. Ni får en konkret plan: vilka verktyg ni behöver, i vilken ordning de ska på plats och vad det kostar." },
-  { n: "03", t: "Införande & uppföljning", b: "Löpande. Vi konfigurerar, integrerar och utbildar teamet. Sedan mäter vi effekten och justerar tills det sitter." },
+  { n: "03", t: "Införande & uppföljning", b: "Löpande. Jag konfigurerar, integrerar och utbildar teamet. Sedan mäter jag effekten och justerar tills det sitter." },
 ];
 
 const useCases = [
@@ -167,7 +167,7 @@ function Page() {
         <PageHero
           eyebrow="Tjänst 01 · Digitala system & AI"
           title={<>Strategin först. <span className="text-brand-green">Tekniken sedan.</span></>}
-          intro="Vi kartlägger era arbetsflöden, väljer rätt system och AI-verktyg, inför dem och utbildar teamet. Ni får en digital helhet som hänger samman och en vardag där systemen jobbar åt er, inte tvärtom."
+          intro="Jag kartlägger era arbetsflöden, väljer rätt system och AI-verktyg, inför dem och utbildar teamet. Ni får en digital helhet som hänger samman och en vardag där systemen jobbar åt er, inte tvärtom."
         />
 
         <SystemMap />
@@ -175,14 +175,14 @@ function Page() {
         <section className="border-b border-line">
           <div className="mx-auto max-w-6xl px-6 py-20 md:py-28">
             <Reveal className="max-w-2xl">
-              <div className="eyebrow mb-5">Vår hållning</div>
+              <div className="eyebrow mb-5">Min hållning</div>
               <h2 className="display-heading text-3xl md:text-4xl">
                 Verktyg ska <span className="text-brand-green">tjäna affären</span>, inte tvärtom.
               </h2>
               <p className="mt-6 text-ink/75 leading-relaxed">
                 Ny teknik är billig. Fel val är dyrt. Frågan är inte vilket
                 verktyg som är hetast, utan vilken helhet som löser er uppgift.
-                Vi hjälper er välja pragmatiskt, införa etappvis och mäta
+                Jag hjälper er välja pragmatiskt, införa etappvis och mäta
                 effekten, inte samla fler prenumerationer.
               </p>
             </Reveal>
@@ -219,7 +219,7 @@ function Page() {
               <div className="eyebrow mb-5">Upplägg</div>
               <h2 className="display-heading text-3xl md:text-4xl">Tre faser. <span className="text-brand-green">Tydliga milstolpar.</span></h2>
               <p className="mt-6 text-ink/75 leading-relaxed">
-                Ett uppdrag hos oss har alltid en tydlig början, konkreta
+                Ett uppdrag hos mig har alltid en tydlig början, konkreta
                 beslutspunkter och ett slut ni själva väljer. Inga eviga
                 konsulttimmar utan riktning.
               </p>
@@ -244,7 +244,7 @@ function Page() {
           <div className="mx-auto max-w-6xl px-6 py-20 md:py-28">
             <Reveal>
               <div className="eyebrow mb-5">Användningsfall</div>
-              <h2 className="display-heading text-3xl md:text-4xl mb-12">Där vi ofta börjar</h2>
+              <h2 className="display-heading text-3xl md:text-4xl mb-12">Där jag ofta börjar</h2>
             </Reveal>
             <div className="grid gap-8 md:grid-cols-3">
               {useCases.map((u, i) => (
@@ -262,7 +262,7 @@ function Page() {
 
         <BookingCTA
           title="Osäkra på vilka system och verktyg ni behöver?"
-          body="Vi tar ett första möte och kartlägger var effekten är störst, och i vilken ordning. Konkret, inte teoretiskt."
+          body="Jag tar ett första möte och kartlägger var effekten är störst, och i vilken ordning. Konkret, inte teoretiskt."
         />
 
         <section className="border-b border-line">

@@ -151,7 +151,7 @@ function ActKaos() {
   );
 }
 
-// ---- Akt 2: Vi reder ut ----
+// ---- Akt 2: Jag reder ut ----
 const redaChips: (Chip & { cut?: boolean })[] = [
   { label: "Analys", x: 50, y: 15 },
   { label: "CRM", x: 20, y: 30 },
@@ -169,9 +169,9 @@ function ActRedaUt() {
       <div className="mx-auto max-w-6xl px-6 py-20 md:py-28 grid md:grid-cols-12 gap-10 md:gap-12 items-center">
         <div className="md:col-span-5 md:order-2">
           <div className="eyebrow mb-4">02 · Med ABO Growth</div>
-          <h2 className="display-heading text-3xl md:text-5xl">Vi reder ut.</h2>
+          <h2 className="display-heading text-3xl md:text-5xl">Jag reder ut.</h2>
           <p className="mt-6 text-ink/75 leading-relaxed">
-            Vi kartlägger allt ni har, väljer bort det som inte bär och kopplar
+            Jag kartlägger allt ni har, väljer bort det som inte bär och kopplar
             ihop det som faktiskt ska prata med varandra. Strategin först,
             tekniken sedan.
           </p>
@@ -287,7 +287,7 @@ function Page() {
         <PageHero
           eyebrow="Resan"
           title={<>Från kaos till <span className="text-brand-green">ordning</span>.</>}
-          intro="Så här kan en resa med oss se ut. Scrolla för att följa med, från spretig verktygsflora som kostar pengar till en struktur som hänger ihop."
+          intro="Så här kan en resa med mig se ut. Scrolla för att följa med, från spretig verktygsflora som kostar pengar till en struktur som hänger ihop."
         />
 
         <ActKaos />
@@ -300,7 +300,7 @@ function Page() {
               <div className="eyebrow mb-4 text-brand-green">Nästa steg</div>
               <h2 className="display-heading text-3xl md:text-5xl text-paper">Redo för samma resa?</h2>
               <p className="mt-5 text-paper/70 max-w-xl leading-relaxed">
-                Boka ett kort första samtal, så börjar vi där ni står idag.
+                Boka ett kort första samtal, så börjar jag där ni står idag.
               </p>
             </div>
             <div className="md:col-span-4 md:text-right">
