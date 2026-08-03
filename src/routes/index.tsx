@@ -572,7 +572,10 @@ function Hero() {
       {/* Hero-djungeln: verktygschips som tumlar in i kaos och snäpper till
           ordning, driver i egna banor och binds av kopplingar. hero-net är
           även hemvist för pekarens strålar och markörnod. */}
-      <div ref={layerRef} className="hero-net hero-par hero-par-3 absolute inset-0" aria-hidden="true">
+      {/* Hela nätverkslagret är dolt på mobil: chips och linjer bakom texten
+          blev rörigt när rubriken tar hela bredden. Glöden och tillväxt-
+          linjen bär mobilheron i stället. */}
+      <div ref={layerRef} className="hero-net hero-par hero-par-3 absolute inset-0 hidden md:block" aria-hidden="true">
         <svg className="absolute inset-0 h-full w-full" viewBox="0 0 100 100" preserveAspectRatio="none" fill="none">
           {heroLinks.map(([a, b, delay]) => (
             <line
