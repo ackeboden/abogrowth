@@ -187,11 +187,24 @@
   scroll-snap-align: start;
 }
 
+/* Utgående sida: tippar bakåt i 3D, vrider sig lätt och krymper medan
+   den täcks. Ingående sida (stack-enter-target) svingar in åt motsatt
+   håll och rätar upp sig när den landat. Båda styrs av samma --covp. */
 .stack-cover-target {
-  transform: scale(calc(1 - var(--covp, 0) * 0.06));
-  opacity: calc(1 - var(--covp, 0) * 0.55);
-  transform-origin: 50% 30%;
+  transform: perspective(1200px) rotateX(calc(var(--covp, 0) * 10deg))
+    rotate(calc(var(--covp, 0) * -3deg)) scale(calc(1 - var(--covp, 0) * 0.08));
+  opacity: calc(1 - var(--covp, 0) * 0.6);
+  transform-origin: 50% 20%;
   will-change: transform, opacity;
+}
+
+.stack-enter-target {
+  transform: perspective(1200px) rotateX(calc((1 - var(--covp, 0)) * -8deg))
+    rotate(calc((1 - var(--covp, 0)) * 2deg))
+    translateY(calc((1 - var(--covp, 0)) * 26px))
+    scale(calc(0.96 + var(--covp, 0) * 0.04));
+  transform-origin: 50% 12%;
+  will-change: transform;
 }
 
 /* Parallaxlager i heron. --par-x/--par-y (-1..1) sätts på sektionen vid
@@ -811,7 +824,8 @@ details[open] .faq-icon {
   .hero-chip-box {
     transition: none;
   }
-  .stack-cover-target {
+  .stack-cover-target,
+  .stack-enter-target {
     transform: none;
     opacity: 1;
   }

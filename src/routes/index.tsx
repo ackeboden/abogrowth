@@ -749,7 +749,8 @@ function JungleTest() {
   return (
     <section id="djungeltestet" className="snap-start relative z-10 min-h-svh bg-ink text-paper overflow-hidden">
       <div className="ai-glow" aria-hidden="true" />
-      <div className="relative mx-auto max-w-6xl px-6 py-24 md:py-32">
+      {/* stack-enter-target: svingar in via --covp när sektionen täcker heron */}
+      <div className="stack-enter-target relative mx-auto max-w-6xl px-6 py-24 md:py-32">
         <Reveal>
           <div className="max-w-3xl">
             <div className="eyebrow mb-5">Huvudtjänst · Digitala system & AI</div>
