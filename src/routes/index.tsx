@@ -215,6 +215,7 @@ function Index() {
         </MorkScen>
         <StartHere />
         <Services />
+        <Varde />
         <Process />
         <Faq />
         <Contact />
@@ -1167,6 +1168,97 @@ function Services() {
               </Reveal>
             );
           })}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// Värdet av tjänsterna: EFFEKTEN i kundens vardag och plånbok, medvetet
+// skilt från tjänstekortens "Ni får"-leverabler (sakerna som landar på
+// bordet). Huvudtjänsten väger tyngst: fem punkter och framhävt kort.
+type VardePunkt = { rubrik: string; rad: string };
+
+const vardeHuvud: VardePunkt[] = [
+  { rubrik: "Spara pengar", rad: "Färre licenser, mindre spill och timmar tillbaka varje vecka." },
+  { rubrik: "Mindre dubbeljobb", rad: "Uppgifter skrivs in en gång och landar rätt överallt." },
+  { rubrik: "Tydligare arbetsflöde", rad: "Alla vet var saker finns och vad som händer härnäst." },
+  { rubrik: "Modernare verktyg", rad: "Rätt teknik i tiden, utan att jaga varje trend." },
+  { rubrik: "En opartisk rådgivare", rad: "Jag tjänar ingenting på att ni köper fler licenser." },
+];
+
+const vardeStod: { tjanst: string; punkter: VardePunkt[] }[] = [
+  {
+    tjanst: "Affärsutveckling",
+    punkter: [
+      { rubrik: "Hitta nya marknader", rad: "Tillväxt i segment ni ännu inte prövat." },
+      { rubrik: "Nytt perspektiv", rad: "Utifrånblick på det ni sitter för nära för att se." },
+      { rubrik: "Grundade prioriteringar", rad: "Vägval byggda på analys, inte magkänsla." },
+      { rubrik: "En plan som genomförs", rad: "Faser och deadlines i stället för en rapport i en mapp." },
+    ],
+  },
+  {
+    tjanst: "Optimerade kampanjer",
+    punkter: [
+      { rubrik: "Spara annonspengar", rad: "Budgeten läggs där den ger effekt, spillet försvinner." },
+      { rubrik: "Nå rätt målgrupp snabbare", rad: "Rätt budskap möter rätt personer från start." },
+      { rubrik: "Beslut på data", rad: "Siffror i stället för gissningar när kampanjer skruvas." },
+      { rubrik: "Syns där kunderna finns", rad: "Kanalval efter var era kunder faktiskt är." },
+    ],
+  },
+];
+
+function Varde() {
+  return (
+    <section id="varde" className="border-b border-line bg-white">
+      <div className="mx-auto max-w-6xl px-6 py-24 md:py-32">
+        <Reveal>
+          <div className="max-w-3xl">
+            <div className="eyebrow mb-5">Värdet</div>
+            <h2 className="display-heading text-3xl md:text-5xl">
+              Vad får ni <span className="text-brand-green">ut av det?</span>
+            </h2>
+            <p className="mt-6 text-ink/70 leading-relaxed max-w-2xl">
+              Leverabler i all ära, men det som räknas är effekten i vardagen
+              och plånboken. Det här är vad kunderna faktiskt får ut.
+            </p>
+          </div>
+        </Reveal>
+
+        <Reveal delay={100}>
+          <div className="relative mt-16 bg-paper border border-brand-green/50 shadow-md p-5 md:p-10 overflow-hidden transition-all duration-300 hover:border-brand-green hover:-translate-y-1">
+            <span aria-hidden="true" className="absolute inset-x-0 top-0 h-1 bg-brand-green" />
+            <div className="flex flex-wrap items-center gap-3 mb-8">
+              <h3 className="display-heading text-xl md:text-2xl">Digitala system & AI</h3>
+              <span className="text-[10px] tracked px-2 py-1 bg-brand-green text-paper">Huvudtjänst</span>
+            </div>
+            <div className="grid gap-x-8 gap-y-6 sm:grid-cols-2 lg:grid-cols-5">
+              {vardeHuvud.map((v) => (
+                <div key={v.rubrik} className="border-l-2 border-brand-green pl-4">
+                  <div className="font-semibold mb-1.5">{v.rubrik}</div>
+                  <p className="text-sm text-ink/65 leading-relaxed">{v.rad}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </Reveal>
+
+        <div className="mt-6 grid gap-6 md:grid-cols-2">
+          {vardeStod.map((s, i) => (
+            <Reveal key={s.tjanst} delay={200 + i * 120}>
+              <div className="h-full bg-paper border border-line shadow-sm p-5 md:p-8 transition-all duration-300 hover:border-brand-green/40 hover:shadow-md hover:-translate-y-1">
+                <h3 className="display-heading text-lg mb-6">{s.tjanst}</h3>
+                <div className="grid gap-x-6 gap-y-5 sm:grid-cols-2">
+                  {s.punkter.map((v) => (
+                    <div key={v.rubrik} className="border-l-2 border-brand-green/50 pl-4">
+                      <div className="font-semibold text-sm mb-1">{v.rubrik}</div>
+                      <p className="text-sm text-ink/65 leading-relaxed">{v.rad}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </Reveal>
+          ))}
         </div>
       </div>
     </section>
