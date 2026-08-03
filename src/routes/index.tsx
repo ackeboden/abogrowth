@@ -398,77 +398,14 @@ function Stapel({ children }: { children: React.ReactNode }) {
       mal = fart * 2.5;
       if (!lutRaf) lutRaf = requestAnimationFrame(lutLoop);
     };
-    // VÄXLAD SCROLL för mushjul/trackpad: en medveten gest = exakt ett
-    // sidbyte. Delta ackumuleras till en tröskel, sedan glider vi styrt
-    // till nästa sektion och ignorerar allt hjul-delta under spärrtiden
-    // (annars ger trackpadens efterrullning flera byten per svep).
-    // Touch växlas via CSS-snäpp (mandatory), inte här. Scrollbar,
-    // tangentbord och programmatisk scroll rörs aldrig.
-    const TROSKEL = 90;
-    const SPARR_MS = 950;
-    const GLID_MS = 700;
-    let ack = 0;
-    let sparrTill = 0;
-    let glidRaf = 0;
-
-    const glidTill = (malY: number) => {
-      const start = window.scrollY;
-      const dist = malY - start;
-      const t0 = performance.now();
-      const ease = (t: number) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
-      const steg = (nu: number) => {
-        const t = Math.min(1, (nu - t0) / GLID_MS);
-        window.scrollTo(0, start + dist * ease(t));
-        glidRaf = t < 1 ? requestAnimationFrame(steg) : 0;
-      };
-      cancelAnimationFrame(glidRaf);
-      glidRaf = requestAnimationFrame(steg);
-    };
-
-    const onWheel = (e: WheelEvent) => {
-      if (e.ctrlKey) return; // zoomgest
-      const dy = e.deltaMode === 1 ? e.deltaY * 16 : e.deltaY;
-      if (Math.abs(e.deltaX) > Math.abs(dy)) return; // horisontell gest
-      const riktning = Math.sign(dy);
-      if (!riktning) return;
-      const vh = window.innerHeight;
-
-      // Aktiv sektion: den vars wrapper täcker viewportens överkant
-      const rekt = wrappers.map((w) => w.getBoundingClientRect());
-      let idx = 0;
-      for (let i = 0; i < rekt.length; i++) if (rekt[i].top <= 1) idx = i;
-      const r = rekt[idx];
-
-      // Sektion högre än skärmen: fri scroll tills kanten är nådd
-      const hog = r.height > vh + 2;
-      const vidBotten = r.bottom <= vh + 2;
-      const vidTopp = r.top >= -2;
-      if (hog && ((riktning > 0 && !vidBotten) || (riktning < 0 && !vidTopp))) return;
-
-      const mal = idx + riktning;
-      if (mal < 0 || mal >= wrappers.length) return; // utanför kortleken: native (footern/toppen)
-
-      e.preventDefault(); // härifrån äger vi gesten
-      const nu = performance.now();
-      if (nu < sparrTill) return;
-      ack += dy;
-      if (Math.abs(ack) < TROSKEL) return;
-      ack = 0;
-      sparrTill = nu + SPARR_MS;
-      glidTill(rekt[mal].top + window.scrollY);
-    };
-
     uppdatera();
     window.addEventListener("scroll", onScroll, { passive: true });
     window.addEventListener("resize", onScroll);
-    window.addEventListener("wheel", onWheel, { passive: false });
     return () => {
       window.removeEventListener("scroll", onScroll);
       window.removeEventListener("resize", onScroll);
-      window.removeEventListener("wheel", onWheel);
       cancelAnimationFrame(raf);
       cancelAnimationFrame(lutRaf);
-      cancelAnimationFrame(glidRaf);
       document.documentElement.style.removeProperty("--lut");
     };
   }, []);
@@ -1099,7 +1036,7 @@ function JungleTest() {
 
 function Services() {
   return (
-    <section id="tjanster" className="snap-start border-b border-line bg-mist">
+    <section id="tjanster" className="border-b border-line bg-mist">
       <div className="mx-auto max-w-6xl px-6 py-24 md:py-32">
         <Reveal>
           <div className="max-w-3xl">
@@ -1235,7 +1172,7 @@ const vardeTjanster: {
 
 function Varde() {
   return (
-    <section id="varde" className="snap-start border-b border-line bg-white">
+    <section id="varde" className="border-b border-line bg-white">
       <div className="mx-auto max-w-6xl px-6 py-24 md:py-32">
         <Reveal>
           <div className="max-w-3xl">
@@ -1289,7 +1226,7 @@ function Varde() {
 
 function Process() {
   return (
-    <section id="arbetssatt" className="snap-start relative bg-ink text-paper overflow-hidden">
+    <section id="arbetssatt" className="relative bg-ink text-paper overflow-hidden">
       <GrowthLine className="opacity-40" />
       <div className="relative mx-auto max-w-6xl px-6 py-24 md:py-32">
         <Reveal>
@@ -1401,7 +1338,7 @@ function ProcessLine() {
 
 function Faq() {
   return (
-    <section id="faq" className="snap-start border-b border-line bg-mist">
+    <section id="faq" className="border-b border-line bg-mist">
       <div className="mx-auto max-w-6xl px-6 py-24 md:py-32 grid md:grid-cols-12 gap-12 items-start">
         <Reveal className="md:col-span-4">
           <div className="eyebrow mb-5">Vanliga frågor</div>
@@ -1476,7 +1413,7 @@ function Contact() {
   const sent = status === "sent";
 
   return (
-    <section id="kontakt" className="snap-start bg-paper">
+    <section id="kontakt" className="bg-paper">
       <div className="mx-auto max-w-6xl px-6 py-24 md:py-32 grid md:grid-cols-12 gap-12">
         <Reveal className="md:col-span-5">
           <div className="eyebrow mb-5">Kontakt</div>
