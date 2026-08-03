@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { Children, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { ArrowDown, ArrowUpRight, Check, Plus } from "lucide-react";
 import { Header, Footer, GrowthLine, Reveal, useInView, useIsMobile, CONTACT_EMAIL } from "@/components/Site";
 
@@ -201,15 +201,15 @@ function Index() {
     <div className="min-h-screen bg-paper text-ink">
       <Header />
       <main>
-        <MorkScen>
+        <Stapel>
           <Hero />
           <JungleTest />
-        </MorkScen>
-        <Services />
-        <Varde />
-        <Process />
-        <Faq />
-        <Contact />
+          <Services />
+          <Varde />
+          <Process />
+          <Faq />
+          <Contact />
+        </Stapel>
       </main>
       <Footer />
     </div>
@@ -338,29 +338,65 @@ function Bokstavsrad({ text, bas, steg = 0.03 }: { text: string; bas: number; st
 const useKlientLayoutEffect = typeof window !== "undefined" ? useLayoutEffect : useEffect;
 
 /**
- * MorkScen — sidbytes-scrollen. Heron (första barnet) är sticky och
- * Djungeltestet glider upp över den som en ny sida. Här mäts hur långt
- * täckningen kommit (--covp 0..1) så heron kan krympa och tona i CSS.
- * Scrollen kapas aldrig: allt är native scroll + sticky + snap.
+ * Stapel — kortleken. Varje sektion wrappas i en sticky yta med stigande
+ * z-index; nästa sektion täcker den förra medan den inre ytan (.sida-yta)
+ * tippar bort (--covp) och entrén svingar in (--entp). En enda rAF-struken
+ * scroll-lyssnare mäter alla wrappers och sätter variablerna. Här bor även
+ * fartlutningen: --lut på dokumentroten lerpas mot scrollhastigheten och
+ * fjädrar tillbaka mot noll när scrollandet stannar.
  */
-function MorkScen({ children }: { children: React.ReactNode }) {
+function Stapel({ children }: { children: React.ReactNode }) {
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
+    const rot = ref.current;
+    if (!rot) return;
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const wrappers = [...rot.children] as HTMLElement[];
     let raf = 0;
+
+    // Fartlutningen: mål sätts av scrollhastigheten, värdet lerpas dit och
+    // målet självt fjädrar mot noll, så sidan alltid landar rakt.
+    let lut = 0;
+    let mal = 0;
+    let lutRaf = 0;
+    let lastY = window.scrollY;
+    let lastT = performance.now();
+    const lutLoop = () => {
+      lut += (mal - lut) * 0.12;
+      mal *= 0.88;
+      if (Math.abs(lut) > 0.01 || Math.abs(mal) > 0.01) {
+        document.documentElement.style.setProperty("--lut", `${lut.toFixed(3)}deg`);
+        lutRaf = requestAnimationFrame(lutLoop);
+      } else {
+        lut = 0;
+        lutRaf = 0;
+        document.documentElement.style.setProperty("--lut", "0deg");
+      }
+    };
+
     const uppdatera = () => {
       raf = 0;
-      const r = el.getBoundingClientRect();
-      const hero = el.firstElementChild as HTMLElement | null;
-      const h = hero?.offsetHeight || window.innerHeight;
-      const p = Math.min(1, Math.max(0, -r.top / h));
-      el.style.setProperty("--covp", p.toFixed(3));
+      const vh = window.innerHeight;
+      const entp = wrappers.map((w) => {
+        const top = w.getBoundingClientRect().top;
+        return Math.min(1, Math.max(0, (vh - top) / vh));
+      });
+      wrappers.forEach((w, i) => {
+        w.style.setProperty("--entp", entp[i].toFixed(3));
+        w.style.setProperty("--covp", (entp[i + 1] ?? 0).toFixed(3));
+      });
     };
     const onScroll = () => {
       if (!raf) raf = requestAnimationFrame(uppdatera);
+      const nu = performance.now();
+      const dy = window.scrollY - lastY;
+      const dt = Math.max(1, nu - lastT);
+      lastY = window.scrollY;
+      lastT = nu;
+      const fart = Math.max(-1, Math.min(1, (dy / dt) * 0.5));
+      mal = fart * 2.5;
+      if (!lutRaf) lutRaf = requestAnimationFrame(lutLoop);
     };
     uppdatera();
     window.addEventListener("scroll", onScroll, { passive: true });
@@ -369,12 +405,18 @@ function MorkScen({ children }: { children: React.ReactNode }) {
       window.removeEventListener("scroll", onScroll);
       window.removeEventListener("resize", onScroll);
       cancelAnimationFrame(raf);
+      cancelAnimationFrame(lutRaf);
+      document.documentElement.style.removeProperty("--lut");
     };
   }, []);
 
   return (
     <div ref={ref}>
-      {children}
+      {Children.map(children, (barn, i) => (
+        <div className="sticky top-0" style={{ zIndex: i }}>
+          <div className="sida-yta">{barn}</div>
+        </div>
+      ))}
     </div>
   );
 }
@@ -499,10 +541,9 @@ function Hero() {
   const kaos = scen === "kaos";
 
   return (
-    // Sticky + z-0: Djungeltestet (z-10) glider upp över heron som en ny
-    // sida. stack-cover-target krymper och tonar innehållet via --covp.
-    <section ref={ref} id="top" className="snap-start sticky top-0 z-0 bg-ink text-paper overflow-hidden">
-      <div className="stack-cover-target relative min-h-svh flex items-center">
+    // Kortleksbeteendet (sticky, z-ordning, tilt) sköts av Stapel-wrappern.
+    <section ref={ref} id="top" className="snap-start relative bg-ink text-paper overflow-hidden">
+      <div className="relative min-h-svh flex items-center">
       <div className="hero-par hero-par-1 absolute inset-0" aria-hidden="true">
         <div className="ai-glow" />
       </div>
@@ -739,10 +780,9 @@ function JungleTest() {
   if (n >= 5) for (let i = 0; i < n; i += 2) tangle.push([i, (i + 3) % n]);
 
   return (
-    <section id="djungeltestet" className="snap-start relative z-10 min-h-svh bg-ink text-paper overflow-hidden">
+    <section id="djungeltestet" className="snap-start relative min-h-svh bg-ink text-paper overflow-hidden">
       <div className="ai-glow" aria-hidden="true" />
-      {/* stack-enter-target: svingar in via --covp när sektionen täcker heron */}
-      <div className="stack-enter-target relative mx-auto max-w-6xl px-6 py-24 md:py-32">
+      <div className="relative mx-auto max-w-6xl px-6 py-24 md:py-32">
         <Reveal>
           <div className="max-w-3xl">
             <div className="eyebrow mb-5">Huvudtjänst · Digitala system & AI</div>
@@ -1132,7 +1172,7 @@ const vardeTjanster: {
 
 function Varde() {
   return (
-    <section id="varde" className="border-b border-line bg-white">
+    <section id="varde" className="snap-start border-b border-line bg-white">
       <div className="mx-auto max-w-6xl px-6 py-24 md:py-32">
         <Reveal>
           <div className="max-w-3xl">
@@ -1186,7 +1226,7 @@ function Varde() {
 
 function Process() {
   return (
-    <section id="arbetssatt" className="relative bg-ink text-paper overflow-hidden">
+    <section id="arbetssatt" className="snap-start relative bg-ink text-paper overflow-hidden">
       <GrowthLine className="opacity-40" />
       <div className="relative mx-auto max-w-6xl px-6 py-24 md:py-32">
         <Reveal>
@@ -1298,7 +1338,7 @@ function ProcessLine() {
 
 function Faq() {
   return (
-    <section id="faq" className="border-b border-line bg-mist">
+    <section id="faq" className="snap-start border-b border-line bg-mist">
       <div className="mx-auto max-w-6xl px-6 py-24 md:py-32 grid md:grid-cols-12 gap-12 items-start">
         <Reveal className="md:col-span-4">
           <div className="eyebrow mb-5">Vanliga frågor</div>
@@ -1373,7 +1413,7 @@ function Contact() {
   const sent = status === "sent";
 
   return (
-    <section id="kontakt">
+    <section id="kontakt" className="snap-start bg-paper">
       <div className="mx-auto max-w-6xl px-6 py-24 md:py-32 grid md:grid-cols-12 gap-12">
         <Reveal className="md:col-span-5">
           <div className="eyebrow mb-5">Kontakt</div>
