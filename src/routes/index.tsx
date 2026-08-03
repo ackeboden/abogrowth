@@ -191,14 +191,6 @@ const faqItems = [
   },
 ];
 
-// Det paketerade första steget. Håll i linje med tjänst 01 och priskalkylatorn:
-// avgränsat uppdrag, fast pris innan start.
-const mappingIncludes = [
-  "Genomgång av systemen, verktygen och licenserna ni har idag",
-  "En karta över hur allt hänger ihop, och var det glappar",
-  "Prioriterad åtgärdslista: vad som ger mest effekt först",
-  "Förslag på var automation och AI sparar tid hos just er",
-];
 
 // Orden roterar det vi skapar ordning i — besökaren ska inom sekunder förstå
 // kärnan: koll och struktur i den digitala floran.
@@ -213,7 +205,6 @@ function Index() {
           <Hero />
           <JungleTest />
         </MorkScen>
-        <StartHere />
         <Services />
         <Varde />
         <Process />
@@ -1003,86 +994,9 @@ function JungleTest() {
   );
 }
 
-/**
- * StartHere — paketerar systemkartläggningen som ett tydligt första steg.
- * Finns för att besökaren annars inte vet hur ett samarbete börjar eller
- * vad som konkret landar på bordet.
- */
-function StartHere() {
-  return (
-    <section id="borja-har" className="snap-start border-b border-line bg-white">
-      <div className="mx-auto max-w-6xl px-6 py-24 md:py-32">
-        <Reveal>
-          {/* items-stretch (default) + h-full på kortet gör att kolumnernas
-              underkanter hamnar i linje i stället för att sluta olika högt. */}
-          <div className="grid lg:grid-cols-12 gap-10 lg:gap-16">
-            <div className="lg:col-span-5 flex flex-col">
-              <div className="eyebrow mb-5">Första steget</div>
-              <h2 className="display-heading text-3xl md:text-5xl">
-                Börja med en <span className="text-brand-green">systemkartläggning</span>
-              </h2>
-              <p className="mt-6 text-ink/75 leading-relaxed">
-                Det naturliga första steget, och ett avgränsat uppdrag i sig. Jag
-                går igenom vad ni använder idag, var det krånglar och vad som bör
-                göras först. Ni får ett fast pris innan jag börjar, och ingenting
-                binder er vid mer än det.
-              </p>
-              <div className="mt-8 flex flex-wrap items-center gap-x-8 gap-y-3 text-sm">
-                <span>
-                  <span className="tracked text-[10px] text-subtle block mb-1">Tid</span>
-                  <span className="font-semibold">1 till 2 veckor</span>
-                </span>
-                <span>
-                  <span className="tracked text-[10px] text-subtle block mb-1">Upplägg</span>
-                  <span className="font-semibold">Avgränsat projekt, fast pris</span>
-                </span>
-              </div>
-              {/* mt-auto trycker ned knapparna så de möter kortets underkant */}
-              <div className="mt-auto pt-10 flex flex-wrap items-center gap-4">
-                <Link
-                  to="/boka"
-                  className="inline-flex items-center gap-2 bg-ink text-paper px-6 py-3.5 text-sm font-semibold hover:bg-brand-green transition-colors"
-                >
-                  Boka ett samtal <ArrowUpRight className="h-4 w-4" strokeWidth={2.5} />
-                </Link>
-                <Link
-                  to="/pris"
-                  className="group inline-flex items-center gap-1.5 text-sm font-semibold border-b-2 border-brand-green pb-1 hover:text-brand-green"
-                >
-                  Se vad det kan kosta
-                  <ArrowUpRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" strokeWidth={2.5} />
-                </Link>
-              </div>
-            </div>
-
-            <div className="lg:col-span-7 flex">
-              <div className="w-full h-full flex flex-col border border-brand-green/40 bg-paper p-5 md:p-10 shadow-sm">
-                <div className="tracked text-[10px] text-subtle mb-6">Det här får ni</div>
-                <ul className="space-y-5">
-                  {mappingIncludes.map((item) => (
-                    <li key={item} className="flex items-start gap-3.5 text-sm md:text-base text-ink/85 leading-relaxed">
-                      <Check className="h-5 w-5 mt-0.5 shrink-0 text-brand-green" strokeWidth={2.5} />
-                      {item}
-                    </li>
-                  ))}
-                </ul>
-                <p className="mt-auto pt-8 text-sm text-ink/65 leading-relaxed">
-                  <span className="block mb-6 h-px w-full bg-line" aria-hidden="true" />
-                  Vill ni sedan att jag genomför åtgärderna gör jag det. Vill ni
-                  göra dem själva fungerar listan lika bra utan mig.
-                </p>
-              </div>
-            </div>
-          </div>
-        </Reveal>
-      </div>
-    </section>
-  );
-}
-
 function Services() {
   return (
-    <section id="tjanster" className="border-b border-line bg-mist">
+    <section id="tjanster" className="snap-start border-b border-line bg-mist">
       <div className="mx-auto max-w-6xl px-6 py-24 md:py-32">
         <Reveal>
           <div className="max-w-3xl">
@@ -1175,19 +1089,27 @@ function Services() {
 }
 
 // Värdet av tjänsterna: EFFEKTEN i kundens vardag och plånbok, medvetet
-// skilt från tjänstekortens "Ni får"-leverabler (sakerna som landar på
-// bordet). Huvudtjänsten väger tyngst: fem punkter och framhävt kort.
+// skilt från tjänstekortens "Ni får"-leverabler. Alla tre kort delar EXAKT
+// samma skelett (vertikal lista, samma typografi); huvudtjänsten framhävs
+// enbart med färg. Vertikala listor radbryter aldrig ojämnt.
 type VardePunkt = { rubrik: string; rad: string };
 
-const vardeHuvud: VardePunkt[] = [
-  { rubrik: "Spara pengar", rad: "Färre licenser, mindre spill och timmar tillbaka varje vecka." },
-  { rubrik: "Mindre dubbeljobb", rad: "Uppgifter skrivs in en gång och landar rätt överallt." },
-  { rubrik: "Tydligare arbetsflöde", rad: "Alla vet var saker finns och vad som händer härnäst." },
-  { rubrik: "Modernare verktyg", rad: "Rätt teknik i tiden, utan att jaga varje trend." },
-  { rubrik: "En opartisk rådgivare", rad: "Jag tjänar ingenting på att ni köper fler licenser." },
-];
-
-const vardeStod: { tjanst: string; punkter: VardePunkt[] }[] = [
+const vardeTjanster: {
+  tjanst: string;
+  huvud?: boolean;
+  punkter: VardePunkt[];
+}[] = [
+  {
+    tjanst: "Digitala system & AI",
+    huvud: true,
+    punkter: [
+      { rubrik: "Spara pengar", rad: "Färre licenser, mindre spill och timmar tillbaka varje vecka." },
+      { rubrik: "Mindre dubbeljobb", rad: "Uppgifter skrivs in en gång och landar rätt överallt." },
+      { rubrik: "Tydligare arbetsflöde", rad: "Alla vet var saker finns och vad som händer härnäst." },
+      { rubrik: "Modernare verktyg", rad: "Rätt teknik i tiden, utan att jaga varje trend." },
+      { rubrik: "En opartisk rådgivare", rad: "Jag tjänar ingenting på att ni köper fler licenser." },
+    ],
+  },
   {
     tjanst: "Affärsutveckling",
     punkter: [
@@ -1225,37 +1147,34 @@ function Varde() {
           </div>
         </Reveal>
 
-        <Reveal delay={100}>
-          <div className="relative mt-16 bg-paper border border-brand-green/50 shadow-md p-5 md:p-10 overflow-hidden transition-all duration-300 hover:border-brand-green hover:-translate-y-1">
-            <span aria-hidden="true" className="absolute inset-x-0 top-0 h-1 bg-brand-green" />
-            <div className="flex flex-wrap items-center gap-3 mb-8">
-              <h3 className="display-heading text-xl md:text-2xl">Digitala system & AI</h3>
-              <span className="text-[10px] tracked px-2 py-1 bg-brand-green text-paper">Huvudtjänst</span>
-            </div>
-            <div className="grid gap-x-8 gap-y-6 sm:grid-cols-2 lg:grid-cols-5">
-              {vardeHuvud.map((v) => (
-                <div key={v.rubrik} className="border-l-2 border-brand-green pl-4">
-                  <div className="font-semibold mb-1.5">{v.rubrik}</div>
-                  <p className="text-sm text-ink/65 leading-relaxed">{v.rad}</p>
+        {/* Tre identiska kolumner. items-start så inget kort tänjs ut. */}
+        <div className="mt-16 grid gap-6 lg:grid-cols-3 items-start">
+          {vardeTjanster.map((t, i) => (
+            <Reveal key={t.tjanst} delay={i * 120}>
+              <div
+                className={`relative overflow-hidden bg-paper border p-5 md:p-8 ${
+                  t.huvud ? "border-brand-green/50 shadow-md" : "border-line shadow-sm"
+                }`}
+              >
+                {t.huvud && (
+                  <span aria-hidden="true" className="absolute inset-x-0 top-0 h-1 bg-brand-green" />
+                )}
+                <div className="flex items-center justify-between gap-3 mb-7 min-h-7">
+                  <h3 className="display-heading text-lg">{t.tjanst}</h3>
+                  {t.huvud && (
+                    <span className="text-[10px] tracked px-2 py-1 bg-brand-green text-paper shrink-0">
+                      Huvudtjänst
+                    </span>
+                  )}
                 </div>
-              ))}
-            </div>
-          </div>
-        </Reveal>
-
-        <div className="mt-6 grid gap-6 md:grid-cols-2">
-          {vardeStod.map((s, i) => (
-            <Reveal key={s.tjanst} delay={200 + i * 120}>
-              <div className="h-full bg-paper border border-line shadow-sm p-5 md:p-8 transition-all duration-300 hover:border-brand-green/40 hover:shadow-md hover:-translate-y-1">
-                <h3 className="display-heading text-lg mb-6">{s.tjanst}</h3>
-                <div className="grid gap-x-6 gap-y-5 sm:grid-cols-2">
-                  {s.punkter.map((v) => (
-                    <div key={v.rubrik} className="border-l-2 border-brand-green/50 pl-4">
+                <ul className="space-y-5">
+                  {t.punkter.map((v) => (
+                    <li key={v.rubrik} className="border-l-2 border-brand-green pl-4">
                       <div className="font-semibold text-sm mb-1">{v.rubrik}</div>
                       <p className="text-sm text-ink/65 leading-relaxed">{v.rad}</p>
-                    </div>
+                    </li>
                   ))}
-                </div>
+                </ul>
               </div>
             </Reveal>
           ))}
