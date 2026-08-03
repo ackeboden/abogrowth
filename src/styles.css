@@ -181,28 +181,12 @@
   animation: growth-dot-in 0.4s ease-out 2.6s forwards;
 }
 
-/* Sidbytes-scroll: heron är sticky och Djungeltestet glider upp över den.
-   --covp (0..1, sätts av MorkScen via scroll) krymper och tonar heron
-   medan den täcks, så bytet känns som att en ny sida läggs ovanpå. */
+/* Mjuk snäpplandning för de två helskärmsscenerna (hero + Djungeltestet) */
 .snap-start {
   scroll-snap-align: start;
 }
 
-/* Kortleken: varje sektions inre yta bär EN kombinerad transform.
-   Utgång styrs av --covp (hur mycket nästa sektion täckt mig): tippar
-   bakåt, vrider och krymper. Entré styrs av --entp (hur långt jag själv
-   kommit in, standard 1 = landad): svingar in åt motsatt håll och rätar
-   upp sig till exakt noll. --lut är fartlutningen som gäller alla ytor
-   samtidigt. SSR utan JS: allt stilla och rakt. */
-.sida-yta {
-  transform: perspective(1200px)
-    rotateX(calc(var(--covp, 0) * 10deg + (1 - var(--entp, 1)) * -8deg))
-    rotate(calc(var(--covp, 0) * -3deg + (1 - var(--entp, 1)) * 2deg + var(--lut, 0deg)))
-    translateY(calc((1 - var(--entp, 1)) * 26px))
-    scale(calc(1 - var(--covp, 0) * 0.08 - (1 - var(--entp, 1)) * 0.04));
-  opacity: calc(1 - var(--covp, 0) * 0.6);
-  transform-origin: 50% 20%;
-}
+
 
 /* Parallaxlager i heron. --par-x/--par-y (-1..1) sätts på sektionen vid
    musrörelse; lagren glider olika långt så djupet känns. Transitionen ger
@@ -820,9 +804,5 @@ details[open] .faq-icon {
   .hero-node,
   .hero-chip-box {
     transition: none;
-  }
-  .sida-yta {
-    transform: none;
-    opacity: 1;
   }
 }

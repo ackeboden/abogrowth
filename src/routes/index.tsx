@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { Children, useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { ArrowDown, ArrowUpRight, Check, Plus } from "lucide-react";
 import { Header, Footer, GrowthLine, Reveal, useInView, useIsMobile, CONTACT_EMAIL } from "@/components/Site";
 
@@ -199,17 +199,17 @@ const rotatingWords = ["systemen", "verktygen", "marknadsföringen", "försäljn
 function Index() {
   return (
     <div className="min-h-screen bg-paper text-ink">
+      <FramstegsLinje />
+      <SidNav />
       <Header />
       <main>
-        <Stapel>
-          <Hero />
-          <JungleTest />
-          <Services />
-          <Varde />
-          <Process />
-          <Faq />
-          <Contact />
-        </Stapel>
+        <Hero />
+        <JungleTest />
+        <Services />
+        <Varde />
+        <Process />
+        <Faq />
+        <Contact />
       </main>
       <Footer />
     </div>
@@ -338,65 +338,23 @@ function Bokstavsrad({ text, bas, steg = 0.03 }: { text: string; bas: number; st
 const useKlientLayoutEffect = typeof window !== "undefined" ? useLayoutEffect : useEffect;
 
 /**
- * Stapel — kortleken. Varje sektion wrappas i en sticky yta med stigande
- * z-index; nästa sektion täcker den förra medan den inre ytan (.sida-yta)
- * tippar bort (--covp) och entrén svingar in (--entp). En enda rAF-struken
- * scroll-lyssnare mäter alla wrappers och sätter variablerna. Här bor även
- * fartlutningen: --lut på dokumentroten lerpas mot scrollhastigheten och
- * fjädrar tillbaka mot noll när scrollandet stannar.
+ * FramstegsLinje — tunn grön linje högst upp som fylls i takt med hur
+ * långt man scrollat. Helt passiv: läser positionen, rör aldrig scrollen.
  */
-function Stapel({ children }: { children: React.ReactNode }) {
+function FramstegsLinje() {
   const ref = useRef<HTMLDivElement>(null);
-
   useEffect(() => {
-    const rot = ref.current;
-    if (!rot) return;
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    const wrappers = [...rot.children] as HTMLElement[];
+    const el = ref.current;
+    if (!el) return;
     let raf = 0;
-
-    // Fartlutningen: mål sätts av scrollhastigheten, värdet lerpas dit och
-    // målet självt fjädrar mot noll, så sidan alltid landar rakt.
-    let lut = 0;
-    let mal = 0;
-    let lutRaf = 0;
-    let lastY = window.scrollY;
-    let lastT = performance.now();
-    const lutLoop = () => {
-      lut += (mal - lut) * 0.12;
-      mal *= 0.88;
-      if (Math.abs(lut) > 0.01 || Math.abs(mal) > 0.01) {
-        document.documentElement.style.setProperty("--lut", `${lut.toFixed(3)}deg`);
-        lutRaf = requestAnimationFrame(lutLoop);
-      } else {
-        lut = 0;
-        lutRaf = 0;
-        document.documentElement.style.setProperty("--lut", "0deg");
-      }
-    };
-
     const uppdatera = () => {
       raf = 0;
-      const vh = window.innerHeight;
-      const entp = wrappers.map((w) => {
-        const top = w.getBoundingClientRect().top;
-        return Math.min(1, Math.max(0, (vh - top) / vh));
-      });
-      wrappers.forEach((w, i) => {
-        w.style.setProperty("--entp", entp[i].toFixed(3));
-        w.style.setProperty("--covp", (entp[i + 1] ?? 0).toFixed(3));
-      });
+      const max = document.documentElement.scrollHeight - window.innerHeight;
+      const p = max > 0 ? Math.min(1, window.scrollY / max) : 0;
+      el.style.transform = `scaleX(${p.toFixed(4)})`;
     };
     const onScroll = () => {
       if (!raf) raf = requestAnimationFrame(uppdatera);
-      const nu = performance.now();
-      const dy = window.scrollY - lastY;
-      const dt = Math.max(1, nu - lastT);
-      lastY = window.scrollY;
-      lastT = nu;
-      const fart = Math.max(-1, Math.min(1, (dy / dt) * 0.5));
-      mal = fart * 2.5;
-      if (!lutRaf) lutRaf = requestAnimationFrame(lutLoop);
     };
     uppdatera();
     window.addEventListener("scroll", onScroll, { passive: true });
@@ -405,19 +363,81 @@ function Stapel({ children }: { children: React.ReactNode }) {
       window.removeEventListener("scroll", onScroll);
       window.removeEventListener("resize", onScroll);
       cancelAnimationFrame(raf);
-      cancelAnimationFrame(lutRaf);
-      document.documentElement.style.removeProperty("--lut");
     };
   }, []);
-
   return (
-    <div ref={ref}>
-      {Children.map(children, (barn, i) => (
-        <div className="sticky top-0" style={{ zIndex: i }}>
-          <div className="sida-yta">{barn}</div>
-        </div>
-      ))}
+    <div aria-hidden="true" className="fixed inset-x-0 top-0 z-50 h-[3px] pointer-events-none">
+      <div ref={ref} className="h-full w-full origin-left bg-brand-green" style={{ transform: "scaleX(0)" }} />
     </div>
+  );
+}
+
+// Sektionsprickarnas mål, i sidans ordning.
+const sidNavMal = [
+  { id: "top", namn: "Hem" },
+  { id: "djungeltestet", namn: "Djungeltestet" },
+  { id: "tjanster", namn: "Tjänster" },
+  { id: "varde", namn: "Värdet" },
+  { id: "arbetssatt", namn: "Arbetssätt" },
+  { id: "faq", namn: "Vanliga frågor" },
+  { id: "kontakt", namn: "Kontakt" },
+];
+
+/**
+ * SidNav — klickbar minikarta i högerkanten (desktop): en prick per
+ * sektion, aktiv lyser grönt, namnet visas vid hover. Ankarlänkar +
+ * webbläsarens egen mjuka scroll, ingen kapning.
+ */
+function SidNav() {
+  const [aktiv, setAktiv] = useState("top");
+  useEffect(() => {
+    let raf = 0;
+    const uppdatera = () => {
+      raf = 0;
+      const mitt = window.innerHeight * 0.5;
+      let vald = sidNavMal[0].id;
+      for (const m of sidNavMal) {
+        const el = document.getElementById(m.id);
+        if (el && el.getBoundingClientRect().top <= mitt) vald = m.id;
+      }
+      setAktiv(vald);
+    };
+    const onScroll = () => {
+      if (!raf) raf = requestAnimationFrame(uppdatera);
+    };
+    uppdatera();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      cancelAnimationFrame(raf);
+    };
+  }, []);
+  return (
+    <nav
+      aria-label="Snabbnavigering mellan sektioner"
+      className="fixed right-5 top-1/2 -translate-y-1/2 z-40 hidden lg:flex flex-col gap-3"
+    >
+      {sidNavMal.map((m) => (
+        <a
+          key={m.id}
+          href={`#${m.id}`}
+          aria-label={m.namn}
+          aria-current={aktiv === m.id ? "true" : undefined}
+          className="group relative flex items-center justify-center h-4 w-4"
+        >
+          <span
+            className={`block rounded-full transition-all duration-300 ${
+              aktiv === m.id
+                ? "h-3 w-3 bg-brand-green shadow-[0_0_8px_rgba(31,138,92,0.6)]"
+                : "h-2 w-2 bg-subtle/60 group-hover:bg-brand-green/70"
+            }`}
+          />
+          <span className="pointer-events-none absolute right-6 whitespace-nowrap text-xs font-semibold text-ink bg-white border border-line px-2 py-1 opacity-0 translate-x-1 transition-all duration-200 group-hover:opacity-100 group-hover:translate-x-0 shadow-sm">
+            {m.namn}
+          </span>
+        </a>
+      ))}
+    </nav>
   );
 }
 
@@ -541,7 +561,6 @@ function Hero() {
   const kaos = scen === "kaos";
 
   return (
-    // Kortleksbeteendet (sticky, z-ordning, tilt) sköts av Stapel-wrappern.
     <section ref={ref} id="top" className="snap-start relative bg-ink text-paper overflow-hidden">
       <div className="relative min-h-svh flex items-center">
       <div className="hero-par hero-par-1 absolute inset-0" aria-hidden="true">
