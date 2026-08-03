@@ -113,6 +113,21 @@
     scroll-snap-type: y proximity;
   }
 
+  /* Touch: en svepning = en sida. mandatory bläddrar sektioner i skärmhöjd
+     en i taget; sektioner högre än skärmen får fri scroll inom sig enligt
+     snap-specen. Mushjulet växlas i stället i JS (Stapel). */
+  @media (pointer: coarse) {
+    html {
+      scroll-snap-type: y mandatory;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-snap-type: y proximity;
+    }
+  }
+
   body {
     background-color: var(--color-background);
     color: var(--color-foreground);

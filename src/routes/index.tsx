@@ -398,14 +398,77 @@ function Stapel({ children }: { children: React.ReactNode }) {
       mal = fart * 2.5;
       if (!lutRaf) lutRaf = requestAnimationFrame(lutLoop);
     };
+    // VÄXLAD SCROLL för mushjul/trackpad: en medveten gest = exakt ett
+    // sidbyte. Delta ackumuleras till en tröskel, sedan glider vi styrt
+    // till nästa sektion och ignorerar allt hjul-delta under spärrtiden
+    // (annars ger trackpadens efterrullning flera byten per svep).
+    // Touch växlas via CSS-snäpp (mandatory), inte här. Scrollbar,
+    // tangentbord och programmatisk scroll rörs aldrig.
+    const TROSKEL = 90;
+    const SPARR_MS = 950;
+    const GLID_MS = 700;
+    let ack = 0;
+    let sparrTill = 0;
+    let glidRaf = 0;
+
+    const glidTill = (malY: number) => {
+      const start = window.scrollY;
+      const dist = malY - start;
+      const t0 = performance.now();
+      const ease = (t: number) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
+      const steg = (nu: number) => {
+        const t = Math.min(1, (nu - t0) / GLID_MS);
+        window.scrollTo(0, start + dist * ease(t));
+        glidRaf = t < 1 ? requestAnimationFrame(steg) : 0;
+      };
+      cancelAnimationFrame(glidRaf);
+      glidRaf = requestAnimationFrame(steg);
+    };
+
+    const onWheel = (e: WheelEvent) => {
+      if (e.ctrlKey) return; // zoomgest
+      const dy = e.deltaMode === 1 ? e.deltaY * 16 : e.deltaY;
+      if (Math.abs(e.deltaX) > Math.abs(dy)) return; // horisontell gest
+      const riktning = Math.sign(dy);
+      if (!riktning) return;
+      const vh = window.innerHeight;
+
+      // Aktiv sektion: den vars wrapper täcker viewportens överkant
+      const rekt = wrappers.map((w) => w.getBoundingClientRect());
+      let idx = 0;
+      for (let i = 0; i < rekt.length; i++) if (rekt[i].top <= 1) idx = i;
+      const r = rekt[idx];
+
+      // Sektion högre än skärmen: fri scroll tills kanten är nådd
+      const hog = r.height > vh + 2;
+      const vidBotten = r.bottom <= vh + 2;
+      const vidTopp = r.top >= -2;
+      if (hog && ((riktning > 0 && !vidBotten) || (riktning < 0 && !vidTopp))) return;
+
+      const mal = idx + riktning;
+      if (mal < 0 || mal >= wrappers.length) return; // utanför kortleken: native (footern/toppen)
+
+      e.preventDefault(); // härifrån äger vi gesten
+      const nu = performance.now();
+      if (nu < sparrTill) return;
+      ack += dy;
+      if (Math.abs(ack) < TROSKEL) return;
+      ack = 0;
+      sparrTill = nu + SPARR_MS;
+      glidTill(rekt[mal].top + window.scrollY);
+    };
+
     uppdatera();
     window.addEventListener("scroll", onScroll, { passive: true });
     window.addEventListener("resize", onScroll);
+    window.addEventListener("wheel", onWheel, { passive: false });
     return () => {
       window.removeEventListener("scroll", onScroll);
       window.removeEventListener("resize", onScroll);
+      window.removeEventListener("wheel", onWheel);
       cancelAnimationFrame(raf);
       cancelAnimationFrame(lutRaf);
+      cancelAnimationFrame(glidRaf);
       document.documentElement.style.removeProperty("--lut");
     };
   }, []);
