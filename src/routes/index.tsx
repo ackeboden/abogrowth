@@ -312,23 +312,37 @@ const heroLinks: [number, number, number][] = [
 
 // Bokstäver som landar en i taget, lätt vridna ur trasslet. Delas av
 // rubrikens statiska delar och det roterande ordet.
+// VIKTIGT: varje ORD wrappas i en obrytbar span. Utan den kan webbläsaren
+// radbryta mellan två bokstavsspans mitt i ett ord ("djunge / ln"), vilket
+// hände på mobil. Radbrytning sker nu bara vid mellanslagen.
 function Bokstavsrad({ text, bas, steg = 0.03 }: { text: string; bas: number; steg?: number }) {
+  let lopande = 0; // bokstavsindex som fortsätter över ordgränserna
   return (
     <>
-      {text.split("").map((b, i) => (
-        <span
-          key={i}
-          className="hero-letter"
-          style={{
-            animationDelay: `${bas + i * steg}s`,
-            ["--lr" as string]: `${(i % 2 ? -1 : 1) * (5 + (i % 3) * 4)}deg`,
-            ["--lx" as string]: `${((i % 3) - 1) * 0.06}em`,
-            whiteSpace: b === " " ? "pre" : undefined,
-          }}
-        >
-          {b}
-        </span>
-      ))}
+      {text.split(/(\s+)/).map((del, d) =>
+        /^\s+$/.test(del) ? (
+          <span key={`m-${d}`}>{del}</span>
+        ) : del ? (
+          <span key={`o-${d}`} className="inline-block whitespace-nowrap">
+            {del.split("").map((b) => {
+              const j = lopande++;
+              return (
+                <span
+                  key={j}
+                  className="hero-letter"
+                  style={{
+                    animationDelay: `${bas + j * steg}s`,
+                    ["--lr" as string]: `${(j % 2 ? -1 : 1) * (5 + (j % 3) * 4)}deg`,
+                    ["--lx" as string]: `${((j % 3) - 1) * 0.06}em`,
+                  }}
+                >
+                  {b}
+                </span>
+              );
+            })}
+          </span>
+        ) : null,
+      )}
     </>
   );
 }
