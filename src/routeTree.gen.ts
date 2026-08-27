@@ -14,6 +14,7 @@ import { Route as SaGarDetTillRouteImport } from './routes/sa-gar-det-till'
 import { Route as ResanRouteImport } from './routes/resan'
 import { Route as PrisRouteImport } from './routes/pris'
 import { Route as OmRouteImport } from './routes/om'
+import { Route as IntegritetRouteImport } from './routes/integritet'
 import { Route as CaseRouteImport } from './routes/case'
 import { Route as BokaRouteImport } from './routes/boka'
 import { Route as IndexRouteImport } from './routes/index'
@@ -44,6 +45,11 @@ const PrisRoute = PrisRouteImport.update({
 const OmRoute = OmRouteImport.update({
   id: '/om',
   path: '/om',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const IntegritetRoute = IntegritetRouteImport.update({
+  id: '/integritet',
+  path: '/integritet',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CaseRoute = CaseRouteImport.update({
@@ -84,6 +90,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/boka': typeof BokaRoute
   '/case': typeof CaseRoute
+  '/integritet': typeof IntegritetRoute
   '/om': typeof OmRoute
   '/pris': typeof PrisRoute
   '/resan': typeof ResanRoute
@@ -97,6 +104,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/boka': typeof BokaRoute
   '/case': typeof CaseRoute
+  '/integritet': typeof IntegritetRoute
   '/om': typeof OmRoute
   '/pris': typeof PrisRoute
   '/resan': typeof ResanRoute
@@ -111,6 +119,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/boka': typeof BokaRoute
   '/case': typeof CaseRoute
+  '/integritet': typeof IntegritetRoute
   '/om': typeof OmRoute
   '/pris': typeof PrisRoute
   '/resan': typeof ResanRoute
@@ -126,6 +135,7 @@ export interface FileRouteTypes {
     | '/'
     | '/boka'
     | '/case'
+    | '/integritet'
     | '/om'
     | '/pris'
     | '/resan'
@@ -139,6 +149,7 @@ export interface FileRouteTypes {
     | '/'
     | '/boka'
     | '/case'
+    | '/integritet'
     | '/om'
     | '/pris'
     | '/resan'
@@ -152,6 +163,7 @@ export interface FileRouteTypes {
     | '/'
     | '/boka'
     | '/case'
+    | '/integritet'
     | '/om'
     | '/pris'
     | '/resan'
@@ -166,6 +178,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   BokaRoute: typeof BokaRoute
   CaseRoute: typeof CaseRoute
+  IntegritetRoute: typeof IntegritetRoute
   OmRoute: typeof OmRoute
   PrisRoute: typeof PrisRoute
   ResanRoute: typeof ResanRoute
@@ -211,6 +224,13 @@ declare module '@tanstack/react-router' {
       path: '/om'
       fullPath: '/om'
       preLoaderRoute: typeof OmRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/integritet': {
+      id: '/integritet'
+      path: '/integritet'
+      fullPath: '/integritet'
+      preLoaderRoute: typeof IntegritetRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/case': {
@@ -262,6 +282,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   BokaRoute: BokaRoute,
   CaseRoute: CaseRoute,
+  IntegritetRoute: IntegritetRoute,
   OmRoute: OmRoute,
   PrisRoute: PrisRoute,
   ResanRoute: ResanRoute,

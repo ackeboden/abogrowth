@@ -226,6 +226,16 @@ export function Footer() {
             <li><Link to="/sa-gar-det-till" className="hover:text-paper">Så går det till</Link></li>
             <li><Link to="/case" className="hover:text-paper">Case</Link></li>
             <li><Link to="/" hash="kontakt" className="hover:text-paper">Kontakt</Link></li>
+            <li><Link to="/integritet" className="hover:text-paper">Integritet & cookies</Link></li>
+            <li>
+              <button
+                type="button"
+                onClick={() => window.dispatchEvent(new Event("visa-cookiebanner"))}
+                className="hover:text-paper"
+              >
+                Cookieinställningar
+              </button>
+            </li>
           </ul>
         </div>
         <div>
