@@ -20,25 +20,26 @@ export const Route = createFileRoute("/integritet")({
   component: Page,
 });
 
-// Medvetet allmänt hållen (Alexanders önskemål) så texten inte behöver
-// skrivas om vid varje teknikbyte. Håll den ändå sann mot vad sajten
-// faktiskt gör; analysverktyget nämns som "för närvarande".
+// Medvetet allmänt hållen och i hemsidans-form i stället för jag-form
+// (Alexanders önskemål, enda undantaget från sajtens jag-röst) så texten
+// inte behöver skrivas om vid teknikbyten. Håll den ändå sann mot vad
+// sajten faktiskt gör; analysverktyget nämns som "för närvarande".
 const block = [
   {
     rubrik: "Vilka cookies används?",
-    text: "Sajten använder bara cookies för anonym besöksstatistik, och bara om du tackat ja i bannern. Statistiken samlas in med ett vanligt analysverktyg (för närvarande Google Analytics) och IP-adresser anonymiseras. Tackar du nej sätts inga statistikcookies alls och ingenting laddas.",
+    text: "Den här hemsidan använder bara cookies för anonym besöksstatistik, och bara om du tackat ja i bannern. Statistiken samlas in med ett vanligt analysverktyg (för närvarande Google Analytics) och IP-adresser anonymiseras. Tackar du nej sätts inga statistikcookies alls och ingenting laddas.",
   },
   {
     rubrik: "Vad används statistiken till?",
-    text: "Till att förstå vad på sajten som är till nytta: vilka sidor som läses, var besökare tappar intresset och vilka vägar som leder till kontakt. Statistiken säljs inte, delas inte och kopplas aldrig till dig som person.",
+    text: "Till att förstå vad på hemsidan som är till nytta: vilka sidor som läses, var besökare tappar intresset och vilka vägar som leder till kontakt. Statistiken säljs inte, delas inte och kopplas aldrig till dig som person.",
   },
   {
     rubrik: "Formulären då?",
-    text: "Uppgifter du lämnar i sajtens formulär (namn, e-post och det du skriver) går direkt till mig och används enbart för att svara dig. De läggs inte i utskickslistor och delas inte vidare.",
+    text: "Uppgifter du lämnar i hemsidans formulär (namn, e-post och det du skriver) används enbart för att besvara din förfrågan. De läggs inte i utskickslistor och delas inte vidare.",
   },
   {
     rubrik: "Dina rättigheter",
-    text: "Du kan när som helst begära att få veta vilka uppgifter jag har om dig, få dem rättade eller raderade. Mejla mig så ordnar jag det.",
+    text: "Du kan när som helst begära att få veta vilka uppgifter som finns sparade om dig, få dem rättade eller raderade. Mejla adressen nedan så ordnas det.",
   },
 ];
 

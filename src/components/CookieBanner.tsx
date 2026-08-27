@@ -46,8 +46,8 @@ export function CookieBanner() {
     >
       <div className="mx-auto max-w-6xl px-6 py-5 md:py-6 flex flex-col md:flex-row md:items-center gap-4 md:gap-8">
         <p className="text-sm text-paper/75 leading-relaxed md:flex-1">
-          Jag använder en cookie för anonym besöksstatistik (Google
-          Analytics), så att jag ser vad på sajten som är till nytta. Inget
+          Den här hemsidan använder en cookie för anonym besöksstatistik
+          (Google Analytics), så att innehållet kan förbättras. Inget
           laddas förrän du sagt ja, och du kan ångra dig när som helst.{" "}
           <Link to="/integritet" className="font-semibold text-paper border-b border-brand-green hover:text-brand-green">
             Läs mer
