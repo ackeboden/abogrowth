@@ -9,7 +9,7 @@ export const Route = createFileRoute("/integritet")({
       {
         name: "description",
         content:
-          "Så hanterar abogrowth.se cookies och personuppgifter: anonym besöksstatistik via Google Analytics, bara efter ditt samtycke, och formulärdata som endast används för att svara dig.",
+          "Så hanterar abogrowth.se cookies och personuppgifter: anonym besöksstatistik bara efter ditt samtycke, och formulärdata som endast används för att svara dig.",
       },
       { property: "og:title", content: "Integritet & cookies | ABO Growth" },
       { property: "og:type", content: "website" },
@@ -20,20 +20,21 @@ export const Route = createFileRoute("/integritet")({
   component: Page,
 });
 
-// Kort och ärligt: sidan speglar exakt vad sajten faktiskt gör. Uppdatera
-// den om spårning eller formulärhantering ändras.
+// Medvetet allmänt hållen (Alexanders önskemål) så texten inte behöver
+// skrivas om vid varje teknikbyte. Håll den ändå sann mot vad sajten
+// faktiskt gör; analysverktyget nämns som "för närvarande".
 const block = [
   {
     rubrik: "Vilka cookies används?",
-    text: "En enda sorts cookie, och bara om du tackat ja i bannern: Google Analytics, som ger mig anonym statistik över vilka sidor som besöks och hur besökare hittar hit. IP-adresser anonymiseras. Tackar du nej sätts ingen cookie alls och ingenting laddas.",
+    text: "Sajten använder bara cookies för anonym besöksstatistik, och bara om du tackat ja i bannern. Statistiken samlas in med ett vanligt analysverktyg (för närvarande Google Analytics) och IP-adresser anonymiseras. Tackar du nej sätts inga statistikcookies alls och ingenting laddas.",
   },
   {
     rubrik: "Vad används statistiken till?",
-    text: "Till att förstå vad på sajten som är till nytta: vilka sidor som läses, var besökare tappar intresset och vilka vägar som leder till kontakt. Den säljs inte, delas inte och kopplas aldrig till dig som person.",
+    text: "Till att förstå vad på sajten som är till nytta: vilka sidor som läses, var besökare tappar intresset och vilka vägar som leder till kontakt. Statistiken säljs inte, delas inte och kopplas aldrig till dig som person.",
   },
   {
     rubrik: "Formulären då?",
-    text: "Uppgifter du lämnar i boknings-, kontakt- eller prisformulären (namn, e-post och det du skriver) går via Netlify Forms direkt till mig och används enbart för att svara dig. De läggs inte i nyhetsbrevslistor och delas inte vidare.",
+    text: "Uppgifter du lämnar i sajtens formulär (namn, e-post och det du skriver) går direkt till mig och används enbart för att svara dig. De läggs inte i utskickslistor och delas inte vidare.",
   },
   {
     rubrik: "Dina rättigheter",
