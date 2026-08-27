@@ -4,7 +4,7 @@
 // MÄT-ID: klistra in Alexanders GA4-id (formen G-XXXXXXXXXX) nedan.
 // Tomt id = GA helt avstängt; bannern fungerar ändå och sparar valet,
 // så statistiken börjar rulla automatiskt när id:t är på plats.
-export const GA_MATID = "";
+export const GA_MATID: string = "";
 
 const NYCKEL = "cookie-samtycke";
 
