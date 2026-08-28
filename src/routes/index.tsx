@@ -1578,24 +1578,51 @@ function SystemKollen() {
                   </div>
                 </div>
                 {/* Bara första tipset visas i klartext: resten är samtalets
-                    värde och följer med i leadet så Alexander kommer förberedd. */}
+                    värde och följer med i leadet så Alexander kommer förberedd.
+                    De låsta raderna visar äkta etiketter men PLATSHÅLLARTEXT
+                    bakom blurret: riktiga tips i DOM:en hade gått att läsa
+                    genom att plocka bort filtret i utvecklarverktygen. */}
                 {tips.length > 0 && (
                   <div
                     className="jungle-late mt-8 max-w-3xl border border-paper/15 bg-white/[0.04] p-5 md:p-6"
                     style={{ transitionDelay: "1.2s" }}
                   >
                     <p className="tracked text-[10px] text-paper/45 mb-4">Tips utifrån er karta</p>
-                    <div className="flex items-start gap-3 text-sm text-paper/75 leading-relaxed">
-                      <span
-                        className={`tracked shrink-0 mt-0.5 px-2 py-0.5 border text-[9px] ${
-                          tips[0].typ === "byte"
-                            ? "border-paper/30 text-paper/60"
-                            : "border-brand-green/50 text-brand-green"
-                        }`}
-                      >
-                        {tips[0].typ === "byte" ? "Överlapp" : "Komplement"}
-                      </span>
-                      <span>{tips[0].text}</span>
+                    <div className="space-y-3.5">
+                      <div className="flex items-start gap-3 text-sm text-paper/75 leading-relaxed">
+                        <span
+                          className={`tracked shrink-0 mt-0.5 px-2 py-0.5 border text-[9px] ${
+                            tips[0].typ === "byte"
+                              ? "border-paper/30 text-paper/60"
+                              : "border-brand-green/50 text-brand-green"
+                          }`}
+                        >
+                          {tips[0].typ === "byte" ? "Överlapp" : "Komplement"}
+                        </span>
+                        <span>{tips[0].text}</span>
+                      </div>
+                      {tips.slice(1).map((t, i) => (
+                        <div
+                          key={`last-${i}`}
+                          aria-hidden="true"
+                          className="flex items-start gap-3 text-sm text-paper/75 leading-relaxed select-none pointer-events-none"
+                        >
+                          <span
+                            className={`tracked shrink-0 mt-0.5 px-2 py-0.5 border text-[9px] ${
+                              t.typ === "byte"
+                                ? "border-paper/30 text-paper/60"
+                                : "border-brand-green/50 text-brand-green"
+                            }`}
+                          >
+                            {t.typ === "byte" ? "Överlapp" : "Komplement"}
+                          </span>
+                          <span className="blur-[5px] opacity-60">
+                            {i % 2 === 0
+                              ? "Det här tipset går jag igenom i samtalet, tillsammans med resten av er karta."
+                              : "Även det här förslaget sparar jag till samtalet, det bygger på era system."}
+                          </span>
+                        </div>
+                      ))}
                     </div>
                     {tips.length > 1 && (
                       <p className="mt-4 pt-4 border-t border-paper/10 text-sm text-paper/75 leading-relaxed">
