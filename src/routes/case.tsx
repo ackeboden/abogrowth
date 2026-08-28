@@ -10,7 +10,7 @@ export const Route = createFileRoute("/case")({
       {
         name: "description",
         content:
-          "Utvalda case från ABO Growth. Verkliga uppdrag inom affärsutveckling, tillväxt och digitala system.",
+          "Utvalda case från ABO Growth. Verkliga uppdrag inom digitala system, AI och affärsutveckling.",
       },
       { property: "og:title", content: "Case | ABO Growth" },
       { property: "og:description", content: "Utvalda uppdrag och resultat." },

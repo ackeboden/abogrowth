@@ -116,8 +116,8 @@ function ActKaos() {
           <div className="eyebrow mb-4">01 · Idag</div>
           <h2 className="display-heading text-3xl md:text-5xl">Kaos.</h2>
           <p className="mt-6 text-ink/75 leading-relaxed">
-            Sju verktyg, ingen överblick. De pratar inte med varandra, dubbel-
-            arbetet växer och prenumerationerna kostar pengar varje månad.
+            Sju verktyg, ingen överblick. De pratar inte med varandra,
+            dubbelarbetet växer och prenumerationerna kostar pengar varje månad.
           </p>
         </div>
         <div className="md:col-span-7">

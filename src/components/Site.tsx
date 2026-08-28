@@ -223,6 +223,7 @@ export function Footer() {
             <li><Link to="/pris" className="hover:text-paper">Prisuppskattning</Link></li>
             <li><Link to="/boka" className="hover:text-paper">Boka ett samtal</Link></li>
             <li><Link to="/om" className="hover:text-paper">Om</Link></li>
+            <li><Link to="/resan" className="hover:text-paper">Resan</Link></li>
             <li><Link to="/sa-gar-det-till" className="hover:text-paper">Så går det till</Link></li>
             <li><Link to="/case" className="hover:text-paper">Case</Link></li>
             <li><Link to="/" hash="kontakt" className="hover:text-paper">Kontakt</Link></li>
@@ -266,7 +267,7 @@ export function Footer() {
 }
 
 export function BookingCTA({
-  title = "Redo att växa?",
+  title = "Redo att få ordning?",
   body = "Boka ett kort första samtal. Jag lyssnar, ställer frågor och föreslår ett upplägg.",
 }: { title?: string; body?: string }) {
   return (

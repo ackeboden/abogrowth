@@ -138,7 +138,15 @@ function SystemMap() {
           ))}
         </div>
         <p className="mt-8 text-sm text-subtle max-w-xl">
-          Boxarna är exempel. Vilka som ingår hos er avgörs av strategin, inte av trenderna.
+          Boxarna är exempel. Vilka som ingår hos er avgörs av strategin, inte
+          av trenderna. Vill ni se er egen karta?{" "}
+          <Link
+            to="/"
+            hash="systemkollen"
+            className="font-semibold text-ink border-b-2 border-brand-green pb-0.5 hover:text-brand-green"
+          >
+            Gör systemkollen
+          </Link>
         </p>
       </div>
     </section>

@@ -187,7 +187,7 @@ const faqItems = [
   },
   {
     q: "Kan vi börja smått?",
-    a: "Absolut. Många samarbeten börjar med ett avgränsat projekt: en kartläggning, en kampanj eller ett systemval. Fungerar det bra växer samarbetet därifrån.",
+    a: "Absolut. Gör systemkollen högre upp på sidan så ser ni var ni står redan idag. Många samarbeten börjar sedan med ett avgränsat projekt: en kartläggning, en kampanj eller ett systemval. Fungerar det bra växer samarbetet därifrån.",
   },
 ];
 
