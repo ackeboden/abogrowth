@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ArrowUpRight, Check } from "lucide-react";
 import { Header, Footer, PageHero, CONTACT_EMAIL } from "@/components/Site";
 
@@ -38,6 +38,20 @@ function encodeForm(data: Record<string, string>) {
 function BookingForm() {
   const [form, setForm] = useState({ namn: "", epost: "", foretag: "", telefon: "", meddelande: "" });
   const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">("idle");
+
+  // Kommer besökaren från djungeltestet ligger kartan i sessionStorage:
+  // förifyll meddelandet (om det är tomt) så samtalet börjar med kontext.
+  useEffect(() => {
+    try {
+      const franDjungeln = sessionStorage.getItem("djungel-boka");
+      if (franDjungeln) {
+        sessionStorage.removeItem("djungel-boka");
+        setForm((f) => (f.meddelande ? f : { ...f, meddelande: franDjungeln }));
+      }
+    } catch {
+      /* privat läge utan sessionStorage: formuläret funkar som vanligt */
+    }
+  }, []);
 
   const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.epost.trim());
   const canSubmit = form.namn.trim().length > 1 && emailOk && status !== "sending";

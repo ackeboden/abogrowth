@@ -1111,6 +1111,20 @@ function JungleTest() {
   const k = lankar.length;
   const tips = beraknaTips(valda);
 
+  // När besökaren går vidare till bokningen från resultatet följer kartan
+  // med: /boka läser nyckeln vid mount och förifyller meddelandefältet.
+  const sparaBokningsKontext = () => {
+    try {
+      sessionStorage.setItem(
+        "djungel-boka",
+        `Jag gjorde djungeltestet: ${valda.map((v) => `${v.namn} (${kategoriNamn[v.kat]})`).join(", ")}. ` +
+          (k > 0 ? `Kartan visade ${k} möjliga kopplingar.` : "Kartan visade inga givna kopplingar."),
+      );
+    } catch {
+      /* privat läge utan sessionStorage: bokningen funkar ändå */
+    }
+  };
+
   // Trassel i kaosläget (kedja + genvägar mellan kaosplatserna).
   const tangle: [number, number][] = [];
   for (let i = 0; i < n - 1; i++) tangle.push([i, i + 1]);
@@ -1540,6 +1554,7 @@ function JungleTest() {
                   <div className="jungle-late md:col-span-5 flex flex-wrap items-center gap-4 md:justify-end" style={{ transitionDelay: "1.05s" }}>
                     <Link
                       to="/boka"
+                      onClick={sparaBokningsKontext}
                       className="inline-flex items-center gap-2 bg-brand-green text-paper px-6 py-3.5 text-sm font-semibold hover:bg-paper hover:text-ink transition-colors"
                     >
                       Boka ett samtal <ArrowUpRight className="h-4 w-4" strokeWidth={2.5} />
@@ -1553,28 +1568,43 @@ function JungleTest() {
                     </button>
                   </div>
                 </div>
+                {/* Bara första tipset visas i klartext: resten är samtalets
+                    värde och följer med i leadet så Alexander kommer förberedd. */}
                 {tips.length > 0 && (
                   <div
                     className="jungle-late mt-8 max-w-3xl border border-paper/15 bg-white/[0.04] p-5 md:p-6"
                     style={{ transitionDelay: "1.2s" }}
                   >
                     <p className="tracked text-[10px] text-paper/45 mb-4">Tips utifrån er karta</p>
-                    <ul className="space-y-3.5">
-                      {tips.map((t) => (
-                        <li key={t.text} className="flex items-start gap-3 text-sm text-paper/75 leading-relaxed">
-                          <span
-                            className={`tracked shrink-0 mt-0.5 px-2 py-0.5 border text-[9px] ${
-                              t.typ === "byte"
-                                ? "border-paper/30 text-paper/60"
-                                : "border-brand-green/50 text-brand-green"
-                            }`}
-                          >
-                            {t.typ === "byte" ? "Överlapp" : "Komplement"}
-                          </span>
-                          <span>{t.text}</span>
-                        </li>
-                      ))}
-                    </ul>
+                    <div className="flex items-start gap-3 text-sm text-paper/75 leading-relaxed">
+                      <span
+                        className={`tracked shrink-0 mt-0.5 px-2 py-0.5 border text-[9px] ${
+                          tips[0].typ === "byte"
+                            ? "border-paper/30 text-paper/60"
+                            : "border-brand-green/50 text-brand-green"
+                        }`}
+                      >
+                        {tips[0].typ === "byte" ? "Överlapp" : "Komplement"}
+                      </span>
+                      <span>{tips[0].text}</span>
+                    </div>
+                    {tips.length > 1 && (
+                      <p className="mt-4 pt-4 border-t border-paper/10 text-sm text-paper/75 leading-relaxed">
+                        Jag ser{" "}
+                        <span className="font-semibold text-paper">
+                          {tips.length - 1 === 1 ? "en sak till" : `${tips.length - 1} saker till`}
+                        </span>{" "}
+                        i er karta. Dem går vi igenom i ett{" "}
+                        <Link
+                          to="/boka"
+                          onClick={sparaBokningsKontext}
+                          className="font-semibold text-paper border-b border-brand-green hover:text-brand-green"
+                        >
+                          kostnadsfritt samtal
+                        </Link>
+                        .
+                      </p>
+                    )}
                   </div>
                 )}
               </div>
