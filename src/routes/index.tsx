@@ -1154,9 +1154,33 @@ function SystemKollen() {
     const cy = my + (dy / len) * bulge;
     return {
       d: `M ${A.x} ${A.y} Q ${cx} ${cy} ${B.x} ${B.y}`,
-      apx: (A.x + 2 * cx + B.x) / 4,
-      apy: (A.y + 2 * cy + B.y) / 4,
+      // Punkt på kvadratiska Bezierkurvan vid parameter t (0..1)
+      punkt: (t: number) => ({
+        x: (1 - t) * (1 - t) * A.x + 2 * (1 - t) * t * cx + t * t * B.x,
+        y: (1 - t) * (1 - t) * A.y + 2 * (1 - t) * t * cy + t * t * B.y,
+      }),
     };
+  };
+
+  // Markörens plats på bågen: börja på mitten och glid utåt längs kurvan
+  // tills punkten inte krockar med någon systemruta eller navet. Rutorna har
+  // fast pixelstorlek, så deras andel av procentrymden växer när kartan är
+  // smal; marginalerna är tilltagna för att täcka även mindre fönster.
+  // Hittas ingen fri punkt får mitten duga; markören ritas då under rutan
+  // (ingen z-index, noderna ligger på 1) i stället för ovanpå texten.
+  const marginalX = mobil ? 14 : 11;
+  const marginalY = mobil ? 9.5 : 8;
+  const markorPos = (ai: number, bi: number) => {
+    const arc = arcPath(ai, bi);
+    const rutor = [...valda.map((_, idx) => orderedPos(idx)), hub];
+    for (const t of [0.5, 0.42, 0.58, 0.34, 0.66, 0.26, 0.74]) {
+      const p = arc.punkt(t);
+      if (!rutor.some((q) => Math.abs(p.x - q.x) < marginalX && Math.abs(p.y - q.y) < marginalY))
+        return { ...p, dold: false };
+    }
+    // Hela kurvan är upptagen: göm markören (linjen ritas ändå). En osynlig
+    // knapp bakom en ruta vore bara en fokusfälla för tangentbordet.
+    return { ...arc.punkt(0.5), dold: true };
   };
 
   // Grinden: leaden skickas till Netlify Forms (statiska detekteringsfilen,
@@ -1390,7 +1414,8 @@ function SystemKollen() {
                 {/* Kopplingsmarkörer: hover/tryck visar förslaget i klartext */}
                 {ordnad &&
                   lankar.map((l, j) => {
-                    const arc = arcPath(l.a, l.b);
+                    const p = markorPos(l.a, l.b);
+                    if (p.dold) return null;
                     return (
                       <button
                         key={`m-${l.a}-${l.b}`}
@@ -1402,10 +1427,10 @@ function SystemKollen() {
                           e.stopPropagation();
                           setEtikett((v) => (v === j ? null : j));
                         }}
-                        className="jungle-late absolute z-10 flex h-6 w-6 items-center justify-center"
+                        className="jungle-late absolute flex h-6 w-6 items-center justify-center"
                         style={{
-                          left: `${arc.apx}%`,
-                          top: `${arc.apy}%`,
+                          left: `${p.x}%`,
+                          top: `${p.y}%`,
                           transform: "translate(-50%, -50%)",
                           transitionDelay: `${1.6 + j * 0.05}s`,
                         }}
@@ -1423,8 +1448,8 @@ function SystemKollen() {
                   <div
                     className="absolute z-20 max-w-[260px] -translate-x-1/2 bg-white text-ink text-xs font-semibold leading-snug px-3 py-2 shadow-lg border border-line pointer-events-none"
                     style={{
-                      left: `${Math.min(80, Math.max(20, arcPath(lankar[etikett].a, lankar[etikett].b).apx))}%`,
-                      top: `${Math.max(4, arcPath(lankar[etikett].a, lankar[etikett].b).apy - 10)}%`,
+                      left: `${Math.min(80, Math.max(20, markorPos(lankar[etikett].a, lankar[etikett].b).x))}%`,
+                      top: `${Math.max(4, markorPos(lankar[etikett].a, lankar[etikett].b).y - 10)}%`,
                     }}
                   >
                     {lankar[etikett].text}
@@ -1449,7 +1474,7 @@ function SystemKollen() {
                       className="sysmap-node absolute"
                       style={{ left: `${p.x}%`, top: `${p.y}%`, transform: `translate(-50%, -50%) rotate(${rot}deg)`, zIndex: 1 }}
                     >
-                      <div className="jungle-pop sysmap-node-box whitespace-nowrap bg-white/95 border border-line text-ink/80 shadow-sm px-2 py-1 md:px-3 md:py-1.5 text-[10px] md:text-xs font-semibold">
+                      <div className="jungle-pop sysmap-node-box whitespace-nowrap bg-white border border-line text-ink/80 shadow-sm px-2 py-1 md:px-3 md:py-1.5 text-[10px] md:text-xs font-semibold">
                         {v.namn}
                       </div>
                     </div>
