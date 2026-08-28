@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
-import { ArrowDown, ArrowUpRight, Check, Plus } from "lucide-react";
+import { ArrowDown, ArrowUpRight, Check, Plus, X } from "lucide-react";
 import { Header, Footer, GrowthLine, Reveal, useInView, useIsMobile, CONTACT_EMAIL } from "@/components/Site";
 
 export const Route = createFileRoute("/")({
@@ -696,94 +696,254 @@ function Hero() {
   );
 }
 
-// Djungeltestets verktyg. Kaospositionerna (sx/sy/sr) är spridda och roterade
-// så kartan känns rörig innan ordningen läggs. Allt är deterministiskt: ingen
-// slump, samma karta vid varje besök och inga SSR-problem.
-type JungleTool = {
-  id: string;
-  label: string;
-  labelShort?: string;
-  sx: number;
-  sy: number;
-  sr: number;
+// ============================================================================
+// DJUNGELTESTET 2.0 — besökaren anger sina RIKTIGA system, låser upp
+// resultatet med ett kort formulär (lead till Netlify Forms "djungeltest")
+// och får kartan som förslag: systemen ordnade kring affären med
+// regelbaserade kopplingar som förklarar sig vid hover/tryck.
+// Deterministiskt, ingen AI-tjänst, ingen backend utöver Netlify Forms.
+// ============================================================================
+
+type Kategori =
+  | "ekonomi"
+  | "crm"
+  | "mejl"
+  | "komm"
+  | "projekt"
+  | "mf"
+  | "ehandel"
+  | "lagring"
+  | "analys"
+  | "ai"
+  | "ovrigt";
+
+const kategoriNamn: Record<Kategori, string> = {
+  ekonomi: "Ekonomi",
+  crm: "CRM & sälj",
+  mejl: "Mejl & kalender",
+  komm: "Kommunikation",
+  projekt: "Projekt",
+  mf: "Marknadsföring",
+  ehandel: "E-handel & webb",
+  lagring: "Fillagring",
+  analys: "Analys & kalkyl",
+  ai: "AI-verktyg",
+  ovrigt: "Övrigt",
 };
 
-const jungleTools: JungleTool[] = [
-  { id: "crm", label: "CRM", sx: 30, sy: 26, sr: -9 },
-  { id: "mejl", label: "Mejl & kalender", labelShort: "Mejl", sx: 63, sy: 22, sr: 7 },
-  { id: "ekonomi", label: "Ekonomi", sx: 45, sy: 50, sr: -6 },
-  { id: "kalkyl", label: "Kalkylblad", sx: 71, sy: 55, sr: 11 },
-  { id: "projekt", label: "Projektverktyg", labelShort: "Projekt", sx: 25, sy: 62, sr: 8 },
-  { id: "socialt", label: "Sociala medier", labelShort: "Socialt", sx: 55, sy: 35, sr: -12 },
-  { id: "nyhetsbrev", label: "Nyhetsbrev", sx: 38, sy: 76, sr: 6 },
-  { id: "ai", label: "AI-assistent", labelShort: "AI", sx: 66, sy: 78, sr: -8 },
-  { id: "analys", label: "Analys", sx: 21, sy: 41, sr: -5 },
-  { id: "lagring", label: "Fillagring", labelShort: "Lagring", sx: 50, sy: 66, sr: 9 },
+// Katalog över vanliga system i svenska småbolag. Namnen används i leads
+// och på kartan; håll stavningen som varumärkena själva skriver den.
+const systemKatalog: { namn: string; kat: Kategori }[] = [
+  { namn: "Fortnox", kat: "ekonomi" },
+  { namn: "Visma eEkonomi", kat: "ekonomi" },
+  { namn: "Bokio", kat: "ekonomi" },
+  { namn: "Wint", kat: "ekonomi" },
+  { namn: "PE Accounting", kat: "ekonomi" },
+  { namn: "Björn Lundén", kat: "ekonomi" },
+  { namn: "Billogram", kat: "ekonomi" },
+  { namn: "Klarna", kat: "ekonomi" },
+  { namn: "Stripe", kat: "ekonomi" },
+  { namn: "Zettle", kat: "ekonomi" },
+  { namn: "Swish", kat: "ekonomi" },
+  { namn: "Kivra", kat: "ekonomi" },
+  { namn: "HubSpot", kat: "crm" },
+  { namn: "Pipedrive", kat: "crm" },
+  { namn: "Salesforce", kat: "crm" },
+  { namn: "Upsales", kat: "crm" },
+  { namn: "Lime CRM", kat: "crm" },
+  { namn: "Zoho CRM", kat: "crm" },
+  { namn: "webCRM", kat: "crm" },
+  { namn: "Microsoft 365", kat: "mejl" },
+  { namn: "Outlook", kat: "mejl" },
+  { namn: "Google Workspace", kat: "mejl" },
+  { namn: "Gmail", kat: "mejl" },
+  { namn: "Calendly", kat: "mejl" },
+  { namn: "Slack", kat: "komm" },
+  { namn: "Teams", kat: "komm" },
+  { namn: "Zoom", kat: "komm" },
+  { namn: "Google Meet", kat: "komm" },
+  { namn: "Discord", kat: "komm" },
+  { namn: "Monday", kat: "projekt" },
+  { namn: "Trello", kat: "projekt" },
+  { namn: "Asana", kat: "projekt" },
+  { namn: "Notion", kat: "projekt" },
+  { namn: "ClickUp", kat: "projekt" },
+  { namn: "Jira", kat: "projekt" },
+  { namn: "Basecamp", kat: "projekt" },
+  { namn: "Mailchimp", kat: "mf" },
+  { namn: "Klaviyo", kat: "mf" },
+  { namn: "Rule", kat: "mf" },
+  { namn: "Get a Newsletter", kat: "mf" },
+  { namn: "Meta Ads", kat: "mf" },
+  { namn: "Google Ads", kat: "mf" },
+  { namn: "LinkedIn Ads", kat: "mf" },
+  { namn: "Canva", kat: "mf" },
+  { namn: "Shopify", kat: "ehandel" },
+  { namn: "WooCommerce", kat: "ehandel" },
+  { namn: "Quickbutik", kat: "ehandel" },
+  { namn: "Wix", kat: "ehandel" },
+  { namn: "Squarespace", kat: "ehandel" },
+  { namn: "WordPress", kat: "ehandel" },
+  { namn: "Google Drive", kat: "lagring" },
+  { namn: "OneDrive", kat: "lagring" },
+  { namn: "Dropbox", kat: "lagring" },
+  { namn: "SharePoint", kat: "lagring" },
+  { namn: "Google Analytics", kat: "analys" },
+  { namn: "Matomo", kat: "analys" },
+  { namn: "Hotjar", kat: "analys" },
+  { namn: "Looker Studio", kat: "analys" },
+  { namn: "Power BI", kat: "analys" },
+  { namn: "Excel", kat: "analys" },
+  { namn: "Google Sheets", kat: "analys" },
+  { namn: "ChatGPT", kat: "ai" },
+  { namn: "Claude", kat: "ai" },
+  { namn: "Copilot", kat: "ai" },
+  { namn: "Gemini", kat: "ai" },
+  { namn: "Midjourney", kat: "ai" },
 ];
 
-// Vilka system som hör ihop i verkligheten. En koppling ritas bara när
-// besökaren valt BÅDA verktygen i paret. Deterministisk lista, ingen slump.
-// AI-assistenten finns INTE här: den kopplas till ALLA valda verktyg och
-// ritas som ett eget, lättare lager i komponenten.
-const jungleRelations: [string, string][] = [
-  ["crm", "nyhetsbrev"], // kontakterna styr utskicken
-  ["crm", "mejl"], // mejlen loggas på kunden
-  ["crm", "ekonomi"], // offert blir faktura
-  ["socialt", "analys"], // resultatet mäts
-  ["nyhetsbrev", "analys"], // öppningar och klick mäts
-  ["kalkyl", "ekonomi"], // kalkylen hämtar siffrorna
-  ["projekt", "mejl"], // deadlines hamnar i kalendern
-  ["lagring", "projekt"], // filerna kopplas till projekten
+// Snabbval under sökfältet: de vanligaste hos målgruppen.
+const snabbval = [
+  "Fortnox",
+  "Microsoft 365",
+  "HubSpot",
+  "Slack",
+  "Google Workspace",
+  "Shopify",
+  "Mailchimp",
+  "ChatGPT",
+  "Trello",
+  "Google Analytics",
 ];
 
-/**
- * JungleTest — sajtens signaturfunktion. Besökaren väljer sina verktyg,
- * ser sin egen röriga karta växa fram och trycker sedan på knappen som gör
- * det tjänsten gör: skapar ordning. Bygger på sysmap-tekniken från
- * tjänstesidorna; is-visible styrs här av knappen i stället för scroll.
- */
+// Regelkatalogen: vad två kategorier kan göra ihop. {a}/{b} byts mot
+// systemens riktiga namn i kartetiketterna. En text per par, inga
+// tankstreck, skrivna så de låter skräddarsydda.
+const kopplingsregler: { par: [Kategori, Kategori]; text: string }[] = [
+  { par: ["ekonomi", "crm"], text: "{a} + {b}: godkänd offert blir faktura automatiskt" },
+  { par: ["crm", "mejl"], text: "{a} + {b}: mejl och möten loggas på rätt kund" },
+  { par: ["crm", "mf"], text: "{a} + {b}: kontakterna styr utskick och målgrupper" },
+  { par: ["mf", "analys"], text: "{a} + {b}: kampanjresultat mäts mot riktiga siffror" },
+  { par: ["ehandel", "ekonomi"], text: "{a} + {b}: ordrar bokförs utan handpåläggning" },
+  { par: ["ehandel", "mf"], text: "{a} + {b}: köpdata styr kampanjerna" },
+  { par: ["ehandel", "analys"], text: "{a} + {b}: försäljningen syns i realtid" },
+  { par: ["ehandel", "crm"], text: "{a} + {b}: kunderna i butiken blir kontakter i registret" },
+  { par: ["projekt", "mejl"], text: "{a} + {b}: deadlines hamnar i kalendern av sig själva" },
+  { par: ["projekt", "lagring"], text: "{a} + {b}: filerna ligger på rätt projekt" },
+  { par: ["projekt", "komm"], text: "{a} + {b}: uppdateringar landar där teamet redan är" },
+  { par: ["komm", "mejl"], text: "{a} + {b}: ett flöde för möten och meddelanden" },
+  { par: ["komm", "crm"], text: "{a} + {b}: kunddialogen samlas på ett ställe" },
+  { par: ["ekonomi", "analys"], text: "{a} + {b}: nyckeltalen uppdaterar sig själva" },
+  { par: ["ekonomi", "lagring"], text: "{a} + {b}: kvitton och underlag arkiveras automatiskt" },
+  { par: ["crm", "analys"], text: "{a} + {b}: säljtratten blir mätbar" },
+  { par: ["mf", "ehandel"], text: "{a} + {b}: annonserna leder rakt till kassan" },
+];
+
+const AI_ETIKETT = "{a} + {b}: AI:n gör grovjobbet med underlag och utkast";
+
+const MAX_SYSTEM = 12;
+
+type ValtSystem = { namn: string; kat: Kategori };
+
+// Kaosplatser för upp till 12 noder (index-styrt, deterministiskt).
+const kaosPlatser = [
+  { x: 34, y: 26, r: -9 },
+  { x: 62, y: 22, r: 7 },
+  { x: 46, y: 48, r: -6 },
+  { x: 70, y: 54, r: 11 },
+  { x: 28, y: 60, r: 8 },
+  { x: 55, y: 34, r: -12 },
+  { x: 38, y: 74, r: 6 },
+  { x: 66, y: 76, r: -8 },
+  { x: 22, y: 42, r: -5 },
+  { x: 50, y: 64, r: 9 },
+  { x: 78, y: 36, r: -7 },
+  { x: 42, y: 14, r: 10 },
+];
+
 function JungleTest() {
-  const [selected, setSelected] = useState<string[]>([]);
-  const [ordered, setOrdered] = useState(false);
+  const [valda, setValda] = useState<ValtSystem[]>([]);
+  const [sok, setSok] = useState("");
+  const [okand, setOkand] = useState<string | null>(null);
+  const [fas, setFas] = useState<"bygga" | "formular" | "ordnad">("bygga");
+  const [lead, setLead] = useState({ namn: "", epost: "", foretag: "" });
+  const [skickar, setSkickar] = useState(false);
+  const [fel, setFel] = useState(false);
+  const [etikett, setEtikett] = useState<number | null>(null);
   const mobil = useIsMobile();
 
-  const tools = selected
-    .map((id) => jungleTools.find((t) => t.id === id))
-    .filter((t): t is JungleTool => !!t);
-  const n = tools.length;
+  const n = valda.length;
+  const ordnad = fas === "ordnad";
   const hub = { x: 50, y: mobil ? 48 : 47 };
   const rx = mobil ? 34 : 38;
   const ry = mobil ? 36 : 33;
 
-  // Ordnade platser: jämnt fördelade på en ellips runt affären, start rakt
-  // uppåt. Beräknas ur index, så layouten är deterministisk.
   const orderedPos = (i: number) => {
     const vinkel = -Math.PI / 2 + (i * 2 * Math.PI) / Math.max(n, 1);
     return { x: hub.x + rx * Math.cos(vinkel), y: hub.y + ry * Math.sin(vinkel) };
   };
-  const pos = (t: JungleTool, i: number) => (ordered ? orderedPos(i) : { x: t.sx, y: t.sy });
+  const kaosPos = (i: number) => kaosPlatser[i % kaosPlatser.length];
+  const pos = (i: number) => (ordnad ? orderedPos(i) : kaosPos(i));
 
-  const toggla = (id: string) =>
-    setSelected((s) => (s.includes(id) ? s.filter((x) => x !== id) : [...s, id]));
+  // Sökförslag: katalogträffar som inte redan är valda, max 6.
+  const forslag =
+    sok.trim().length < 2
+      ? []
+      : systemKatalog
+          .filter(
+            (k) =>
+              k.namn.toLowerCase().includes(sok.trim().toLowerCase()) &&
+              !valda.some((v) => v.namn.toLowerCase() === k.namn.toLowerCase()),
+          )
+          .slice(0, 6);
+  const exaktTraff = forslag.some((f) => f.namn.toLowerCase() === sok.trim().toLowerCase());
+
+  const laggTill = (namn: string, kat: Kategori) => {
+    if (n >= MAX_SYSTEM) return;
+    if (valda.some((v) => v.namn.toLowerCase() === namn.toLowerCase())) return;
+    setValda((s) => [...s, { namn, kat }]);
+    setSok("");
+    setOkand(null);
+  };
+  const taBort = (namn: string) => setValda((s) => s.filter((v) => v.namn !== namn));
   const reset = () => {
-    setSelected([]);
-    setOrdered(false);
+    setValda([]);
+    setSok("");
+    setOkand(null);
+    setFas("bygga");
+    setLead({ namn: "", epost: "", foretag: "" });
+    setFel(false);
+    setEtikett(null);
   };
 
-  // Systemkopplingar: relationer där besökaren valt båda verktygen.
-  const sysLinks = jungleRelations
-    .map(([a, b]) => [tools.findIndex((t) => t.id === a), tools.findIndex((t) => t.id === b)] as [number, number])
-    .filter(([a, b]) => a !== -1 && b !== -1);
-  // AI-assistenten kopplas till allt: ett lättare lager av bågar till varje
-  // annat valt verktyg, plus en förstärkt navlinje (analys + AI + er affär
-  // hänger alltid ihop när båda är valda).
-  const aiIdx = tools.findIndex((t) => t.id === "ai");
-  const aiLinks = aiIdx === -1 ? [] : tools.map((_, i) => i).filter((i) => i !== aiIdx);
-  const k = sysLinks.length + aiLinks.length;
+  // Kopplingar: regelkatalogen på kategoripar (i<j, en linje per systempar),
+  // AI-kategorin kopplas till allt som ett eget lättare lager.
+  const lankar: { a: number; b: number; text: string; ai: boolean }[] = [];
+  for (let i = 0; i < n; i++) {
+    for (let j = i + 1; j < n; j++) {
+      const A = valda[i];
+      const B = valda[j];
+      const namnsatt = (mall: string) => mall.replace("{a}", A.namn).replace("{b}", B.namn);
+      if (A.kat === "ai" || B.kat === "ai") {
+        if (A.kat !== B.kat) lankar.push({ a: i, b: j, text: namnsatt(AI_ETIKETT), ai: true });
+        continue;
+      }
+      const regel = kopplingsregler.find(
+        (r) =>
+          (r.par[0] === A.kat && r.par[1] === B.kat) ||
+          (r.par[0] === B.kat && r.par[1] === A.kat),
+      );
+      if (regel) lankar.push({ a: i, b: j, text: namnsatt(regel.text), ai: false });
+    }
+  }
+  const k = lankar.length;
 
-  // Mjuk båge mellan två ordnade noder som buktar UTÅT från navet, så att
-  // kopplingarna läses som medvetna och aldrig korsar navlinjerna i mitten.
-  // apx/apy är bågens topp (kvadratisk Bezier vid t=0,5) och styr pulsen.
+  // Trassel i kaosläget (kedja + genvägar mellan kaosplatserna).
+  const tangle: [number, number][] = [];
+  for (let i = 0; i < n - 1; i++) tangle.push([i, i + 1]);
+  if (n >= 3) tangle.push([n - 1, 0]);
+  if (n >= 5) for (let i = 0; i < n; i += 2) tangle.push([i, (i + 3) % n]);
+
   const arcPath = (ai: number, bi: number) => {
     const A = orderedPos(ai);
     const B = orderedPos(bi);
@@ -793,7 +953,6 @@ function JungleTest() {
     let dy = my - hub.y;
     let len = Math.hypot(dx, dy);
     if (len < 1) {
-      // Paret sitter mittemot varandra: bukta vinkelrätt mot kordan i stället.
       dx = -(B.y - A.y);
       dy = B.x - A.x;
       len = Math.hypot(dx, dy) || 1;
@@ -808,12 +967,35 @@ function JungleTest() {
     };
   };
 
-  // Trasslet i kaosläget: en kedja genom alla valda plus korsande genvägar.
-  // Linjerna ligger kvar i DOM efter ordningen och tonas ut via CSS.
-  const tangle: [number, number][] = [];
-  for (let i = 0; i < n - 1; i++) tangle.push([i, i + 1]);
-  if (n >= 3) tangle.push([n - 1, 0]);
-  if (n >= 5) for (let i = 0; i < n; i += 2) tangle.push([i, (i + 3) % n]);
+  // Grinden: leaden skickas till Netlify Forms (statiska detekteringsfilen,
+  // ALDRIG "/"), med hela systemlistan som säljunderlag. I dev-läge saknas
+  // Netlify-mottagaren, då släpps man vidare ändå.
+  const skickaLead = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setSkickar(true);
+    setFel(false);
+    try {
+      const res = await fetch("/__forms.html", {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: new URLSearchParams({
+          "form-name": "djungeltest",
+          "bot-field": "",
+          namn: lead.namn,
+          epost: lead.epost,
+          foretag: lead.foretag,
+          system: valda.map((v) => `${v.namn} (${kategoriNamn[v.kat]})`).join(", "),
+          kopplingar: String(k),
+        }).toString(),
+      });
+      if (!res.ok && import.meta.env.PROD) throw new Error(String(res.status));
+      setFas("ordnad");
+    } catch {
+      setFel(true);
+    } finally {
+      setSkickar(false);
+    }
+  };
 
   return (
     <section id="djungeltestet" className="snap-start relative min-h-svh bg-ink text-paper overflow-hidden">
@@ -826,70 +1008,162 @@ function JungleTest() {
               Hur ser er <span className="text-brand-green">djungel</span> ut?
             </h2>
             <p className="mt-6 text-paper/70 leading-relaxed max-w-2xl">
-              Klicka i verktygen ni använder idag och se er egen karta växa
-              fram. Gör sedan det jag gör i varje uppdrag: skapa ordning.
+              Skriv in systemen ni faktiskt använder och se er egen karta växa
+              fram. Sedan ordnar jag den: kartan som landar är mitt förslag på
+              hur allt kan jobba ihop.
             </p>
           </div>
         </Reveal>
 
         <Reveal delay={120}>
-          <div className="mt-10 flex flex-wrap gap-2" role="group" aria-label="Välj era verktyg">
-            {jungleTools.map((t) => {
-              const vald = selected.includes(t.id);
-              return (
-                <button
-                  key={t.id}
-                  type="button"
-                  aria-pressed={vald}
-                  onClick={() => toggla(t.id)}
-                  className={`px-3.5 py-2 text-xs md:text-sm font-semibold border transition-colors ${
-                    vald
-                      ? "bg-brand-green border-brand-green text-paper"
-                      : "border-paper/25 text-paper/75 hover:border-brand-green/60 hover:text-paper"
-                  }`}
-                >
-                  {t.label}
-                </button>
-              );
-            })}
-          </div>
+          {/* Sökfält + snabbval (döljs när kartan är ordnad) */}
+          {!ordnad && (
+            <div className="mt-10 max-w-2xl">
+              <div className="relative">
+                <input
+                  type="text"
+                  value={sok}
+                  onChange={(e) => {
+                    setSok(e.target.value);
+                    setOkand(null);
+                  }}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                      e.preventDefault();
+                      if (forslag.length > 0) laggTill(forslag[0].namn, forslag[0].kat);
+                      else if (sok.trim().length >= 2) setOkand(sok.trim());
+                    }
+                  }}
+                  placeholder={n >= MAX_SYSTEM ? "Max 12 system" : "Sök era system: Fortnox, HubSpot, Slack ..."}
+                  disabled={n >= MAX_SYSTEM}
+                  aria-label="Sök efter system"
+                  className="w-full bg-white/5 border border-paper/25 px-4 py-3.5 text-base text-paper placeholder:text-paper/40 focus:outline-none focus:border-brand-green disabled:opacity-50"
+                />
+                {(forslag.length > 0 || (sok.trim().length >= 2 && !exaktTraff)) && (
+                  <div className="absolute inset-x-0 top-full mt-1 z-20 bg-ink border border-paper/20 shadow-xl">
+                    {forslag.map((f) => (
+                      <button
+                        key={f.namn}
+                        type="button"
+                        onClick={() => laggTill(f.namn, f.kat)}
+                        className="flex w-full items-center justify-between px-4 py-2.5 text-sm text-left text-paper/85 hover:bg-white/10"
+                      >
+                        <span>{f.namn}</span>
+                        <span className="tracked text-[9px] text-paper/40">{kategoriNamn[f.kat]}</span>
+                      </button>
+                    ))}
+                    {sok.trim().length >= 2 && !exaktTraff && (
+                      <button
+                        type="button"
+                        onClick={() => setOkand(sok.trim())}
+                        className="flex w-full items-center gap-2 px-4 py-2.5 text-sm text-left text-brand-green hover:bg-white/10 border-t border-paper/10"
+                      >
+                        <Plus className="h-3.5 w-3.5" strokeWidth={2.5} />
+                        Lägg till &quot;{sok.trim()}&quot;
+                      </button>
+                    )}
+                  </div>
+                )}
+              </div>
 
+              {/* Kategorifråga för okända system */}
+              {okand && (
+                <div className="mt-3 border border-brand-green/40 bg-white/5 p-4">
+                  <p className="text-sm text-paper/75 mb-3">
+                    Vad är <span className="font-semibold text-paper">{okand}</span> för sorts system?
+                  </p>
+                  <div className="flex flex-wrap gap-2">
+                    {(Object.keys(kategoriNamn) as Kategori[]).map((kat) => (
+                      <button
+                        key={kat}
+                        type="button"
+                        onClick={() => laggTill(okand, kat)}
+                        className="px-3 py-1.5 text-xs font-semibold border border-paper/25 text-paper/75 hover:border-brand-green hover:text-paper transition-colors"
+                      >
+                        {kategoriNamn[kat]}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Snabbval */}
+              <div className="mt-4 flex flex-wrap items-center gap-2">
+                <span className="tracked text-[9px] text-paper/40 mr-1">Vanliga:</span>
+                {snabbval
+                  .filter((namn) => !valda.some((v) => v.namn === namn))
+                  .slice(0, mobil ? 6 : 10)
+                  .map((namn) => {
+                    const post = systemKatalog.find((s) => s.namn === namn)!;
+                    return (
+                      <button
+                        key={namn}
+                        type="button"
+                        onClick={() => laggTill(post.namn, post.kat)}
+                        disabled={n >= MAX_SYSTEM}
+                        className="px-3 py-1.5 text-xs font-semibold border border-paper/20 text-paper/65 hover:border-brand-green/60 hover:text-paper transition-colors disabled:opacity-40"
+                      >
+                        {namn}
+                      </button>
+                    );
+                  })}
+              </div>
+
+              {/* Valda system som borttagbara taggar */}
+              {n > 0 && (
+                <div className="mt-4 flex flex-wrap items-center gap-2">
+                  {valda.map((v) => (
+                    <span
+                      key={v.namn}
+                      className="inline-flex items-center gap-1.5 bg-brand-green/15 border border-brand-green/40 text-paper px-2.5 py-1 text-xs font-semibold"
+                    >
+                      {v.namn}
+                      <button
+                        type="button"
+                        onClick={() => taBort(v.namn)}
+                        aria-label={`Ta bort ${v.namn}`}
+                        className="text-paper/60 hover:text-paper"
+                      >
+                        <X className="h-3 w-3" strokeWidth={2.5} />
+                      </button>
+                    </span>
+                  ))}
+                  <span className="text-xs text-paper/40">{n}/{MAX_SYSTEM}</span>
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* Kartan */}
           <div
             className={`sysmap relative mt-8 h-[21rem] md:h-96 border border-paper/10 bg-white/[0.03] ${
-              ordered ? "is-visible" : ""
+              ordnad ? "is-visible" : ""
             }`}
+            onClick={() => setEtikett(null)}
           >
             {n === 0 ? (
               <p className="absolute inset-0 flex items-center justify-center px-8 text-center text-sm text-paper/40">
-                Välj verktygen ovan, så byggs er karta här.
+                Sök eller välj era system ovan, så byggs er karta här.
               </p>
             ) : (
               <>
-                <svg
-                  className="absolute inset-0 h-full w-full"
-                  viewBox="0 0 100 100"
-                  preserveAspectRatio="none"
-                  fill="none"
-                  aria-hidden="true"
-                >
+                <svg className="absolute inset-0 h-full w-full" viewBox="0 0 100 100" preserveAspectRatio="none" fill="none" aria-hidden="true">
                   {tangle.map(([a, b]) => (
                     <line
-                      key={`t-${tools[a].id}-${tools[b].id}`}
+                      key={`t-${a}-${b}`}
                       className="jungle-tangle"
-                      x1={tools[a].sx}
-                      y1={tools[a].sy}
-                      x2={tools[b].sx}
-                      y2={tools[b].sy}
+                      x1={kaosPos(a).x}
+                      y1={kaosPos(a).y}
+                      x2={kaosPos(b).x}
+                      y2={kaosPos(b).y}
                       stroke="#8A8D90"
                       strokeWidth="1"
                       vectorEffect="non-scaling-stroke"
                     />
                   ))}
-                  {/* Nav- och systemlinjer renderas alltid men är dolda tills
-                      is-visible sätts: så spelas ritanimationen upp korrekt. */}
-                  {tools.map((t, i) => (
+                  {valda.map((v, i) => (
                     <line
-                      key={`o-${t.id}`}
+                      key={`o-${v.namn}`}
                       className="sysmap-link"
                       pathLength={1}
                       x1={hub.x}
@@ -897,117 +1171,92 @@ function JungleTest() {
                       x2={orderedPos(i).x}
                       y2={orderedPos(i).y}
                       stroke="#1F8A5C"
-                      strokeOpacity={t.id === "ai" ? "0.7" : "0.35"}
-                      strokeWidth={t.id === "ai" ? "1.75" : "1.25"}
+                      strokeOpacity="0.35"
+                      strokeWidth="1.25"
                       vectorEffect="non-scaling-stroke"
-                      style={{ transitionDelay: `${0.55 + i * 0.08}s` }}
+                      style={{ transitionDelay: `${0.55 + i * 0.06}s` }}
                     />
                   ))}
-                  {/* Systemkopplingarna: tunnare, klarare gröna bågar som buktar
-                      utåt. Ritas som andra våg, efter navlinjerna. */}
-                  {sysLinks.map(([a, b], j) => (
+                  {lankar.map((l, j) => (
                     <path
-                      key={`s-${tools[a].id}-${tools[b].id}`}
+                      key={`s-${l.a}-${l.b}`}
                       className="sysmap-link"
                       pathLength={1}
-                      d={arcPath(a, b).d}
+                      d={arcPath(l.a, l.b).d}
                       stroke="#1F8A5C"
-                      strokeOpacity="0.8"
-                      strokeWidth="1"
+                      strokeOpacity={l.ai ? "0.3" : etikett === j ? "1" : "0.8"}
+                      strokeWidth={l.ai ? "0.75" : etikett === j ? "1.75" : "1"}
                       fill="none"
                       vectorEffect="non-scaling-stroke"
-                      style={{ transitionDelay: `${1.35 + j * 0.14}s` }}
-                    />
-                  ))}
-                  {/* AI-lagret: assistenten når allt. Tunnare och ljusare än
-                      systemkopplingarna så det läses som ett stödskikt,
-                      inte som nytt trassel. Tredje vågen. */}
-                  {aiLinks.map((i, j) => (
-                    <path
-                      key={`ai-${tools[i].id}`}
-                      className="sysmap-link"
-                      pathLength={1}
-                      d={arcPath(aiIdx, i).d}
-                      stroke="#1F8A5C"
-                      strokeOpacity="0.3"
-                      strokeWidth="0.75"
-                      fill="none"
-                      vectorEffect="non-scaling-stroke"
-                      style={{ transitionDelay: `${1.8 + j * 0.1}s` }}
+                      style={{ transitionDelay: `${1.3 + j * 0.09}s` }}
                     />
                   ))}
                 </svg>
                 <span className="sysmap-hub-ring" style={{ left: `${hub.x}%`, top: `${hub.y}%` }} />
-                {tools.slice(0, 5).map((t, i) => (
-                  <span
-                    key={`p-${t.id}`}
-                    className={`sysmap-pulse ${i % 2 === 1 ? "flow-back" : ""}`}
+                {/* Kopplingsmarkörer: hover/tryck visar förslaget i klartext */}
+                {ordnad &&
+                  lankar.map((l, j) => {
+                    const arc = arcPath(l.a, l.b);
+                    return (
+                      <button
+                        key={`m-${l.a}-${l.b}`}
+                        type="button"
+                        aria-label={l.text}
+                        onMouseEnter={() => setEtikett(j)}
+                        onMouseLeave={() => setEtikett((v) => (v === j ? null : v))}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setEtikett((v) => (v === j ? null : j));
+                        }}
+                        className="jungle-late absolute z-10 flex h-6 w-6 items-center justify-center"
+                        style={{
+                          left: `${arc.apx}%`,
+                          top: `${arc.apy}%`,
+                          transform: "translate(-50%, -50%)",
+                          transitionDelay: `${1.6 + j * 0.05}s`,
+                        }}
+                      >
+                        <span
+                          className={`block rounded-full transition-all ${
+                            etikett === j ? "h-3 w-3 bg-brand-green shadow-[0_0_10px_rgba(31,138,92,0.8)]" : "h-2 w-2 bg-brand-green/70"
+                          }`}
+                        />
+                      </button>
+                    );
+                  })}
+                {/* Etiketten */}
+                {ordnad && etikett !== null && lankar[etikett] && (
+                  <div
+                    className="absolute z-20 max-w-[260px] -translate-x-1/2 bg-white text-ink text-xs font-semibold leading-snug px-3 py-2 shadow-lg border border-line pointer-events-none"
                     style={{
-                      ["--hx" as string]: `${hub.x}%`,
-                      ["--hy" as string]: `${hub.y}%`,
-                      ["--nx" as string]: `${orderedPos(i).x}%`,
-                      ["--ny" as string]: `${orderedPos(i).y}%`,
-                      animationDelay: `${1.6 + i * 0.5}s`,
+                      left: `${Math.min(80, Math.max(20, arcPath(lankar[etikett].a, lankar[etikett].b).apx))}%`,
+                      top: `${Math.max(4, arcPath(lankar[etikett].a, lankar[etikett].b).apy - 10)}%`,
                     }}
-                  />
-                ))}
-                {/* En puls som följer första systemkopplingens båge */}
-                {sysLinks.slice(0, 2).map(([a, b], j) => {
-                  const arc = arcPath(a, b);
-                  const A = orderedPos(a);
-                  const B = orderedPos(b);
-                  return (
-                    <span
-                      key={`sp-${tools[a].id}-${tools[b].id}`}
-                      className="jungle-syspulse"
-                      style={{
-                        ["--ax" as string]: `${A.x}%`,
-                        ["--ay" as string]: `${A.y}%`,
-                        ["--mx" as string]: `${arc.apx}%`,
-                        ["--my" as string]: `${arc.apy}%`,
-                        ["--bx" as string]: `${B.x}%`,
-                        ["--by" as string]: `${B.y}%`,
-                        animationDelay: `${2.4 + j * 1.1}s`,
-                      }}
-                    />
-                  );
-                })}
+                  >
+                    {lankar[etikett].text}
+                  </div>
+                )}
+                {/* Navet */}
                 <div
                   className="jungle-late absolute"
-                  style={{
-                    left: `${hub.x}%`,
-                    top: `${hub.y}%`,
-                    transform: "translate(-50%, -50%)",
-                    transitionDelay: "0.45s",
-                    zIndex: 2,
-                  }}
+                  style={{ left: `${hub.x}%`, top: `${hub.y}%`, transform: "translate(-50%, -50%)", transitionDelay: "0.45s", zIndex: 2 }}
                 >
                   <div className="sysmap-node-box bg-brand-green text-paper shadow-md whitespace-nowrap px-4 py-2 md:px-5 md:py-2.5 text-xs md:text-sm font-semibold">
                     Er affär
                   </div>
                 </div>
-                {tools.map((t, i) => {
-                  const p = pos(t, i);
+                {/* Systemnoderna med riktiga namn */}
+                {valda.map((v, i) => {
+                  const p = pos(i);
+                  const rot = ordnad ? 0 : kaosPos(i).r;
                   return (
                     <div
-                      key={t.id}
+                      key={v.namn}
                       className="sysmap-node absolute"
-                      style={{
-                        left: `${p.x}%`,
-                        top: `${p.y}%`,
-                        transform: `translate(-50%, -50%) rotate(${ordered ? 0 : t.sr}deg)`,
-                        zIndex: 1,
-                      }}
+                      style={{ left: `${p.x}%`, top: `${p.y}%`, transform: `translate(-50%, -50%) rotate(${rot}deg)`, zIndex: 1 }}
                     >
-                      <div className="jungle-pop sysmap-node-box whitespace-nowrap bg-white/95 border border-line text-ink/80 shadow-sm px-2.5 py-1.5 md:px-4 md:py-2 text-[11px] md:text-sm font-semibold">
-                        {t.labelShort ? (
-                          <>
-                            <span className="md:hidden">{t.labelShort}</span>
-                            <span className="hidden md:inline">{t.label}</span>
-                          </>
-                        ) : (
-                          t.label
-                        )}
+                      <div className="jungle-pop sysmap-node-box whitespace-nowrap bg-white/95 border border-line text-ink/80 shadow-sm px-2 py-1 md:px-3 md:py-1.5 text-[10px] md:text-xs font-semibold">
+                        {v.namn}
                       </div>
                     </div>
                   );
@@ -1016,37 +1265,96 @@ function JungleTest() {
             )}
           </div>
 
+          {/* Under kartan: knapp / grind / resultat beroende på fas */}
           <div className="mt-8 min-h-14">
-            {!ordered ? (
+            {fas === "bygga" && (
               <div className="flex flex-wrap items-center gap-4">
                 <button
                   type="button"
-                  onClick={() => setOrdered(true)}
+                  onClick={() => setFas("formular")}
                   disabled={n < 2}
                   className="inline-flex items-center gap-2 bg-brand-green text-paper px-6 py-3.5 text-sm font-semibold transition-colors hover:bg-paper hover:text-ink disabled:opacity-40 disabled:pointer-events-none"
                 >
                   Skapa ordning <ArrowUpRight className="h-4 w-4" strokeWidth={2.5} />
                 </button>
-                <span className="text-sm text-paper/50" aria-live="polite">
-                  {n < 2 ? "Välj minst två verktyg." : `${n} verktyg valda.`}
+                <span className="text-sm text-paper/50">
+                  {n < 2 ? "Välj minst två system." : `${n} system valda.`}
                 </span>
               </div>
-            ) : (
+            )}
+
+            {fas === "formular" && (
+              <form onSubmit={skickaLead} className="max-w-xl border border-brand-green/40 bg-white/5 p-5 md:p-6">
+                <p className="text-sm text-paper/75 leading-relaxed mb-5">
+                  Fyll i så ordnar jag er karta. Jag hör av mig med tankar om
+                  er systemflora, kostnadsfritt och utan förpliktelser.
+                </p>
+                <div className="grid gap-3 sm:grid-cols-2">
+                  <input
+                    type="text"
+                    required
+                    value={lead.namn}
+                    onChange={(e) => setLead({ ...lead, namn: e.target.value })}
+                    placeholder="Namn *"
+                    aria-label="Namn"
+                    className="w-full bg-ink border border-paper/25 px-4 py-3 text-base text-paper placeholder:text-paper/40 focus:outline-none focus:border-brand-green"
+                  />
+                  <input
+                    type="email"
+                    required
+                    value={lead.epost}
+                    onChange={(e) => setLead({ ...lead, epost: e.target.value })}
+                    placeholder="E-post *"
+                    aria-label="E-post"
+                    className="w-full bg-ink border border-paper/25 px-4 py-3 text-base text-paper placeholder:text-paper/40 focus:outline-none focus:border-brand-green"
+                  />
+                  <input
+                    type="text"
+                    value={lead.foretag}
+                    onChange={(e) => setLead({ ...lead, foretag: e.target.value })}
+                    placeholder="Företag (valfritt)"
+                    aria-label="Företag"
+                    className="w-full bg-ink border border-paper/25 px-4 py-3 text-base text-paper placeholder:text-paper/40 focus:outline-none focus:border-brand-green sm:col-span-2"
+                  />
+                </div>
+                {fel && (
+                  <p className="mt-3 text-sm text-paper/70">
+                    Något gick fel vid skickandet. Prova igen om en stund.
+                  </p>
+                )}
+                <div className="mt-5 flex flex-wrap items-center gap-4">
+                  <button
+                    type="submit"
+                    disabled={skickar}
+                    className="inline-flex items-center gap-2 bg-brand-green text-paper px-6 py-3 text-sm font-semibold transition-colors hover:bg-paper hover:text-ink disabled:opacity-50"
+                  >
+                    {skickar ? "Ordnar ..." : "Ordna min karta"}
+                    <ArrowUpRight className="h-4 w-4" strokeWidth={2.5} />
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setFas("bygga")}
+                    className="text-sm text-paper/50 hover:text-paper underline underline-offset-4"
+                  >
+                    Tillbaka
+                  </button>
+                </div>
+              </form>
+            )}
+
+            {fas === "ordnad" && (
               <div className="jungle-result is-visible grid md:grid-cols-12 gap-6 items-center">
                 <div className="jungle-late md:col-span-7" style={{ transitionDelay: "0.9s" }}>
                   <p className="display-heading text-xl md:text-2xl text-paper">
-                    {n} verktyg. <span className="text-brand-green">Ett system.</span>
+                    {n} system. <span className="text-brand-green">Ett förslag: {k} {k === 1 ? "koppling" : "kopplingar"}.</span>
                   </p>
                   <p className="mt-2 text-sm text-paper/65 leading-relaxed">
                     {k > 0
-                      ? `${k} ${k === 1 ? "koppling" : "kopplingar"} som jobbar åt er, i stället för ${n} öar. Första steget dit: en systemkartläggning.`
-                      : "Så här ser det ut när allt utgår från affären i stället för från apparna. Första steget dit: en systemkartläggning."}
+                      ? `${mobil ? "Tryck" : "Håll muspekaren"} på punkterna längs linjerna så ser ni vad varje koppling gör. Jag hör av mig med mina tankar.`
+                      : "Era system saknar självklara kopplingar i min regelbok, vilket i sig säger något. Jag hör av mig med mina tankar."}
                   </p>
                 </div>
-                <div
-                  className="jungle-late md:col-span-5 flex flex-wrap items-center gap-4 md:justify-end"
-                  style={{ transitionDelay: "1.05s" }}
-                >
+                <div className="jungle-late md:col-span-5 flex flex-wrap items-center gap-4 md:justify-end" style={{ transitionDelay: "1.05s" }}>
                   <Link
                     to="/boka"
                     className="inline-flex items-center gap-2 bg-brand-green text-paper px-6 py-3.5 text-sm font-semibold hover:bg-paper hover:text-ink transition-colors"

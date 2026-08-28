@@ -744,6 +744,11 @@ details[open] .faq-icon {
     transition: none;
     stroke-dashoffset: 0;
   }
+  /* Utan ritanimationen skulle de ordnade linjerna annars synas redan i
+     kaosläget (dashoffset 0 gäller alltid); göm dem tills kartan ordnats */
+  .sysmap:not(.is-visible) .sysmap-link {
+    opacity: 0;
+  }
   .process-line-dot {
     transition: none;
     opacity: 1;
