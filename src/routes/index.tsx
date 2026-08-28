@@ -2,6 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { ArrowDown, ArrowUpRight, Check, Plus, X } from "lucide-react";
 import { Header, Footer, GrowthLine, Reveal, useInView, useIsMobile, CONTACT_EMAIL } from "@/components/Site";
+import { skickaHandelse } from "@/lib/analytics";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -1066,6 +1067,7 @@ function SystemKollen() {
   const laggTill = (namn: string, kat: Kategori) => {
     if (n >= MAX_SYSTEM) return;
     if (valda.some((v) => v.namn.toLowerCase() === namn.toLowerCase())) return;
+    if (n === 0) skickaHandelse("systemkollen_start");
     setValda((s) => [...s, { namn, kat }]);
     setSok("");
     setOkand(null);
@@ -1114,6 +1116,7 @@ function SystemKollen() {
   // När besökaren går vidare till bokningen från resultatet följer kartan
   // med: /boka läser nyckeln vid mount och förifyller meddelandefältet.
   const sparaBokningsKontext = () => {
+    skickaHandelse("systemkollen_boka");
     try {
       sessionStorage.setItem(
         "systemkollen-boka",
@@ -1179,6 +1182,7 @@ function SystemKollen() {
         }).toString(),
       });
       if (!res.ok && import.meta.env.PROD) throw new Error(String(res.status));
+      skickaHandelse("systemkollen_lead", { antal_system: n, antal_kopplingar: k });
       setFas("ordnad");
     } catch {
       setFel(true);
@@ -1461,7 +1465,10 @@ function SystemKollen() {
               <div className="flex flex-wrap items-center gap-4">
                 <button
                   type="button"
-                  onClick={() => setFas("formular")}
+                  onClick={() => {
+                    skickaHandelse("systemkollen_grind", { antal_system: n });
+                    setFas("formular");
+                  }}
                   disabled={n < 2}
                   className="inline-flex items-center gap-2 bg-brand-green text-paper px-6 py-3.5 text-sm font-semibold transition-colors hover:bg-paper hover:text-ink disabled:opacity-40 disabled:pointer-events-none"
                 >

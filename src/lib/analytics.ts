@@ -108,3 +108,11 @@ export function skickaSidvisning(sokvag: string) {
     page_title: document.title,
   });
 }
+
+// Egen händelse (t.ex. Systemkollens tratt). Samma samtyckesgrind som
+// sidvisningarna: utan ja är GA aldrig laddat och anropet blir en no-op.
+// Skicka aldrig personuppgifter i parametrarna, bara antal och lägen.
+export function skickaHandelse(namn: string, params?: Record<string, string | number>) {
+  if (!laddad || !window.gtag) return;
+  window.gtag("event", namn, params);
+}
