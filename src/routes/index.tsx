@@ -733,73 +733,87 @@ const kategoriNamn: Record<Kategori, string> = {
 
 // Katalog över vanliga system i svenska småbolag. Namnen används i leads
 // och på kartan; håll stavningen som varumärkena själva skriver den.
-const systemKatalog: { namn: string; kat: Kategori }[] = [
-  { namn: "Fortnox", kat: "ekonomi" },
-  { namn: "Visma eEkonomi", kat: "ekonomi" },
-  { namn: "Bokio", kat: "ekonomi" },
-  { namn: "Wint", kat: "ekonomi" },
-  { namn: "PE Accounting", kat: "ekonomi" },
-  { namn: "Björn Lundén", kat: "ekonomi" },
+// regelgrupp: ersätter kategorin vid regelmatchning när systemet inte beter
+// sig som kategorins typfall (Klarna bokför inte, Canva skickar inga utskick).
+// overlapp: två valda system i samma overlapp-grupp gör samma jobb → bytestips.
+type RegelToken =
+  | Kategori
+  | "betalning"
+  | "webbanalys"
+  | "beteende"
+  | "webbplats"
+  | "design"
+  | "video"
+  | "bildai";
+
+type KatalogPost = { namn: string; kat: Kategori; regelgrupp?: RegelToken; overlapp?: string };
+
+const systemKatalog: KatalogPost[] = [
+  { namn: "Fortnox", kat: "ekonomi", overlapp: "bokforing" },
+  { namn: "Visma eEkonomi", kat: "ekonomi", overlapp: "bokforing" },
+  { namn: "Bokio", kat: "ekonomi", overlapp: "bokforing" },
+  { namn: "Wint", kat: "ekonomi", overlapp: "bokforing" },
+  { namn: "PE Accounting", kat: "ekonomi", overlapp: "bokforing" },
+  { namn: "Björn Lundén", kat: "ekonomi", overlapp: "bokforing" },
   { namn: "Billogram", kat: "ekonomi" },
-  { namn: "Klarna", kat: "ekonomi" },
-  { namn: "Stripe", kat: "ekonomi" },
-  { namn: "Zettle", kat: "ekonomi" },
-  { namn: "Swish", kat: "ekonomi" },
-  { namn: "Kivra", kat: "ekonomi" },
-  { namn: "HubSpot", kat: "crm" },
-  { namn: "Pipedrive", kat: "crm" },
-  { namn: "Salesforce", kat: "crm" },
-  { namn: "Upsales", kat: "crm" },
-  { namn: "Lime CRM", kat: "crm" },
-  { namn: "Zoho CRM", kat: "crm" },
-  { namn: "webCRM", kat: "crm" },
-  { namn: "Microsoft 365", kat: "mejl" },
-  { namn: "Outlook", kat: "mejl" },
-  { namn: "Google Workspace", kat: "mejl" },
-  { namn: "Gmail", kat: "mejl" },
+  { namn: "Klarna", kat: "ekonomi", regelgrupp: "betalning" },
+  { namn: "Stripe", kat: "ekonomi", regelgrupp: "betalning" },
+  { namn: "Zettle", kat: "ekonomi", regelgrupp: "betalning" },
+  { namn: "Swish", kat: "ekonomi", regelgrupp: "betalning" },
+  { namn: "HubSpot", kat: "crm", overlapp: "crm" },
+  { namn: "Pipedrive", kat: "crm", overlapp: "crm" },
+  { namn: "Salesforce", kat: "crm", overlapp: "crm" },
+  { namn: "Upsales", kat: "crm", overlapp: "crm" },
+  { namn: "Lime CRM", kat: "crm", overlapp: "crm" },
+  { namn: "Zoho CRM", kat: "crm", overlapp: "crm" },
+  { namn: "webCRM", kat: "crm", overlapp: "crm" },
+  { namn: "Microsoft 365", kat: "mejl", overlapp: "kontorspaket" },
+  { namn: "Google Workspace", kat: "mejl", overlapp: "kontorspaket" },
+  { namn: "Outlook", kat: "mejl", overlapp: "mejlklient" },
+  { namn: "Gmail", kat: "mejl", overlapp: "mejlklient" },
   { namn: "Calendly", kat: "mejl" },
-  { namn: "Slack", kat: "komm" },
-  { namn: "Teams", kat: "komm" },
-  { namn: "Zoom", kat: "komm" },
-  { namn: "Google Meet", kat: "komm" },
-  { namn: "Discord", kat: "komm" },
-  { namn: "Monday", kat: "projekt" },
-  { namn: "Trello", kat: "projekt" },
-  { namn: "Asana", kat: "projekt" },
+  { namn: "Slack", kat: "komm", overlapp: "chatt" },
+  { namn: "Teams", kat: "komm", overlapp: "chatt" },
+  { namn: "Discord", kat: "komm", overlapp: "chatt" },
+  { namn: "Zoom", kat: "komm", regelgrupp: "video", overlapp: "video" },
+  { namn: "Google Meet", kat: "komm", regelgrupp: "video", overlapp: "video" },
+  { namn: "Monday", kat: "projekt", overlapp: "projektverktyg" },
+  { namn: "Trello", kat: "projekt", overlapp: "projektverktyg" },
+  { namn: "Asana", kat: "projekt", overlapp: "projektverktyg" },
+  { namn: "ClickUp", kat: "projekt", overlapp: "projektverktyg" },
+  { namn: "Jira", kat: "projekt", overlapp: "projektverktyg" },
+  { namn: "Basecamp", kat: "projekt", overlapp: "projektverktyg" },
   { namn: "Notion", kat: "projekt" },
-  { namn: "ClickUp", kat: "projekt" },
-  { namn: "Jira", kat: "projekt" },
-  { namn: "Basecamp", kat: "projekt" },
-  { namn: "Mailchimp", kat: "mf" },
-  { namn: "Klaviyo", kat: "mf" },
-  { namn: "Rule", kat: "mf" },
-  { namn: "Get a Newsletter", kat: "mf" },
+  { namn: "Mailchimp", kat: "mf", overlapp: "nyhetsbrev" },
+  { namn: "Klaviyo", kat: "mf", overlapp: "nyhetsbrev" },
+  { namn: "Rule", kat: "mf", overlapp: "nyhetsbrev" },
+  { namn: "Get a Newsletter", kat: "mf", overlapp: "nyhetsbrev" },
   { namn: "Meta Ads", kat: "mf" },
   { namn: "Google Ads", kat: "mf" },
   { namn: "LinkedIn Ads", kat: "mf" },
-  { namn: "Canva", kat: "mf" },
-  { namn: "Shopify", kat: "ehandel" },
-  { namn: "WooCommerce", kat: "ehandel" },
-  { namn: "Quickbutik", kat: "ehandel" },
-  { namn: "Wix", kat: "ehandel" },
-  { namn: "Squarespace", kat: "ehandel" },
-  { namn: "WordPress", kat: "ehandel" },
-  { namn: "Google Drive", kat: "lagring" },
-  { namn: "OneDrive", kat: "lagring" },
-  { namn: "Dropbox", kat: "lagring" },
+  { namn: "Canva", kat: "mf", regelgrupp: "design" },
+  { namn: "Shopify", kat: "ehandel", overlapp: "webbshop" },
+  { namn: "WooCommerce", kat: "ehandel", overlapp: "webbshop" },
+  { namn: "Quickbutik", kat: "ehandel", overlapp: "webbshop" },
+  { namn: "Wix", kat: "ehandel", regelgrupp: "webbplats", overlapp: "sajtbyggare" },
+  { namn: "Squarespace", kat: "ehandel", regelgrupp: "webbplats", overlapp: "sajtbyggare" },
+  { namn: "WordPress", kat: "ehandel", regelgrupp: "webbplats", overlapp: "sajtbyggare" },
+  { namn: "Google Drive", kat: "lagring", overlapp: "fillagring" },
+  { namn: "OneDrive", kat: "lagring", overlapp: "fillagring" },
+  { namn: "Dropbox", kat: "lagring", overlapp: "fillagring" },
   { namn: "SharePoint", kat: "lagring" },
-  { namn: "Google Analytics", kat: "analys" },
-  { namn: "Matomo", kat: "analys" },
-  { namn: "Hotjar", kat: "analys" },
-  { namn: "Looker Studio", kat: "analys" },
-  { namn: "Power BI", kat: "analys" },
-  { namn: "Excel", kat: "analys" },
-  { namn: "Google Sheets", kat: "analys" },
-  { namn: "ChatGPT", kat: "ai" },
-  { namn: "Claude", kat: "ai" },
-  { namn: "Copilot", kat: "ai" },
-  { namn: "Gemini", kat: "ai" },
-  { namn: "Midjourney", kat: "ai" },
+  { namn: "Google Analytics", kat: "analys", regelgrupp: "webbanalys", overlapp: "webbanalys" },
+  { namn: "Matomo", kat: "analys", regelgrupp: "webbanalys", overlapp: "webbanalys" },
+  { namn: "Hotjar", kat: "analys", regelgrupp: "beteende" },
+  { namn: "Looker Studio", kat: "analys", overlapp: "bi" },
+  { namn: "Power BI", kat: "analys", overlapp: "bi" },
+  { namn: "Excel", kat: "analys", overlapp: "kalkyl" },
+  { namn: "Google Sheets", kat: "analys", overlapp: "kalkyl" },
+  { namn: "ChatGPT", kat: "ai", overlapp: "ai-assistent" },
+  { namn: "Claude", kat: "ai", overlapp: "ai-assistent" },
+  { namn: "Copilot", kat: "ai", overlapp: "ai-assistent" },
+  { namn: "Gemini", kat: "ai", overlapp: "ai-assistent" },
+  { namn: "Midjourney", kat: "ai", regelgrupp: "bildai" },
 ];
 
 // Snabbval under sökfältet: de vanligaste hos målgruppen.
@@ -816,34 +830,181 @@ const snabbval = [
   "Google Analytics",
 ];
 
-// Regelkatalogen: vad två kategorier kan göra ihop. {a}/{b} byts mot
-// systemens riktiga namn i kartetiketterna. En text per par, inga
-// tankstreck, skrivna så de låter skräddarsydda.
-const kopplingsregler: { par: [Kategori, Kategori]; text: string }[] = [
-  { par: ["ekonomi", "crm"], text: "{a} + {b}: godkänd offert blir faktura automatiskt" },
-  { par: ["crm", "mejl"], text: "{a} + {b}: mejl och möten loggas på rätt kund" },
-  { par: ["crm", "mf"], text: "{a} + {b}: kontakterna styr utskick och målgrupper" },
-  { par: ["mf", "analys"], text: "{a} + {b}: kampanjresultat mäts mot riktiga siffror" },
-  { par: ["ehandel", "ekonomi"], text: "{a} + {b}: ordrar bokförs utan handpåläggning" },
-  { par: ["ehandel", "mf"], text: "{a} + {b}: köpdata styr kampanjerna" },
-  { par: ["ehandel", "analys"], text: "{a} + {b}: försäljningen syns i realtid" },
-  { par: ["ehandel", "crm"], text: "{a} + {b}: kunderna i butiken blir kontakter i registret" },
-  { par: ["projekt", "mejl"], text: "{a} + {b}: deadlines hamnar i kalendern av sig själva" },
-  { par: ["projekt", "lagring"], text: "{a} + {b}: filerna ligger på rätt projekt" },
-  { par: ["projekt", "komm"], text: "{a} + {b}: uppdateringar landar där teamet redan är" },
-  { par: ["komm", "mejl"], text: "{a} + {b}: ett flöde för möten och meddelanden" },
-  { par: ["komm", "crm"], text: "{a} + {b}: kunddialogen samlas på ett ställe" },
-  { par: ["ekonomi", "analys"], text: "{a} + {b}: nyckeltalen uppdaterar sig själva" },
-  { par: ["ekonomi", "lagring"], text: "{a} + {b}: kvitton och underlag arkiveras automatiskt" },
-  { par: ["crm", "analys"], text: "{a} + {b}: säljtratten blir mätbar" },
-  { par: ["mf", "ehandel"], text: "{a} + {b}: annonserna leder rakt till kassan" },
+// Regelkatalogen: vad två sorters system kan göra ihop. Matchas på
+// regel-token (kategori eller regelgrupp), riktningsneutral text som
+// prefixas med systemens riktiga namn. Skriv bara regler som stämmer för
+// ALLA system bakom respektive token; specialfall får egen regelgrupp.
+const kopplingsregler: { par: [RegelToken, RegelToken]; text: string }[] = [
+  { par: ["ekonomi", "crm"], text: "godkänd offert blir faktura automatiskt" },
+  { par: ["ekonomi", "analys"], text: "nyckeltalen uppdaterar sig själva i rapporterna" },
+  { par: ["ekonomi", "lagring"], text: "kvitton och underlag arkiveras automatiskt" },
+  { par: ["ekonomi", "projekt"], text: "projektets timmar och utlägg blir fakturaunderlag" },
+  { par: ["ekonomi", "komm"], text: "betald faktura ger en notis i kanalen" },
+  { par: ["ekonomi", "ehandel"], text: "ordrar bokförs utan handpåläggning" },
+  { par: ["crm", "mejl"], text: "mejl och möten loggas på rätt kund" },
+  { par: ["crm", "mf"], text: "kundlistan styr utskick och annonsmålgrupper" },
+  { par: ["crm", "projekt"], text: "vunnen affär blir ett projekt med uppgifter direkt" },
+  { par: ["crm", "analys"], text: "säljtratten blir mätbar i rapporterna" },
+  { par: ["crm", "lagring"], text: "avtal och offerter sparas på rätt kund" },
+  { par: ["crm", "komm"], text: "kunddialogen samlas på ett ställe" },
+  { par: ["crm", "ehandel"], text: "kunderna i butiken blir kontakter i registret" },
+  { par: ["mf", "analys"], text: "kampanjresultaten mäts mot riktiga siffror" },
+  { par: ["mf", "ehandel"], text: "köpdatan styr kampanjer och annonser" },
+  { par: ["mejl", "komm"], text: "mötesbokningar och påminnelser dyker upp i chatten" },
+  { par: ["mejl", "projekt"], text: "deadlines hamnar i kalendern av sig själva" },
+  { par: ["mejl", "lagring"], text: "bilagor arkiveras automatiskt i rätt mapp" },
+  { par: ["projekt", "lagring"], text: "filerna ligger på rätt projekt" },
+  { par: ["projekt", "komm"], text: "uppdateringar landar där teamet redan är" },
+  { par: ["ehandel", "analys"], text: "försäljningen syns i realtid i rapporterna" },
+  { par: ["ehandel", "komm"], text: "nya ordrar pingar direkt i kanalen" },
+  { par: ["analys", "komm"], text: "veckans siffror postas automatiskt i kanalen" },
+  { par: ["komm", "lagring"], text: "filer som delas i chatten sparas på rätt ställe" },
+  { par: ["betalning", "ekonomi"], text: "betalningarna prickas av i bokföringen automatiskt" },
+  { par: ["betalning", "ehandel"], text: "kassan och betalningen hänger ihop utan mellansteg" },
+  { par: ["webbanalys", "mf"], text: "ni ser vilka kampanjer som ger trafik som konverterar" },
+  { par: ["webbanalys", "ehandel"], text: "besök och köp kopplas ihop i samma vy" },
+  { par: ["webbanalys", "webbplats"], text: "ni ser vad besökarna faktiskt gör på sajten" },
+  { par: ["webbanalys", "analys"], text: "webbsiffrorna landar i samma rapport som resten" },
+  { par: ["beteende", "ehandel"], text: "ni ser var besökarna fastnar innan köpet" },
+  { par: ["beteende", "webbplats"], text: "ni ser var besökarna fastnar på sidorna" },
+  { par: ["beteende", "mf"], text: "kampanjtrafiken följs hela vägen in på sidan" },
+  { par: ["beteende", "webbanalys"], text: "siffrorna får en förklaring i hur besökarna beter sig" },
+  { par: ["webbplats", "crm"], text: "formulären på sajten skapar kontakter automatiskt" },
+  { par: ["webbplats", "mf"], text: "kampanjerna leder till sidor som går att följa upp" },
+  { par: ["design", "ehandel"], text: "grafiken går rakt in i butik och produktsidor" },
+  { par: ["design", "mf"], text: "designmallarna återanvänds i utskick och annonser" },
+  { par: ["video", "mejl"], text: "möteslänken hamnar rätt i varje kalenderbokning" },
+  { par: ["video", "crm"], text: "kundmöten loggas på rätt kontakt" },
+  { par: ["bildai", "mf"], text: "AI:n tar fram bilder och grafik till inlägg och annonser" },
+  { par: ["bildai", "ehandel"], text: "AI:n skapar produktbilder åt butiken" },
+  { par: ["bildai", "design"], text: "AI-bilderna landar direkt i designflödet" },
 ];
 
-const AI_ETIKETT = "{a} + {b}: AI:n gör grovjobbet med underlag och utkast";
+// AI-assistenternas koppling till övriga system: etiketten väljs efter vad
+// motparten är för sorts system, så varje koppling säger något konkret.
+const aiEtiketter: Record<Kategori, string> = {
+  ekonomi: "AI:n tolkar siffrorna och flaggar det som sticker ut",
+  crm: "AI:n skriver utkast till offerter och uppföljningsmejl",
+  mejl: "AI:n sammanfattar mejltrådar och föreslår svar",
+  komm: "AI:n sammanfattar möten och långa trådar",
+  projekt: "AI:n bryter ner uppgifter och skriver statusrapporter",
+  mf: "AI:n tar fram utkast till inlägg och annonstexter",
+  ehandel: "AI:n skriver produkttexter och svarar på vanliga kundfrågor",
+  lagring: "AI:n hittar rätt dokument och sammanfattar innehållet",
+  analys: "AI:n förklarar vad siffrorna faktiskt betyder",
+  ai: "AI:n avlastar rutinjobbet",
+  ovrigt: "AI:n avlastar rutinjobbet i vardagen",
+};
+
+// Bytestips när två valda system gör samma jobb. Nyckel = overlapp-grupp,
+// "standard" är fallback.
+const overlappTexter: Record<string, string> = {
+  standard: "{a} och {b} gör i stort sett samma jobb. Ett av dem brukar räcka.",
+  kontorspaket:
+    "{a} och {b} är två parallella kontorsvärldar. Att samla allt i en brukar spara både pengar och strul.",
+  mejlklient:
+    "{a} och {b} är två mejlmiljöer sida vid sida. En gemensam brukar ge färre tappade trådar.",
+  chatt:
+    "{a} och {b} delar på samma konversationer. En kanal brukar ge färre missade meddelanden.",
+  fillagring:
+    "{a} och {b} betyder att filerna ligger på två ställen. En gemensam yta sparar mycket letande.",
+  "ai-assistent":
+    "{a} och {b} löser samma sak. Välj en som standard så samlas vanan och historiken på ett ställe.",
+};
 
 const MAX_SYSTEM = 12;
 
 type ValtSystem = { namn: string; kat: Kategori };
+
+const katalogPost = (namn: string) =>
+  systemKatalog.find((s) => s.namn.toLowerCase() === namn.toLowerCase());
+
+// Regel-token: regelgruppen om systemet har en, annars kategorin.
+// Fritextsystem finns inte i katalogen och faller tillbaka på sin kategori.
+const regelToken = (v: ValtSystem): RegelToken => katalogPost(v.namn)?.regelgrupp ?? v.kat;
+
+type Tips = { typ: "byte" | "komplement"; text: string };
+
+// Tipsmotorn: bytesförslag (två system i samma overlapp-grupp) och
+// komplementförslag (lucka i floran som ett känt verktyg skulle fylla).
+// Föreslår aldrig något ur en kategori/grupp besökaren redan täckt.
+function beraknaTips(valda: ValtSystem[]): Tips[] {
+  const tips: Tips[] = [];
+
+  for (let i = 0; i < valda.length; i++) {
+    for (let j = i + 1; j < valda.length; j++) {
+      const ga = katalogPost(valda[i].namn)?.overlapp;
+      const gb = katalogPost(valda[j].namn)?.overlapp;
+      if (ga && ga === gb) {
+        const mall = overlappTexter[ga] ?? overlappTexter.standard;
+        tips.push({
+          typ: "byte",
+          text: mall.replace("{a}", valda[i].namn).replace("{b}", valda[j].namn),
+        });
+      }
+    }
+  }
+
+  const kats = new Set(valda.map((v) => v.kat));
+  const toks = new Set(valda.map(regelToken));
+  const grupper = new Set(valda.map((v) => katalogPost(v.namn)?.overlapp).filter(Boolean));
+  const namnMedToken = (t: RegelToken) => valda.find((v) => regelToken(v) === t)?.namn;
+  const namnMedGrupp = (g: string) =>
+    valda.find((v) => katalogPost(v.namn)?.overlapp === g)?.namn;
+
+  if (kats.has("crm") && !toks.has("ekonomi")) {
+    tips.push({
+      typ: "komplement",
+      text: `Ett ekonomisystem som Fortnox skulle kunna ta emot affärerna från ${namnMedToken("crm")} och göra offert till faktura i ett steg.`,
+    });
+  }
+  if (toks.has("ekonomi") && !kats.has("crm")) {
+    tips.push({
+      typ: "komplement",
+      text: `Ett CRM, till exempel Pipedrive eller HubSpot, skulle ge koll på affärerna innan de landar i ${namnMedToken("ekonomi")}.`,
+    });
+  }
+  if (toks.has("ehandel") && !grupper.has("nyhetsbrev")) {
+    tips.push({
+      typ: "komplement",
+      text: `Ett nyhetsbrevsverktyg som Mailchimp eller Klaviyo skulle kunna jobba direkt med köpdatan från ${namnMedToken("ehandel")}.`,
+    });
+  }
+  let webbmatning = false;
+  if ((toks.has("ehandel") || toks.has("webbplats")) && !toks.has("webbanalys")) {
+    webbmatning = true;
+    tips.push({
+      typ: "komplement",
+      text: `Google Analytics eller Matomo skulle visa vad besökarna gör på ${namnMedToken("ehandel") ?? namnMedToken("webbplats")} innan de köper eller hör av sig.`,
+    });
+  }
+  if (kats.has("mf") && !kats.has("analys") && !webbmatning) {
+    tips.push({
+      typ: "komplement",
+      text: "Ett mätverktyg, till exempel Google Analytics, skulle visa vilka kampanjer som faktiskt ger något.",
+    });
+  }
+  if (kats.has("projekt") && !kats.has("lagring")) {
+    tips.push({
+      typ: "komplement",
+      text: `En gemensam fillagring som Google Drive eller OneDrive skulle ge ${namnMedToken("projekt")} ett ställe att hämta filerna från.`,
+    });
+  }
+  if (grupper.has("chatt") && !kats.has("projekt")) {
+    tips.push({
+      typ: "komplement",
+      text: `Ett projektverktyg som Trello eller Monday skulle ge trådarna i ${namnMedGrupp("chatt")} någonstans att bli uppgifter.`,
+    });
+  }
+  if (valda.length >= 3 && !kats.has("ai")) {
+    tips.push({
+      typ: "komplement",
+      text: "Ett AI-verktyg som ChatGPT eller Copilot skulle kunna avlasta rutinjobbet i flera av systemen.",
+    });
+  }
+
+  return tips.slice(0, 4);
+}
 
 // Kaosplatser för upp till 12 noder (index-styrt, deterministiskt).
 const kaosPlatser = [
@@ -916,27 +1077,35 @@ function JungleTest() {
     setEtikett(null);
   };
 
-  // Kopplingar: regelkatalogen på kategoripar (i<j, en linje per systempar),
-  // AI-kategorin kopplas till allt som ett eget lättare lager.
+  // Kopplingar: regelkatalogen matchas på regel-token (i<j, en linje per
+  // systempar). AI-assistenter kopplas till allt som ett lättare lager med
+  // etikett vald efter motpartens kategori; bild-AI (Midjourney) går i
+  // stället via egna regler så den bara kopplas dit den hör hemma.
   const lankar: { a: number; b: number; text: string; ai: boolean }[] = [];
   for (let i = 0; i < n; i++) {
     for (let j = i + 1; j < n; j++) {
       const A = valda[i];
       const B = valda[j];
-      const namnsatt = (mall: string) => mall.replace("{a}", A.namn).replace("{b}", B.namn);
-      if (A.kat === "ai" || B.kat === "ai") {
-        if (A.kat !== B.kat) lankar.push({ a: i, b: j, text: namnsatt(AI_ETIKETT), ai: true });
+      const tokA = regelToken(A);
+      const tokB = regelToken(B);
+      if (tokA === tokB) continue;
+      const prefix = `${A.namn} + ${B.namn}: `;
+      if (tokA === "ai" || tokB === "ai") {
+        const partner = tokA === "ai" ? B : A;
+        if (partner.kat === "ai") continue;
+        lankar.push({ a: i, b: j, text: prefix + aiEtiketter[partner.kat], ai: true });
         continue;
       }
       const regel = kopplingsregler.find(
         (r) =>
-          (r.par[0] === A.kat && r.par[1] === B.kat) ||
-          (r.par[0] === B.kat && r.par[1] === A.kat),
+          (r.par[0] === tokA && r.par[1] === tokB) ||
+          (r.par[0] === tokB && r.par[1] === tokA),
       );
-      if (regel) lankar.push({ a: i, b: j, text: namnsatt(regel.text), ai: false });
+      if (regel) lankar.push({ a: i, b: j, text: prefix + regel.text, ai: false });
     }
   }
   const k = lankar.length;
+  const tips = beraknaTips(valda);
 
   // Trassel i kaosläget (kedja + genvägar mellan kaosplatserna).
   const tangle: [number, number][] = [];
@@ -986,6 +1155,7 @@ function JungleTest() {
           foretag: lead.foretag,
           system: valda.map((v) => `${v.namn} (${kategoriNamn[v.kat]})`).join(", "),
           kopplingar: String(k),
+          tips: tips.map((t) => `[${t.typ}] ${t.text}`).join(" | "),
         }).toString(),
       });
       if (!res.ok && import.meta.env.PROD) throw new Error(String(res.status));
@@ -1343,32 +1513,58 @@ function JungleTest() {
             )}
 
             {fas === "ordnad" && (
-              <div className="jungle-result is-visible grid md:grid-cols-12 gap-6 items-center">
-                <div className="jungle-late md:col-span-7" style={{ transitionDelay: "0.9s" }}>
-                  <p className="display-heading text-xl md:text-2xl text-paper">
-                    {n} system. <span className="text-brand-green">Ett förslag: {k} {k === 1 ? "koppling" : "kopplingar"}.</span>
-                  </p>
-                  <p className="mt-2 text-sm text-paper/65 leading-relaxed">
-                    {k > 0
-                      ? `${mobil ? "Tryck" : "Håll muspekaren"} på punkterna längs linjerna så ser ni vad varje koppling gör. Jag hör av mig med mina tankar.`
-                      : "Era system saknar självklara kopplingar i min regelbok, vilket i sig säger något. Jag hör av mig med mina tankar."}
-                  </p>
+              <div className="jungle-result is-visible">
+                <div className="grid md:grid-cols-12 gap-6 items-center">
+                  <div className="jungle-late md:col-span-7" style={{ transitionDelay: "0.9s" }}>
+                    <p className="display-heading text-xl md:text-2xl text-paper">
+                      {n} system. <span className="text-brand-green">Ett förslag: {k} {k === 1 ? "koppling" : "kopplingar"}.</span>
+                    </p>
+                    <p className="mt-2 text-sm text-paper/65 leading-relaxed">
+                      {k > 0
+                        ? `${mobil ? "Tryck" : "Håll muspekaren"} på punkterna längs linjerna så ser ni vad varje koppling gör. Jag hör av mig med mina tankar.`
+                        : "Era system saknar självklara kopplingar i min regelbok, vilket i sig säger något. Jag hör av mig med mina tankar."}
+                    </p>
+                  </div>
+                  <div className="jungle-late md:col-span-5 flex flex-wrap items-center gap-4 md:justify-end" style={{ transitionDelay: "1.05s" }}>
+                    <Link
+                      to="/boka"
+                      className="inline-flex items-center gap-2 bg-brand-green text-paper px-6 py-3.5 text-sm font-semibold hover:bg-paper hover:text-ink transition-colors"
+                    >
+                      Boka ett samtal <ArrowUpRight className="h-4 w-4" strokeWidth={2.5} />
+                    </Link>
+                    <button
+                      type="button"
+                      onClick={reset}
+                      className="text-sm text-paper/50 hover:text-paper underline underline-offset-4"
+                    >
+                      Börja om
+                    </button>
+                  </div>
                 </div>
-                <div className="jungle-late md:col-span-5 flex flex-wrap items-center gap-4 md:justify-end" style={{ transitionDelay: "1.05s" }}>
-                  <Link
-                    to="/boka"
-                    className="inline-flex items-center gap-2 bg-brand-green text-paper px-6 py-3.5 text-sm font-semibold hover:bg-paper hover:text-ink transition-colors"
+                {tips.length > 0 && (
+                  <div
+                    className="jungle-late mt-8 max-w-3xl border border-paper/15 bg-white/[0.04] p-5 md:p-6"
+                    style={{ transitionDelay: "1.2s" }}
                   >
-                    Boka ett samtal <ArrowUpRight className="h-4 w-4" strokeWidth={2.5} />
-                  </Link>
-                  <button
-                    type="button"
-                    onClick={reset}
-                    className="text-sm text-paper/50 hover:text-paper underline underline-offset-4"
-                  >
-                    Börja om
-                  </button>
-                </div>
+                    <p className="tracked text-[10px] text-paper/45 mb-4">Tips utifrån er karta</p>
+                    <ul className="space-y-3.5">
+                      {tips.map((t) => (
+                        <li key={t.text} className="flex items-start gap-3 text-sm text-paper/75 leading-relaxed">
+                          <span
+                            className={`tracked shrink-0 mt-0.5 px-2 py-0.5 border text-[9px] ${
+                              t.typ === "byte"
+                                ? "border-paper/30 text-paper/60"
+                                : "border-brand-green/50 text-brand-green"
+                            }`}
+                          >
+                            {t.typ === "byte" ? "Överlapp" : "Komplement"}
+                          </span>
+                          <span>{t.text}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
               </div>
             )}
           </div>
