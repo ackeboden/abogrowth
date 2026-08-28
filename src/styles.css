@@ -323,7 +323,7 @@
   animation: hero-letter 0.5s cubic-bezier(0.2, 0.7, 0.3, 1) both;
 }
 
-/* Hero-djungeln: tunna kopplingar som ritas fram, vilar och släcks i en
+/* Hero-nätet: tunna kopplingar som ritas fram, vilar och släcks i en
    långsam cykel, som ett andetag av kartan i Systemkollen längre ner. */
 @keyframes hero-link-cycle {
   0% { stroke-dashoffset: 1; opacity: 0; }

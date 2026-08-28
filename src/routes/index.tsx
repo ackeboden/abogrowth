@@ -260,7 +260,7 @@ function RotatingWord() {
   );
 }
 
-// Hero-djungelns noder (% av heroytan). Chips är verktygsboxar med namn,
+// Hero-nätets noder (% av heroytan). Chips är verktygsboxar med namn,
 // resten punkter. x/y = ordnad plats, cx/cy/crot = kaosstart för intro-
 // sekvensen (klustrade kring mitten, roterade). Alla driver sedan i egna
 // banor (--dx/--dy + duration). Deterministiskt, ingen slump.
@@ -583,7 +583,7 @@ function Hero() {
       <div className="hero-par hero-par-2 absolute inset-0" aria-hidden="true">
         <GrowthLine className="opacity-80" />
       </div>
-      {/* Hero-djungeln: verktygschips som tumlar in i kaos och snäpper till
+      {/* Hero-nätet: verktygschips som tumlar in i kaos och snäpper till
           ordning, driver i egna banor och binds av kopplingar. hero-net är
           även hemvist för pekarens strålar och markörnod. */}
       {/* Hela nätverkslagret är dolt på mobil: chips och linjer bakom texten
@@ -659,12 +659,12 @@ function Hero() {
               Mobilstorleken skalar med skärmen: annars klipps det längsta
               roterande ordet (marknadsföringen), som inte kan radbrytas. */}
           <h1 className="display-heading text-paper text-[clamp(30px,9vw,44px)] leading-[1.02] md:text-[clamp(44px,5.8vw,76px)]">
-            <span className="sr-only">Få koll på {rotatingWords[0]} i den digitala djungeln.</span>
+            <span className="sr-only">Få koll på {rotatingWords[0]} en gång för alla.</span>
             <span aria-hidden="true">
               <Bokstavsrad text="Få koll på " bas={0.15} />
               <RotatingWord />
               <br />
-              <Bokstavsrad text="i den digitala djungeln." bas={0.55} />
+              <Bokstavsrad text="en gång för alla." bas={0.55} />
             </span>
           </h1>
           <p className="mt-8 max-w-xl text-lg text-paper/70 leading-relaxed hero-rise [animation-delay:700ms]">
