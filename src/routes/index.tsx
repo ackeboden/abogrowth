@@ -1057,7 +1057,11 @@ function JungleTest() {
               !valda.some((v) => v.namn.toLowerCase() === k.namn.toLowerCase()),
           )
           .slice(0, 6);
-  const exaktTraff = forslag.some((f) => f.namn.toLowerCase() === sok.trim().toLowerCase());
+  // Exakt träff i katalogen ELLER bland redan valda: då göms fritextvalet
+  // (annars visas en död "Lägg till"-knapp för system som redan ligger inne).
+  const exaktTraff =
+    forslag.some((f) => f.namn.toLowerCase() === sok.trim().toLowerCase()) ||
+    valda.some((v) => v.namn.toLowerCase() === sok.trim().toLowerCase());
 
   const laggTill = (namn: string, kat: Kategori) => {
     if (n >= MAX_SYSTEM) return;
@@ -1517,7 +1521,15 @@ function JungleTest() {
                 <div className="grid md:grid-cols-12 gap-6 items-center">
                   <div className="jungle-late md:col-span-7" style={{ transitionDelay: "0.9s" }}>
                     <p className="display-heading text-xl md:text-2xl text-paper">
-                      {n} system. <span className="text-brand-green">Ett förslag: {k} {k === 1 ? "koppling" : "kopplingar"}.</span>
+                      {k > 0 ? (
+                        <>
+                          {n} system. <span className="text-brand-green">Ett förslag: {k} {k === 1 ? "koppling" : "kopplingar"}.</span>
+                        </>
+                      ) : (
+                        <>
+                          {n} system, <span className="text-brand-green">inga givna kopplingar.</span>
+                        </>
+                      )}
                     </p>
                     <p className="mt-2 text-sm text-paper/65 leading-relaxed">
                       {k > 0
