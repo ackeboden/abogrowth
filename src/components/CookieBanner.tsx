@@ -47,24 +47,27 @@ export function CookieBanner() {
       <div className="mx-auto max-w-6xl px-6 py-5 md:py-6 flex flex-col md:flex-row md:items-center gap-4 md:gap-8">
         <p className="text-sm text-paper/75 leading-relaxed md:flex-1">
           Den här hemsidan använder en cookie för anonym besöksstatistik
-          (Google Analytics), så att innehållet kan förbättras. Inget
-          laddas förrän du sagt ja, och du kan ångra dig när som helst.{" "}
+          (Google Analytics). Den kopplas aldrig till dig som person och
+          hjälper hemsidan att bli bättre. Inget laddas förrän du sagt ja,
+          och du kan ångra dig när som helst.{" "}
           <Link to="/integritet" className="font-semibold text-paper border-b border-brand-green hover:text-brand-green">
             Läs mer
           </Link>
         </p>
-        <div className="flex items-center gap-3 shrink-0">
+        {/* Båda valen i första lagret, ett klick var (lagkravet). Acceptera
+            är primär knapp; Avvisa nedtonad men fullt läsbar textlänk. */}
+        <div className="flex items-center gap-5 shrink-0">
           <button
             type="button"
             onClick={() => valj("nej")}
-            className="border border-paper/30 px-5 py-2.5 text-sm font-semibold hover:border-paper hover:text-paper text-paper/80 transition-colors"
+            className="text-sm text-paper/60 underline underline-offset-4 hover:text-paper transition-colors"
           >
             Avvisa
           </button>
           <button
             type="button"
             onClick={() => valj("ja")}
-            className="bg-brand-green text-paper px-6 py-2.5 text-sm font-semibold hover:bg-paper hover:text-ink transition-colors"
+            className="bg-brand-green text-paper px-7 py-3 text-sm font-semibold hover:bg-paper hover:text-ink transition-colors"
           >
             Acceptera
           </button>

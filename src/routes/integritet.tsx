@@ -73,9 +73,11 @@ function Page() {
               <div className="bg-paper border border-line p-5 md:p-8">
                 <h2 className="display-heading text-xl mb-3">Ändra ditt cookieval</h2>
                 <p className="text-sm text-ink/70 leading-relaxed mb-6">
-                  Ditt val sparas i din webbläsare. Klicka nedan för att öppna
-                  bannern igen och välja om. Ångrar du ett ja stängs
-                  spårningen av direkt och statistikcookien rensas.
+                  Ditt val sparas i din webbläsare. Ett ja gäller tills du
+                  ändrar det; ett nej gäller i 30 dagar, sedan ställs frågan
+                  igen vid nästa besök. Klicka nedan för att öppna bannern
+                  och välja om. Ångrar du ett ja stängs spårningen av direkt
+                  och statistikcookien rensas.
                 </p>
                 <button
                   type="button"

@@ -17,22 +17,48 @@ declare global {
 
 export type Samtycke = "ja" | "nej" | null;
 
+// Ett ja gäller tills besökaren ändrar det. Ett nej gäller i 30 dagar,
+// sedan ställs frågan igen vid nästa besök (upplyst på /integritet;
+// omfrågning efter månader är ok enligt praxis, tjat inom besöket inte).
+const NEJ_GILTIGT_MS = 30 * 24 * 60 * 60 * 1000;
+
 export function hamtaSamtycke(): Samtycke {
   if (typeof window === "undefined") return null;
   try {
-    const v = window.localStorage.getItem(NYCKEL);
-    return v === "ja" || v === "nej" ? v : null;
+    const rad = window.localStorage.getItem(NYCKEL);
+    if (!rad) return null;
+    // Äldre format: bara "ja"/"nej" utan tidsstämpel. Migrera nej till
+    // dagens datum så 30-dagarsklockan börjar ticka därifrån.
+    if (rad === "ja") return "ja";
+    if (rad === "nej") {
+      sparaVal("nej");
+      return "nej";
+    }
+    const { v, t } = JSON.parse(rad) as { v?: string; t?: number };
+    if (v === "ja") return "ja";
+    if (v === "nej") {
+      if (typeof t === "number" && Date.now() - t > NEJ_GILTIGT_MS) {
+        window.localStorage.removeItem(NYCKEL);
+        return null; // nejet har löpt ut: fråga igen
+      }
+      return "nej";
+    }
+    return null;
   } catch {
     return null;
   }
 }
 
-export function sparaSamtycke(val: "ja" | "nej") {
+function sparaVal(val: "ja" | "nej") {
   try {
-    window.localStorage.setItem(NYCKEL, val);
+    window.localStorage.setItem(NYCKEL, JSON.stringify({ v: val, t: Date.now() }));
   } catch {
     /* privat läge utan lagring: valet gäller ändå för sessionen */
   }
+}
+
+export function sparaSamtycke(val: "ja" | "nej") {
+  sparaVal(val);
   if (val === "ja") {
     laddaAnalytics();
   } else {
