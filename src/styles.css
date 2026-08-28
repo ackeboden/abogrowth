@@ -181,7 +181,7 @@
   animation: growth-dot-in 0.4s ease-out 2.6s forwards;
 }
 
-/* Mjuk snäpplandning för de två helskärmsscenerna (hero + Djungeltestet) */
+/* Mjuk snäpplandning för de två helskärmsscenerna (hero + Systemkollen) */
 .snap-start {
   scroll-snap-align: start;
 }
@@ -324,7 +324,7 @@
 }
 
 /* Hero-djungeln: tunna kopplingar som ritas fram, vilar och släcks i en
-   långsam cykel, som ett andetag av kartan i Djungeltestet längre ner. */
+   långsam cykel, som ett andetag av kartan i Systemkollen längre ner. */
 @keyframes hero-link-cycle {
   0% { stroke-dashoffset: 1; opacity: 0; }
   12% { opacity: 1; }
@@ -532,7 +532,8 @@
   transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
-/* Djungeltestet — besökarens egen karta. Gråa trasslinjer visas i kaosläget
+/* Systemkollen (klassnamnen jungle-* är kvar av historiska skäl) —
+   besökarens egen karta. Gråa trasslinjer visas i kaosläget
    och tonas ut när kartan ordnas (is-visible sätts från React, inte scroll). */
 .jungle-tangle {
   opacity: 0.45;

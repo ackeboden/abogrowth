@@ -39,14 +39,14 @@ function BookingForm() {
   const [form, setForm] = useState({ namn: "", epost: "", foretag: "", telefon: "", meddelande: "" });
   const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">("idle");
 
-  // Kommer besökaren från djungeltestet ligger kartan i sessionStorage:
+  // Kommer besökaren från systemkollen ligger kartan i sessionStorage:
   // förifyll meddelandet (om det är tomt) så samtalet börjar med kontext.
   useEffect(() => {
     try {
-      const franDjungeln = sessionStorage.getItem("djungel-boka");
-      if (franDjungeln) {
-        sessionStorage.removeItem("djungel-boka");
-        setForm((f) => (f.meddelande ? f : { ...f, meddelande: franDjungeln }));
+      const franKollen = sessionStorage.getItem("systemkollen-boka");
+      if (franKollen) {
+        sessionStorage.removeItem("systemkollen-boka");
+        setForm((f) => (f.meddelande ? f : { ...f, meddelande: franKollen }));
       }
     } catch {
       /* privat läge utan sessionStorage: formuläret funkar som vanligt */

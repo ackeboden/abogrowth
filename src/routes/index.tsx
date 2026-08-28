@@ -204,7 +204,7 @@ function Index() {
       <Header />
       <main>
         <Hero />
-        <JungleTest />
+        <SystemKollen />
         <Services />
         <Varde />
         <Process />
@@ -389,7 +389,7 @@ function FramstegsLinje() {
 // Sektionsprickarnas mål, i sidans ordning.
 const sidNavMal = [
   { id: "top", namn: "Hem" },
-  { id: "djungeltestet", namn: "Djungeltestet" },
+  { id: "systemkollen", namn: "Systemkollen" },
   { id: "tjanster", namn: "Tjänster" },
   { id: "varde", namn: "Värdet" },
   { id: "arbetssatt", namn: "Arbetssätt" },
@@ -678,8 +678,8 @@ function Hero() {
             >
               Boka ett samtal <ArrowUpRight className="h-4 w-4" strokeWidth={2.5} />
             </Link>
-            <a href="#djungeltestet" className="group inline-flex items-center gap-1.5 text-sm font-semibold border-b-2 border-brand-green pb-1 hover:text-brand-green">
-              Testa er djungel
+            <a href="#systemkollen" className="group inline-flex items-center gap-1.5 text-sm font-semibold border-b-2 border-brand-green pb-1 hover:text-brand-green">
+              Gör systemkollen
               <ArrowDown className="h-3.5 w-3.5 transition-transform group-hover:translate-y-0.5" strokeWidth={2.5} />
             </a>
           </div>
@@ -697,8 +697,8 @@ function Hero() {
 }
 
 // ============================================================================
-// DJUNGELTESTET 2.0 — besökaren anger sina RIKTIGA system, låser upp
-// resultatet med ett kort formulär (lead till Netlify Forms "djungeltest")
+// SYSTEMKOLLEN — besökaren anger sina RIKTIGA system, låser upp
+// resultatet med ett kort formulär (lead till Netlify Forms "systemkollen")
 // och får kartan som förslag: systemen ordnade kring affären med
 // regelbaserade kopplingar som förklarar sig vid hover/tryck.
 // Deterministiskt, ingen AI-tjänst, ingen backend utöver Netlify Forms.
@@ -1022,7 +1022,7 @@ const kaosPlatser = [
   { x: 42, y: 14, r: 10 },
 ];
 
-function JungleTest() {
+function SystemKollen() {
   const [valda, setValda] = useState<ValtSystem[]>([]);
   const [sok, setSok] = useState("");
   const [okand, setOkand] = useState<string | null>(null);
@@ -1116,9 +1116,11 @@ function JungleTest() {
   const sparaBokningsKontext = () => {
     try {
       sessionStorage.setItem(
-        "djungel-boka",
-        `Jag gjorde djungeltestet: ${valda.map((v) => `${v.namn} (${kategoriNamn[v.kat]})`).join(", ")}. ` +
-          (k > 0 ? `Kartan visade ${k} möjliga kopplingar.` : "Kartan visade inga givna kopplingar."),
+        "systemkollen-boka",
+        `Jag gjorde systemkollen: ${valda.map((v) => `${v.namn} (${kategoriNamn[v.kat]})`).join(", ")}. ` +
+          (k > 0
+            ? `Kartan visade ${k} ${k === 1 ? "möjlig koppling" : "möjliga kopplingar"}.`
+            : "Kartan visade inga givna kopplingar."),
       );
     } catch {
       /* privat läge utan sessionStorage: bokningen funkar ändå */
@@ -1166,7 +1168,7 @@ function JungleTest() {
         method: "POST",
         headers: { "Content-Type": "application/x-www-form-urlencoded" },
         body: new URLSearchParams({
-          "form-name": "djungeltest",
+          "form-name": "systemkollen",
           "bot-field": "",
           namn: lead.namn,
           epost: lead.epost,
@@ -1186,14 +1188,14 @@ function JungleTest() {
   };
 
   return (
-    <section id="djungeltestet" className="snap-start relative min-h-svh bg-ink text-paper overflow-hidden">
+    <section id="systemkollen" className="snap-start relative min-h-svh bg-ink text-paper overflow-hidden">
       <div className="ai-glow" aria-hidden="true" />
       <div className="relative mx-auto max-w-6xl px-6 py-24 md:py-32">
         <Reveal>
           <div className="max-w-3xl">
             <div className="eyebrow mb-5">Huvudtjänst · Digitala system & AI</div>
             <h2 className="display-heading text-3xl md:text-5xl text-paper">
-              Hur ser er <span className="text-brand-green">djungel</span> ut?
+              Gör <span className="text-brand-green">systemkollen</span>.
             </h2>
             <p className="mt-6 text-paper/70 leading-relaxed max-w-2xl">
               Skriv in systemen ni faktiskt använder och se er egen karta växa
