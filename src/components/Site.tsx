@@ -101,7 +101,6 @@ export function useIsMobile() {
 }
 
 // Alla "Boka ett samtal"-knappar leder till /boka-sidan med Netlify-formuläret.
-export const BOOKING_TO = "/boka";
 
 const NAV_LINKS = [
   { label: "Tjänster", to: "/", hash: "tjanster" },

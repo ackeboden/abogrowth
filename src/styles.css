@@ -356,33 +356,6 @@
   animation: hero-dot-breathe 6s ease-in-out infinite;
 }
 
-/* Subtle, slow-moving ambient gradient for hero background */
-@keyframes hero-glow-drift {
-  0%, 100% { transform: translate3d(-4%, -2%, 0); }
-  50% { transform: translate3d(4%, 3%, 0); }
-}
-
-.hero-ambient {
-  position: absolute;
-  inset: -10%;
-  pointer-events: none;
-  background:
-    radial-gradient(60% 55% at 20% 30%, rgba(31, 138, 92, 0.07), transparent 70%),
-    radial-gradient(50% 50% at 85% 75%, rgba(91, 123, 154, 0.06), transparent 70%);
-  animation: hero-glow-drift 18s ease-in-out infinite;
-}
-
-/* Rotating word crossfade */
-@keyframes word-in {
-  from { opacity: 0; transform: translateY(0.35em); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-.word-rotate {
-  display: inline-block;
-  animation: word-in 0.55s ease-out;
-}
-
 /* Entrésteg i heron — spelas vid sidladdning */
 @keyframes rise-in {
   from { opacity: 0; transform: translateY(22px); }
@@ -568,31 +541,6 @@
   transform: none;
 }
 
-/* Puls som vandrar längs en systemkoppling (böjd linje): tre stopp,
-   där mittstoppet ligger på bågens topp så rörelsen följer kurvan. */
-@keyframes jungle-syspulse {
-  0% { left: var(--ax); top: var(--ay); opacity: 0; }
-  15% { opacity: 1; }
-  50% { left: var(--mx); top: var(--my); }
-  85% { opacity: 1; }
-  100% { left: var(--bx); top: var(--by); opacity: 0; }
-}
-
-.jungle-syspulse {
-  position: absolute;
-  width: 5px;
-  height: 5px;
-  margin: -2.5px 0 0 -2.5px;
-  border-radius: 9999px;
-  background: var(--brand-green);
-  opacity: 0;
-  pointer-events: none;
-}
-
-.sysmap.is-visible .jungle-syspulse {
-  animation: jungle-syspulse 3.6s ease-in-out infinite;
-}
-
 .sysmap .sysmap-node-box:hover {
   border-color: rgba(31, 138, 92, 0.55);
   box-shadow: 0 4px 14px rgba(31, 138, 92, 0.16);
@@ -723,12 +671,6 @@ details[open] .faq-icon {
     animation: none;
     opacity: 1;
   }
-  .hero-ambient {
-    animation: none;
-  }
-  .word-rotate {
-    animation: none;
-  }
   .hero-rise {
     animation: none;
   }
@@ -775,8 +717,7 @@ details[open] .faq-icon {
   .jungle-late {
     transform: none;
   }
-  .jungle-pop,
-  .sysmap.is-visible .jungle-syspulse {
+  .jungle-pop {
     animation: none;
   }
   .hero-par,

@@ -1,0 +1,985 @@
+import { useState } from "react";
+import { Link } from "@tanstack/react-router";
+import { ArrowUpRight, Plus, X } from "lucide-react";
+import { Reveal, useIsMobile } from "@/components/Site";
+import { skickaHandelse } from "@/lib/analytics";
+
+// ============================================================================
+// SYSTEMKOLLEN — besökaren anger sina RIKTIGA system, låser upp
+// resultatet med ett kort formulär (lead till Netlify Forms "systemkollen")
+// och får kartan som förslag: systemen ordnade kring affären med
+// regelbaserade kopplingar som förklarar sig vid hover/tryck.
+// Deterministiskt, ingen AI-tjänst, ingen backend utöver Netlify Forms.
+// ============================================================================
+
+type Kategori =
+  | "ekonomi"
+  | "crm"
+  | "mejl"
+  | "komm"
+  | "projekt"
+  | "mf"
+  | "ehandel"
+  | "lagring"
+  | "analys"
+  | "ai"
+  | "ovrigt";
+
+const kategoriNamn: Record<Kategori, string> = {
+  ekonomi: "Ekonomi",
+  crm: "CRM & sälj",
+  mejl: "Mejl & kalender",
+  komm: "Kommunikation",
+  projekt: "Projekt",
+  mf: "Marknadsföring",
+  ehandel: "E-handel & webb",
+  lagring: "Fillagring",
+  analys: "Analys & kalkyl",
+  ai: "AI-verktyg",
+  ovrigt: "Övrigt",
+};
+
+// Katalog över vanliga system i svenska småbolag. Namnen används i leads
+// och på kartan; håll stavningen som varumärkena själva skriver den.
+// regelgrupp: ersätter kategorin vid regelmatchning när systemet inte beter
+// sig som kategorins typfall (Klarna bokför inte, Canva skickar inga utskick).
+// overlapp: två valda system i samma overlapp-grupp gör samma jobb → bytestips.
+type RegelToken =
+  | Kategori
+  | "betalning"
+  | "webbanalys"
+  | "beteende"
+  | "webbplats"
+  | "design"
+  | "video"
+  | "bildai";
+
+type KatalogPost = { namn: string; kat: Kategori; regelgrupp?: RegelToken; overlapp?: string };
+
+const systemKatalog: KatalogPost[] = [
+  { namn: "Fortnox", kat: "ekonomi", overlapp: "bokforing" },
+  { namn: "Visma eEkonomi", kat: "ekonomi", overlapp: "bokforing" },
+  { namn: "Bokio", kat: "ekonomi", overlapp: "bokforing" },
+  { namn: "Wint", kat: "ekonomi", overlapp: "bokforing" },
+  { namn: "PE Accounting", kat: "ekonomi", overlapp: "bokforing" },
+  { namn: "Björn Lundén", kat: "ekonomi", overlapp: "bokforing" },
+  { namn: "Billogram", kat: "ekonomi" },
+  { namn: "Klarna", kat: "ekonomi", regelgrupp: "betalning" },
+  { namn: "Stripe", kat: "ekonomi", regelgrupp: "betalning" },
+  { namn: "Zettle", kat: "ekonomi", regelgrupp: "betalning" },
+  { namn: "Swish", kat: "ekonomi", regelgrupp: "betalning" },
+  { namn: "HubSpot", kat: "crm", overlapp: "crm" },
+  { namn: "Pipedrive", kat: "crm", overlapp: "crm" },
+  { namn: "Salesforce", kat: "crm", overlapp: "crm" },
+  { namn: "Upsales", kat: "crm", overlapp: "crm" },
+  { namn: "Lime CRM", kat: "crm", overlapp: "crm" },
+  { namn: "Zoho CRM", kat: "crm", overlapp: "crm" },
+  { namn: "webCRM", kat: "crm", overlapp: "crm" },
+  { namn: "Microsoft 365", kat: "mejl", overlapp: "kontorspaket" },
+  { namn: "Google Workspace", kat: "mejl", overlapp: "kontorspaket" },
+  { namn: "Outlook", kat: "mejl", overlapp: "mejlklient" },
+  { namn: "Gmail", kat: "mejl", overlapp: "mejlklient" },
+  { namn: "Calendly", kat: "mejl" },
+  { namn: "Slack", kat: "komm", overlapp: "chatt" },
+  { namn: "Teams", kat: "komm", overlapp: "chatt" },
+  { namn: "Discord", kat: "komm", overlapp: "chatt" },
+  { namn: "Zoom", kat: "komm", regelgrupp: "video", overlapp: "video" },
+  { namn: "Google Meet", kat: "komm", regelgrupp: "video", overlapp: "video" },
+  { namn: "Monday", kat: "projekt", overlapp: "projektverktyg" },
+  { namn: "Trello", kat: "projekt", overlapp: "projektverktyg" },
+  { namn: "Asana", kat: "projekt", overlapp: "projektverktyg" },
+  { namn: "ClickUp", kat: "projekt", overlapp: "projektverktyg" },
+  { namn: "Jira", kat: "projekt", overlapp: "projektverktyg" },
+  { namn: "Basecamp", kat: "projekt", overlapp: "projektverktyg" },
+  { namn: "Notion", kat: "projekt" },
+  { namn: "Mailchimp", kat: "mf", overlapp: "nyhetsbrev" },
+  { namn: "Klaviyo", kat: "mf", overlapp: "nyhetsbrev" },
+  { namn: "Rule", kat: "mf", overlapp: "nyhetsbrev" },
+  { namn: "Get a Newsletter", kat: "mf", overlapp: "nyhetsbrev" },
+  { namn: "Meta Ads", kat: "mf" },
+  { namn: "Google Ads", kat: "mf" },
+  { namn: "LinkedIn Ads", kat: "mf" },
+  { namn: "Canva", kat: "mf", regelgrupp: "design" },
+  { namn: "Shopify", kat: "ehandel", overlapp: "webbshop" },
+  { namn: "WooCommerce", kat: "ehandel", overlapp: "webbshop" },
+  { namn: "Quickbutik", kat: "ehandel", overlapp: "webbshop" },
+  { namn: "Wix", kat: "ehandel", regelgrupp: "webbplats", overlapp: "sajtbyggare" },
+  { namn: "Squarespace", kat: "ehandel", regelgrupp: "webbplats", overlapp: "sajtbyggare" },
+  { namn: "WordPress", kat: "ehandel", regelgrupp: "webbplats", overlapp: "sajtbyggare" },
+  { namn: "Google Drive", kat: "lagring", overlapp: "fillagring" },
+  { namn: "OneDrive", kat: "lagring", overlapp: "fillagring" },
+  { namn: "Dropbox", kat: "lagring", overlapp: "fillagring" },
+  { namn: "SharePoint", kat: "lagring" },
+  { namn: "Google Analytics", kat: "analys", regelgrupp: "webbanalys", overlapp: "webbanalys" },
+  { namn: "Matomo", kat: "analys", regelgrupp: "webbanalys", overlapp: "webbanalys" },
+  { namn: "Hotjar", kat: "analys", regelgrupp: "beteende" },
+  { namn: "Looker Studio", kat: "analys", overlapp: "bi" },
+  { namn: "Power BI", kat: "analys", overlapp: "bi" },
+  { namn: "Excel", kat: "analys", overlapp: "kalkyl" },
+  { namn: "Google Sheets", kat: "analys", overlapp: "kalkyl" },
+  { namn: "ChatGPT", kat: "ai", overlapp: "ai-assistent" },
+  { namn: "Claude", kat: "ai", overlapp: "ai-assistent" },
+  { namn: "Copilot", kat: "ai", overlapp: "ai-assistent" },
+  { namn: "Gemini", kat: "ai", overlapp: "ai-assistent" },
+  { namn: "Midjourney", kat: "ai", regelgrupp: "bildai" },
+];
+
+// Snabbval under sökfältet: de vanligaste hos målgruppen.
+const snabbval = [
+  "Fortnox",
+  "Microsoft 365",
+  "HubSpot",
+  "Slack",
+  "Google Workspace",
+  "Shopify",
+  "Mailchimp",
+  "ChatGPT",
+  "Trello",
+  "Google Analytics",
+];
+
+// Regelkatalogen: vad två sorters system kan göra ihop. Matchas på
+// regel-token (kategori eller regelgrupp), riktningsneutral text som
+// prefixas med systemens riktiga namn. Skriv bara regler som stämmer för
+// ALLA system bakom respektive token; specialfall får egen regelgrupp.
+const kopplingsregler: { par: [RegelToken, RegelToken]; text: string }[] = [
+  { par: ["ekonomi", "crm"], text: "godkänd offert blir faktura automatiskt" },
+  { par: ["ekonomi", "analys"], text: "nyckeltalen uppdaterar sig själva i rapporterna" },
+  { par: ["ekonomi", "lagring"], text: "kvitton och underlag arkiveras automatiskt" },
+  { par: ["ekonomi", "projekt"], text: "projektets timmar och utlägg blir fakturaunderlag" },
+  { par: ["ekonomi", "komm"], text: "betald faktura ger en notis i kanalen" },
+  { par: ["ekonomi", "ehandel"], text: "ordrar bokförs utan handpåläggning" },
+  { par: ["crm", "mejl"], text: "mejl och möten loggas på rätt kund" },
+  { par: ["crm", "mf"], text: "kundlistan styr utskick och annonsmålgrupper" },
+  { par: ["crm", "projekt"], text: "vunnen affär blir ett projekt med uppgifter direkt" },
+  { par: ["crm", "analys"], text: "säljtratten blir mätbar i rapporterna" },
+  { par: ["crm", "lagring"], text: "avtal och offerter sparas på rätt kund" },
+  { par: ["crm", "komm"], text: "kunddialogen samlas på ett ställe" },
+  { par: ["crm", "ehandel"], text: "kunderna i butiken blir kontakter i registret" },
+  { par: ["mf", "analys"], text: "kampanjresultaten mäts mot riktiga siffror" },
+  { par: ["mf", "ehandel"], text: "köpdatan styr kampanjer och annonser" },
+  { par: ["mejl", "komm"], text: "mötesbokningar och påminnelser dyker upp i chatten" },
+  { par: ["mejl", "projekt"], text: "deadlines hamnar i kalendern av sig själva" },
+  { par: ["mejl", "lagring"], text: "bilagor arkiveras automatiskt i rätt mapp" },
+  { par: ["projekt", "lagring"], text: "filerna ligger på rätt projekt" },
+  { par: ["projekt", "komm"], text: "uppdateringar landar där teamet redan är" },
+  { par: ["ehandel", "analys"], text: "försäljningen syns i realtid i rapporterna" },
+  { par: ["ehandel", "komm"], text: "nya ordrar pingar direkt i kanalen" },
+  { par: ["analys", "komm"], text: "veckans siffror postas automatiskt i kanalen" },
+  { par: ["komm", "lagring"], text: "filer som delas i chatten sparas på rätt ställe" },
+  { par: ["betalning", "ekonomi"], text: "betalningarna prickas av i bokföringen automatiskt" },
+  { par: ["betalning", "ehandel"], text: "kassan och betalningen hänger ihop utan mellansteg" },
+  { par: ["webbanalys", "mf"], text: "ni ser vilka kampanjer som ger trafik som konverterar" },
+  { par: ["webbanalys", "ehandel"], text: "besök och köp kopplas ihop i samma vy" },
+  { par: ["webbanalys", "webbplats"], text: "ni ser vad besökarna faktiskt gör på sajten" },
+  { par: ["webbanalys", "analys"], text: "webbsiffrorna landar i samma rapport som resten" },
+  { par: ["beteende", "ehandel"], text: "ni ser var besökarna fastnar innan köpet" },
+  { par: ["beteende", "webbplats"], text: "ni ser var besökarna fastnar på sidorna" },
+  { par: ["beteende", "mf"], text: "kampanjtrafiken följs hela vägen in på sidan" },
+  { par: ["beteende", "webbanalys"], text: "siffrorna får en förklaring i hur besökarna beter sig" },
+  { par: ["webbplats", "crm"], text: "formulären på sajten skapar kontakter automatiskt" },
+  { par: ["webbplats", "mf"], text: "kampanjerna leder till sidor som går att följa upp" },
+  { par: ["design", "ehandel"], text: "grafiken går rakt in i butik och produktsidor" },
+  { par: ["design", "mf"], text: "designmallarna återanvänds i utskick och annonser" },
+  { par: ["video", "mejl"], text: "möteslänken hamnar rätt i varje kalenderbokning" },
+  { par: ["video", "crm"], text: "kundmöten loggas på rätt kontakt" },
+  { par: ["bildai", "mf"], text: "AI:n tar fram bilder och grafik till inlägg och annonser" },
+  { par: ["bildai", "ehandel"], text: "AI:n skapar produktbilder åt butiken" },
+  { par: ["bildai", "design"], text: "AI-bilderna landar direkt i designflödet" },
+];
+
+// AI-assistenternas koppling till övriga system: etiketten väljs efter vad
+// motparten är för sorts system, så varje koppling säger något konkret.
+const aiEtiketter: Record<Kategori, string> = {
+  ekonomi: "AI:n tolkar siffrorna och flaggar det som sticker ut",
+  crm: "AI:n skriver utkast till offerter och uppföljningsmejl",
+  mejl: "AI:n sammanfattar mejltrådar och föreslår svar",
+  komm: "AI:n sammanfattar möten och långa trådar",
+  projekt: "AI:n bryter ner uppgifter och skriver statusrapporter",
+  mf: "AI:n tar fram utkast till inlägg och annonstexter",
+  ehandel: "AI:n skriver produkttexter och svarar på vanliga kundfrågor",
+  lagring: "AI:n hittar rätt dokument och sammanfattar innehållet",
+  analys: "AI:n förklarar vad siffrorna faktiskt betyder",
+  ai: "AI:n avlastar rutinjobbet",
+  ovrigt: "AI:n avlastar rutinjobbet i vardagen",
+};
+
+// Bytestips när två valda system gör samma jobb. Nyckel = overlapp-grupp,
+// "standard" är fallback.
+const overlappTexter: Record<string, string> = {
+  standard: "{a} och {b} gör i stort sett samma jobb. Ett av dem brukar räcka.",
+  kontorspaket:
+    "{a} och {b} är två parallella kontorsvärldar. Att samla allt i en brukar spara både pengar och strul.",
+  mejlklient:
+    "{a} och {b} är två mejlmiljöer sida vid sida. En gemensam brukar ge färre tappade trådar.",
+  chatt:
+    "{a} och {b} delar på samma konversationer. En kanal brukar ge färre missade meddelanden.",
+  fillagring:
+    "{a} och {b} betyder att filerna ligger på två ställen. En gemensam yta sparar mycket letande.",
+  "ai-assistent":
+    "{a} och {b} löser samma sak. Välj en som standard så samlas vanan och historiken på ett ställe.",
+};
+
+const MAX_SYSTEM = 12;
+
+type ValtSystem = { namn: string; kat: Kategori };
+
+const katalogPost = (namn: string) =>
+  systemKatalog.find((s) => s.namn.toLowerCase() === namn.toLowerCase());
+
+// Regel-token: regelgruppen om systemet har en, annars kategorin.
+// Fritextsystem finns inte i katalogen och faller tillbaka på sin kategori.
+const regelToken = (v: ValtSystem): RegelToken => katalogPost(v.namn)?.regelgrupp ?? v.kat;
+
+type Tips = { typ: "byte" | "komplement"; text: string };
+
+// Tipsmotorn: bytesförslag (två system i samma overlapp-grupp) och
+// komplementförslag (lucka i floran som ett känt verktyg skulle fylla).
+// Föreslår aldrig något ur en kategori/grupp besökaren redan täckt.
+function beraknaTips(valda: ValtSystem[]): Tips[] {
+  const tips: Tips[] = [];
+
+  for (let i = 0; i < valda.length; i++) {
+    for (let j = i + 1; j < valda.length; j++) {
+      const ga = katalogPost(valda[i].namn)?.overlapp;
+      const gb = katalogPost(valda[j].namn)?.overlapp;
+      if (ga && ga === gb) {
+        const mall = overlappTexter[ga] ?? overlappTexter.standard;
+        tips.push({
+          typ: "byte",
+          text: mall.replace("{a}", valda[i].namn).replace("{b}", valda[j].namn),
+        });
+      }
+    }
+  }
+
+  const kats = new Set(valda.map((v) => v.kat));
+  const toks = new Set(valda.map(regelToken));
+  const grupper = new Set(valda.map((v) => katalogPost(v.namn)?.overlapp).filter(Boolean));
+  const namnMedToken = (t: RegelToken) => valda.find((v) => regelToken(v) === t)?.namn;
+  const namnMedGrupp = (g: string) =>
+    valda.find((v) => katalogPost(v.namn)?.overlapp === g)?.namn;
+
+  if (kats.has("crm") && !toks.has("ekonomi")) {
+    tips.push({
+      typ: "komplement",
+      text: `Ett ekonomisystem som Fortnox skulle kunna ta emot affärerna från ${namnMedToken("crm")} och göra offert till faktura i ett steg.`,
+    });
+  }
+  if (toks.has("ekonomi") && !kats.has("crm")) {
+    tips.push({
+      typ: "komplement",
+      text: `Ett CRM, till exempel Pipedrive eller HubSpot, skulle ge koll på affärerna innan de landar i ${namnMedToken("ekonomi")}.`,
+    });
+  }
+  if (toks.has("ehandel") && !grupper.has("nyhetsbrev")) {
+    tips.push({
+      typ: "komplement",
+      text: `Ett nyhetsbrevsverktyg som Mailchimp eller Klaviyo skulle kunna jobba direkt med köpdatan från ${namnMedToken("ehandel")}.`,
+    });
+  }
+  let webbmatning = false;
+  if ((toks.has("ehandel") || toks.has("webbplats")) && !toks.has("webbanalys")) {
+    webbmatning = true;
+    tips.push({
+      typ: "komplement",
+      text: `Google Analytics eller Matomo skulle visa vad besökarna gör på ${namnMedToken("ehandel") ?? namnMedToken("webbplats")} innan de köper eller hör av sig.`,
+    });
+  }
+  if (kats.has("mf") && !kats.has("analys") && !webbmatning) {
+    tips.push({
+      typ: "komplement",
+      text: "Ett mätverktyg, till exempel Google Analytics, skulle visa vilka kampanjer som faktiskt ger något.",
+    });
+  }
+  if (kats.has("projekt") && !kats.has("lagring")) {
+    tips.push({
+      typ: "komplement",
+      text: `En gemensam fillagring som Google Drive eller OneDrive skulle ge ${namnMedToken("projekt")} ett ställe att hämta filerna från.`,
+    });
+  }
+  if (grupper.has("chatt") && !kats.has("projekt")) {
+    tips.push({
+      typ: "komplement",
+      text: `Ett projektverktyg som Trello eller Monday skulle ge trådarna i ${namnMedGrupp("chatt")} någonstans att bli uppgifter.`,
+    });
+  }
+  if (valda.length >= 3 && !kats.has("ai")) {
+    tips.push({
+      typ: "komplement",
+      text: "Ett AI-verktyg som ChatGPT eller Copilot skulle kunna avlasta rutinjobbet i flera av systemen.",
+    });
+  }
+
+  return tips.slice(0, 4);
+}
+
+// Kaosplatser för upp till 12 noder (index-styrt, deterministiskt).
+const kaosPlatser = [
+  { x: 34, y: 26, r: -9 },
+  { x: 62, y: 22, r: 7 },
+  { x: 46, y: 48, r: -6 },
+  { x: 70, y: 54, r: 11 },
+  { x: 28, y: 60, r: 8 },
+  { x: 55, y: 34, r: -12 },
+  { x: 38, y: 74, r: 6 },
+  { x: 66, y: 76, r: -8 },
+  { x: 22, y: 42, r: -5 },
+  { x: 50, y: 64, r: 9 },
+  { x: 78, y: 36, r: -7 },
+  { x: 42, y: 14, r: 10 },
+];
+
+export function SystemKollen() {
+  const [valda, setValda] = useState<ValtSystem[]>([]);
+  const [sok, setSok] = useState("");
+  const [okand, setOkand] = useState<string | null>(null);
+  const [fas, setFas] = useState<"bygga" | "formular" | "ordnad">("bygga");
+  const [lead, setLead] = useState({ namn: "", epost: "", foretag: "" });
+  const [skickar, setSkickar] = useState(false);
+  const [fel, setFel] = useState(false);
+  const [etikett, setEtikett] = useState<number | null>(null);
+  const mobil = useIsMobile();
+
+  const n = valda.length;
+  const ordnad = fas === "ordnad";
+  const hub = { x: 50, y: mobil ? 48 : 47 };
+  const rx = mobil ? 34 : 38;
+  const ry = mobil ? 36 : 33;
+
+  const orderedPos = (i: number) => {
+    const vinkel = -Math.PI / 2 + (i * 2 * Math.PI) / Math.max(n, 1);
+    return { x: hub.x + rx * Math.cos(vinkel), y: hub.y + ry * Math.sin(vinkel) };
+  };
+  const kaosPos = (i: number) => kaosPlatser[i % kaosPlatser.length];
+  const pos = (i: number) => (ordnad ? orderedPos(i) : kaosPos(i));
+
+  // Sökförslag: katalogträffar som inte redan är valda, max 6.
+  const forslag =
+    sok.trim().length < 2
+      ? []
+      : systemKatalog
+          .filter(
+            (k) =>
+              k.namn.toLowerCase().includes(sok.trim().toLowerCase()) &&
+              !valda.some((v) => v.namn.toLowerCase() === k.namn.toLowerCase()),
+          )
+          .slice(0, 6);
+  // Exakt träff i katalogen ELLER bland redan valda: då göms fritextvalet
+  // (annars visas en död "Lägg till"-knapp för system som redan ligger inne).
+  const exaktTraff =
+    forslag.some((f) => f.namn.toLowerCase() === sok.trim().toLowerCase()) ||
+    valda.some((v) => v.namn.toLowerCase() === sok.trim().toLowerCase());
+
+  const laggTill = (namn: string, kat: Kategori) => {
+    if (n >= MAX_SYSTEM) return;
+    if (valda.some((v) => v.namn.toLowerCase() === namn.toLowerCase())) return;
+    if (n === 0) skickaHandelse("systemkollen_start");
+    setValda((s) => [...s, { namn, kat }]);
+    setSok("");
+    setOkand(null);
+  };
+  const taBort = (namn: string) => setValda((s) => s.filter((v) => v.namn !== namn));
+  const reset = () => {
+    setValda([]);
+    setSok("");
+    setOkand(null);
+    setFas("bygga");
+    setLead({ namn: "", epost: "", foretag: "" });
+    setFel(false);
+    setEtikett(null);
+  };
+
+  // Kopplingar: regelkatalogen matchas på regel-token (i<j, en linje per
+  // systempar). AI-assistenter kopplas till allt som ett lättare lager med
+  // etikett vald efter motpartens kategori; bild-AI (Midjourney) går i
+  // stället via egna regler så den bara kopplas dit den hör hemma.
+  const lankar: { a: number; b: number; text: string; ai: boolean }[] = [];
+  for (let i = 0; i < n; i++) {
+    for (let j = i + 1; j < n; j++) {
+      const A = valda[i];
+      const B = valda[j];
+      const tokA = regelToken(A);
+      const tokB = regelToken(B);
+      if (tokA === tokB) continue;
+      const prefix = `${A.namn} + ${B.namn}: `;
+      if (tokA === "ai" || tokB === "ai") {
+        const partner = tokA === "ai" ? B : A;
+        if (partner.kat === "ai") continue;
+        lankar.push({ a: i, b: j, text: prefix + aiEtiketter[partner.kat], ai: true });
+        continue;
+      }
+      const regel = kopplingsregler.find(
+        (r) =>
+          (r.par[0] === tokA && r.par[1] === tokB) ||
+          (r.par[0] === tokB && r.par[1] === tokA),
+      );
+      if (regel) lankar.push({ a: i, b: j, text: prefix + regel.text, ai: false });
+    }
+  }
+  const k = lankar.length;
+  const tips = beraknaTips(valda);
+
+  // När besökaren går vidare till bokningen från resultatet följer kartan
+  // med: /boka läser nyckeln vid mount och förifyller meddelandefältet.
+  const sparaBokningsKontext = () => {
+    skickaHandelse("systemkollen_boka");
+    try {
+      sessionStorage.setItem(
+        "systemkollen-boka",
+        `Jag gjorde systemkollen: ${valda.map((v) => `${v.namn} (${kategoriNamn[v.kat]})`).join(", ")}. ` +
+          (k > 0
+            ? `Kartan visade ${k} ${k === 1 ? "möjlig koppling" : "möjliga kopplingar"}.`
+            : "Kartan visade inga givna kopplingar."),
+      );
+    } catch {
+      /* privat läge utan sessionStorage: bokningen funkar ändå */
+    }
+  };
+
+  // Trassel i kaosläget (kedja + genvägar mellan kaosplatserna).
+  const tangle: [number, number][] = [];
+  for (let i = 0; i < n - 1; i++) tangle.push([i, i + 1]);
+  if (n >= 3) tangle.push([n - 1, 0]);
+  if (n >= 5) for (let i = 0; i < n; i += 2) tangle.push([i, (i + 3) % n]);
+
+  const arcPath = (ai: number, bi: number) => {
+    const A = orderedPos(ai);
+    const B = orderedPos(bi);
+    const mx = (A.x + B.x) / 2;
+    const my = (A.y + B.y) / 2;
+    let dx = mx - hub.x;
+    let dy = my - hub.y;
+    let len = Math.hypot(dx, dy);
+    if (len < 1) {
+      dx = -(B.y - A.y);
+      dy = B.x - A.x;
+      len = Math.hypot(dx, dy) || 1;
+    }
+    const bulge = 13;
+    const cx = mx + (dx / len) * bulge;
+    const cy = my + (dy / len) * bulge;
+    return {
+      d: `M ${A.x} ${A.y} Q ${cx} ${cy} ${B.x} ${B.y}`,
+      // Punkt på kvadratiska Bezierkurvan vid parameter t (0..1)
+      punkt: (t: number) => ({
+        x: (1 - t) * (1 - t) * A.x + 2 * (1 - t) * t * cx + t * t * B.x,
+        y: (1 - t) * (1 - t) * A.y + 2 * (1 - t) * t * cy + t * t * B.y,
+      }),
+    };
+  };
+
+  // Markörens plats på bågen: börja på mitten och glid utåt längs kurvan
+  // tills punkten inte krockar med någon systemruta eller navet. Rutorna har
+  // fast pixelstorlek, så deras andel av procentrymden växer när kartan är
+  // smal; marginalerna är tilltagna för att täcka även mindre fönster.
+  // Hittas ingen fri punkt får mitten duga; markören ritas då under rutan
+  // (ingen z-index, noderna ligger på 1) i stället för ovanpå texten.
+  const marginalX = mobil ? 14 : 11;
+  const marginalY = mobil ? 9.5 : 8;
+  const markorPos = (ai: number, bi: number) => {
+    const arc = arcPath(ai, bi);
+    const rutor = [...valda.map((_, idx) => orderedPos(idx)), hub];
+    for (const t of [0.5, 0.42, 0.58, 0.34, 0.66, 0.26, 0.74]) {
+      const p = arc.punkt(t);
+      if (!rutor.some((q) => Math.abs(p.x - q.x) < marginalX && Math.abs(p.y - q.y) < marginalY))
+        return { ...p, dold: false };
+    }
+    // Hela kurvan är upptagen: göm markören (linjen ritas ändå). En osynlig
+    // knapp bakom en ruta vore bara en fokusfälla för tangentbordet.
+    return { ...arc.punkt(0.5), dold: true };
+  };
+
+  // Grinden: leaden skickas till Netlify Forms (statiska detekteringsfilen,
+  // ALDRIG "/"), med hela systemlistan som säljunderlag. I dev-läge saknas
+  // Netlify-mottagaren, då släpps man vidare ändå.
+  const skickaLead = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setSkickar(true);
+    setFel(false);
+    try {
+      const res = await fetch("/__forms.html", {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: new URLSearchParams({
+          "form-name": "systemkollen",
+          "bot-field": "",
+          namn: lead.namn,
+          epost: lead.epost,
+          foretag: lead.foretag,
+          system: valda.map((v) => `${v.namn} (${kategoriNamn[v.kat]})`).join(", "),
+          kopplingar: String(k),
+          tips: tips.map((t) => `[${t.typ}] ${t.text}`).join(" | "),
+        }).toString(),
+      });
+      if (!res.ok && import.meta.env.PROD) throw new Error(String(res.status));
+      skickaHandelse("systemkollen_lead", { antal_system: n, antal_kopplingar: k });
+      setFas("ordnad");
+    } catch {
+      setFel(true);
+    } finally {
+      setSkickar(false);
+    }
+  };
+
+  return (
+    <section id="systemkollen" className="snap-start relative min-h-svh bg-ink text-paper overflow-hidden">
+      <div className="ai-glow" aria-hidden="true" />
+      <div className="relative mx-auto max-w-6xl px-6 py-24 md:py-32">
+        <Reveal>
+          <div className="max-w-3xl">
+            <div className="eyebrow mb-5">Huvudtjänst · Digitala system & AI</div>
+            <h2 className="display-heading text-3xl md:text-5xl text-paper">
+              Gör <span className="text-brand-green">systemkollen</span>.
+            </h2>
+            <p className="mt-6 text-paper/70 leading-relaxed max-w-2xl">
+              Skriv in systemen ni faktiskt använder och se er egen karta växa
+              fram. Sedan ordnar jag den: kartan som landar är mitt förslag på
+              hur allt kan jobba ihop.
+            </p>
+          </div>
+        </Reveal>
+
+        <Reveal delay={120}>
+          {/* Sökfält + snabbval (döljs när kartan är ordnad) */}
+          {!ordnad && (
+            <div className="mt-10 max-w-2xl">
+              <div className="relative">
+                <input
+                  type="text"
+                  value={sok}
+                  onChange={(e) => {
+                    setSok(e.target.value);
+                    setOkand(null);
+                  }}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                      e.preventDefault();
+                      if (forslag.length > 0) laggTill(forslag[0].namn, forslag[0].kat);
+                      else if (sok.trim().length >= 2) setOkand(sok.trim());
+                    }
+                  }}
+                  placeholder={n >= MAX_SYSTEM ? "Max 12 system" : "Sök era system: Fortnox, HubSpot, Slack ..."}
+                  disabled={n >= MAX_SYSTEM}
+                  aria-label="Sök efter system"
+                  className="w-full bg-white/5 border border-paper/25 px-4 py-3.5 text-base text-paper placeholder:text-paper/40 focus:outline-none focus:border-brand-green disabled:opacity-50"
+                />
+                {(forslag.length > 0 || (sok.trim().length >= 2 && !exaktTraff)) && (
+                  <div className="absolute inset-x-0 top-full mt-1 z-20 bg-ink border border-paper/20 shadow-xl">
+                    {forslag.map((f) => (
+                      <button
+                        key={f.namn}
+                        type="button"
+                        onClick={() => laggTill(f.namn, f.kat)}
+                        className="flex w-full items-center justify-between px-4 py-2.5 text-sm text-left text-paper/85 hover:bg-white/10"
+                      >
+                        <span>{f.namn}</span>
+                        <span className="tracked text-[9px] text-paper/40">{kategoriNamn[f.kat]}</span>
+                      </button>
+                    ))}
+                    {sok.trim().length >= 2 && !exaktTraff && (
+                      <button
+                        type="button"
+                        onClick={() => setOkand(sok.trim())}
+                        className="flex w-full items-center gap-2 px-4 py-2.5 text-sm text-left text-brand-green hover:bg-white/10 border-t border-paper/10"
+                      >
+                        <Plus className="h-3.5 w-3.5" strokeWidth={2.5} />
+                        Lägg till &quot;{sok.trim()}&quot;
+                      </button>
+                    )}
+                  </div>
+                )}
+              </div>
+
+              {/* Kategorifråga för okända system */}
+              {okand && (
+                <div className="mt-3 border border-brand-green/40 bg-white/5 p-4">
+                  <p className="text-sm text-paper/75 mb-3">
+                    Vad är <span className="font-semibold text-paper">{okand}</span> för sorts system?
+                  </p>
+                  <div className="flex flex-wrap gap-2">
+                    {(Object.keys(kategoriNamn) as Kategori[]).map((kat) => (
+                      <button
+                        key={kat}
+                        type="button"
+                        onClick={() => laggTill(okand, kat)}
+                        className="px-3 py-1.5 text-xs font-semibold border border-paper/25 text-paper/75 hover:border-brand-green hover:text-paper transition-colors"
+                      >
+                        {kategoriNamn[kat]}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Snabbval */}
+              <div className="mt-4 flex flex-wrap items-center gap-2">
+                <span className="tracked text-[9px] text-paper/40 mr-1">Vanliga:</span>
+                {snabbval
+                  .filter((namn) => !valda.some((v) => v.namn === namn))
+                  .slice(0, mobil ? 6 : 10)
+                  .map((namn) => {
+                    const post = systemKatalog.find((s) => s.namn === namn)!;
+                    return (
+                      <button
+                        key={namn}
+                        type="button"
+                        onClick={() => laggTill(post.namn, post.kat)}
+                        disabled={n >= MAX_SYSTEM}
+                        className="px-3 py-1.5 text-xs font-semibold border border-paper/20 text-paper/65 hover:border-brand-green/60 hover:text-paper transition-colors disabled:opacity-40"
+                      >
+                        {namn}
+                      </button>
+                    );
+                  })}
+              </div>
+
+              {/* Valda system som borttagbara taggar */}
+              {n > 0 && (
+                <div className="mt-4 flex flex-wrap items-center gap-2">
+                  {valda.map((v) => (
+                    <span
+                      key={v.namn}
+                      className="inline-flex items-center gap-1.5 bg-brand-green/15 border border-brand-green/40 text-paper px-2.5 py-1 text-xs font-semibold"
+                    >
+                      {v.namn}
+                      <button
+                        type="button"
+                        onClick={() => taBort(v.namn)}
+                        aria-label={`Ta bort ${v.namn}`}
+                        className="text-paper/60 hover:text-paper"
+                      >
+                        <X className="h-3 w-3" strokeWidth={2.5} />
+                      </button>
+                    </span>
+                  ))}
+                  <span className="text-xs text-paper/40">{n}/{MAX_SYSTEM}</span>
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* Kartan */}
+          <div
+            className={`sysmap relative mt-8 h-[21rem] md:h-96 border border-paper/10 bg-white/[0.03] ${
+              ordnad ? "is-visible" : ""
+            }`}
+            onClick={() => setEtikett(null)}
+          >
+            {n === 0 ? (
+              <p className="absolute inset-0 flex items-center justify-center px-8 text-center text-sm text-paper/40">
+                Sök eller välj era system ovan, så byggs er karta här.
+              </p>
+            ) : (
+              <>
+                <svg className="absolute inset-0 h-full w-full" viewBox="0 0 100 100" preserveAspectRatio="none" fill="none" aria-hidden="true">
+                  {tangle.map(([a, b]) => (
+                    <line
+                      key={`t-${a}-${b}`}
+                      className="jungle-tangle"
+                      x1={kaosPos(a).x}
+                      y1={kaosPos(a).y}
+                      x2={kaosPos(b).x}
+                      y2={kaosPos(b).y}
+                      stroke="#8A8D90"
+                      strokeWidth="1"
+                      vectorEffect="non-scaling-stroke"
+                    />
+                  ))}
+                  {valda.map((v, i) => (
+                    <line
+                      key={`o-${v.namn}`}
+                      className="sysmap-link"
+                      pathLength={1}
+                      x1={hub.x}
+                      y1={hub.y}
+                      x2={orderedPos(i).x}
+                      y2={orderedPos(i).y}
+                      stroke="#1F8A5C"
+                      strokeOpacity="0.35"
+                      strokeWidth="1.25"
+                      vectorEffect="non-scaling-stroke"
+                      style={{ transitionDelay: `${0.55 + i * 0.06}s` }}
+                    />
+                  ))}
+                  {lankar.map((l, j) => (
+                    <path
+                      key={`s-${l.a}-${l.b}`}
+                      className="sysmap-link"
+                      pathLength={1}
+                      d={arcPath(l.a, l.b).d}
+                      stroke="#1F8A5C"
+                      strokeOpacity={l.ai ? "0.3" : etikett === j ? "1" : "0.8"}
+                      strokeWidth={l.ai ? "0.75" : etikett === j ? "1.75" : "1"}
+                      fill="none"
+                      vectorEffect="non-scaling-stroke"
+                      style={{ transitionDelay: `${1.3 + j * 0.09}s` }}
+                    />
+                  ))}
+                </svg>
+                <span className="sysmap-hub-ring" style={{ left: `${hub.x}%`, top: `${hub.y}%` }} />
+                {/* Kopplingsmarkörer: hover/tryck visar förslaget i klartext */}
+                {ordnad &&
+                  lankar.map((l, j) => {
+                    const p = markorPos(l.a, l.b);
+                    if (p.dold) return null;
+                    return (
+                      <button
+                        key={`m-${l.a}-${l.b}`}
+                        type="button"
+                        aria-label={l.text}
+                        onMouseEnter={() => setEtikett(j)}
+                        onMouseLeave={() => setEtikett((v) => (v === j ? null : v))}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setEtikett((v) => (v === j ? null : j));
+                        }}
+                        className="jungle-late absolute flex h-6 w-6 items-center justify-center"
+                        style={{
+                          left: `${p.x}%`,
+                          top: `${p.y}%`,
+                          transform: "translate(-50%, -50%)",
+                          transitionDelay: `${1.6 + j * 0.05}s`,
+                        }}
+                      >
+                        <span
+                          className={`block rounded-full transition-all ${
+                            etikett === j ? "h-3 w-3 bg-brand-green shadow-[0_0_10px_rgba(31,138,92,0.8)]" : "h-2 w-2 bg-brand-green/70"
+                          }`}
+                        />
+                      </button>
+                    );
+                  })}
+                {/* Etiketten */}
+                {ordnad && etikett !== null && lankar[etikett] && (
+                  <div
+                    className="absolute z-20 max-w-[260px] -translate-x-1/2 bg-white text-ink text-xs font-semibold leading-snug px-3 py-2 shadow-lg border border-line pointer-events-none"
+                    style={{
+                      left: `${Math.min(80, Math.max(20, markorPos(lankar[etikett].a, lankar[etikett].b).x))}%`,
+                      top: `${Math.max(4, markorPos(lankar[etikett].a, lankar[etikett].b).y - 10)}%`,
+                    }}
+                  >
+                    {lankar[etikett].text}
+                  </div>
+                )}
+                {/* Navet */}
+                <div
+                  className="jungle-late absolute"
+                  style={{ left: `${hub.x}%`, top: `${hub.y}%`, transform: "translate(-50%, -50%)", transitionDelay: "0.45s", zIndex: 2 }}
+                >
+                  <div className="sysmap-node-box bg-brand-green text-paper shadow-md whitespace-nowrap px-4 py-2 md:px-5 md:py-2.5 text-xs md:text-sm font-semibold">
+                    Er affär
+                  </div>
+                </div>
+                {/* Systemnoderna med riktiga namn */}
+                {valda.map((v, i) => {
+                  const p = pos(i);
+                  const rot = ordnad ? 0 : kaosPos(i).r;
+                  return (
+                    <div
+                      key={v.namn}
+                      className="sysmap-node absolute"
+                      style={{ left: `${p.x}%`, top: `${p.y}%`, transform: `translate(-50%, -50%) rotate(${rot}deg)`, zIndex: 1 }}
+                    >
+                      <div className="jungle-pop sysmap-node-box whitespace-nowrap bg-white border border-line text-ink/80 shadow-sm px-2 py-1 md:px-3 md:py-1.5 text-[10px] md:text-xs font-semibold">
+                        {v.namn}
+                      </div>
+                    </div>
+                  );
+                })}
+              </>
+            )}
+          </div>
+
+          {/* Under kartan: knapp / grind / resultat beroende på fas */}
+          <div className="mt-8 min-h-14">
+            {fas === "bygga" && (
+              <div className="flex flex-wrap items-center gap-4">
+                <button
+                  type="button"
+                  onClick={() => {
+                    skickaHandelse("systemkollen_grind", { antal_system: n });
+                    setFas("formular");
+                  }}
+                  disabled={n < 2}
+                  className="inline-flex items-center gap-2 bg-brand-green text-paper px-6 py-3.5 text-sm font-semibold transition-colors hover:bg-paper hover:text-ink disabled:opacity-40 disabled:pointer-events-none"
+                >
+                  Skapa ordning <ArrowUpRight className="h-4 w-4" strokeWidth={2.5} />
+                </button>
+                <span className="text-sm text-paper/50">
+                  {n < 2 ? "Välj minst två system." : `${n} system valda.`}
+                </span>
+              </div>
+            )}
+
+            {fas === "formular" && (
+              <form onSubmit={skickaLead} className="max-w-xl border border-brand-green/40 bg-white/5 p-5 md:p-6">
+                <p className="text-sm text-paper/75 leading-relaxed mb-5">
+                  Fyll i så ordnar jag er karta. Jag hör av mig med tankar om
+                  er systemflora, kostnadsfritt och utan förpliktelser.
+                </p>
+                <div className="grid gap-3 sm:grid-cols-2">
+                  <input
+                    type="text"
+                    required
+                    value={lead.namn}
+                    onChange={(e) => setLead({ ...lead, namn: e.target.value })}
+                    placeholder="Namn *"
+                    aria-label="Namn"
+                    className="w-full bg-ink border border-paper/25 px-4 py-3 text-base text-paper placeholder:text-paper/40 focus:outline-none focus:border-brand-green"
+                  />
+                  <input
+                    type="email"
+                    required
+                    value={lead.epost}
+                    onChange={(e) => setLead({ ...lead, epost: e.target.value })}
+                    placeholder="E-post *"
+                    aria-label="E-post"
+                    className="w-full bg-ink border border-paper/25 px-4 py-3 text-base text-paper placeholder:text-paper/40 focus:outline-none focus:border-brand-green"
+                  />
+                  <input
+                    type="text"
+                    value={lead.foretag}
+                    onChange={(e) => setLead({ ...lead, foretag: e.target.value })}
+                    placeholder="Företag (valfritt)"
+                    aria-label="Företag"
+                    className="w-full bg-ink border border-paper/25 px-4 py-3 text-base text-paper placeholder:text-paper/40 focus:outline-none focus:border-brand-green sm:col-span-2"
+                  />
+                </div>
+                {fel && (
+                  <p className="mt-3 text-sm text-paper/70">
+                    Något gick fel vid skickandet. Prova igen om en stund.
+                  </p>
+                )}
+                <div className="mt-5 flex flex-wrap items-center gap-4">
+                  <button
+                    type="submit"
+                    disabled={skickar}
+                    className="inline-flex items-center gap-2 bg-brand-green text-paper px-6 py-3 text-sm font-semibold transition-colors hover:bg-paper hover:text-ink disabled:opacity-50"
+                  >
+                    {skickar ? "Ordnar ..." : "Ordna min karta"}
+                    <ArrowUpRight className="h-4 w-4" strokeWidth={2.5} />
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setFas("bygga")}
+                    className="text-sm text-paper/50 hover:text-paper underline underline-offset-4"
+                  >
+                    Tillbaka
+                  </button>
+                </div>
+              </form>
+            )}
+
+            {fas === "ordnad" && (
+              <div className="jungle-result is-visible">
+                <div className="grid md:grid-cols-12 gap-6 items-center">
+                  <div className="jungle-late md:col-span-7" style={{ transitionDelay: "0.9s" }}>
+                    <p className="display-heading text-xl md:text-2xl text-paper">
+                      {k > 0 ? (
+                        <>
+                          {n} system. <span className="text-brand-green">Ett förslag: {k} {k === 1 ? "koppling" : "kopplingar"}.</span>
+                        </>
+                      ) : (
+                        <>
+                          {n} system, <span className="text-brand-green">inga givna kopplingar.</span>
+                        </>
+                      )}
+                    </p>
+                    <p className="mt-2 text-sm text-paper/65 leading-relaxed">
+                      {k > 0
+                        ? `${mobil ? "Tryck" : "Håll muspekaren"} på punkterna längs linjerna så ser ni vad varje koppling gör. Jag hör av mig med mina tankar.`
+                        : "Era system saknar självklara kopplingar i min regelbok, vilket i sig säger något. Jag hör av mig med mina tankar."}
+                    </p>
+                  </div>
+                  <div className="jungle-late md:col-span-5 flex flex-wrap items-center gap-4 md:justify-end" style={{ transitionDelay: "1.05s" }}>
+                    <Link
+                      to="/boka"
+                      onClick={sparaBokningsKontext}
+                      className="inline-flex items-center gap-2 bg-brand-green text-paper px-6 py-3.5 text-sm font-semibold hover:bg-paper hover:text-ink transition-colors"
+                    >
+                      Boka ett samtal <ArrowUpRight className="h-4 w-4" strokeWidth={2.5} />
+                    </Link>
+                    <button
+                      type="button"
+                      onClick={reset}
+                      className="text-sm text-paper/50 hover:text-paper underline underline-offset-4"
+                    >
+                      Börja om
+                    </button>
+                  </div>
+                </div>
+                {/* Bara första tipset visas i klartext: resten är samtalets
+                    värde och följer med i leadet så Alexander kommer förberedd.
+                    De låsta raderna visar äkta etiketter men PLATSHÅLLARTEXT
+                    bakom blurret: riktiga tips i DOM:en hade gått att läsa
+                    genom att plocka bort filtret i utvecklarverktygen. */}
+                {tips.length > 0 && (
+                  <div
+                    className="jungle-late mt-8 max-w-3xl border border-paper/15 bg-white/[0.04] p-5 md:p-6"
+                    style={{ transitionDelay: "1.2s" }}
+                  >
+                    <p className="tracked text-[10px] text-paper/45 mb-4">Tips utifrån er karta</p>
+                    <div className="space-y-3.5">
+                      <div className="flex items-start gap-3 text-sm text-paper/75 leading-relaxed">
+                        <span
+                          className={`tracked shrink-0 mt-0.5 px-2 py-0.5 border text-[9px] ${
+                            tips[0].typ === "byte"
+                              ? "border-paper/30 text-paper/60"
+                              : "border-brand-green/50 text-brand-green"
+                          }`}
+                        >
+                          {tips[0].typ === "byte" ? "Överlapp" : "Komplement"}
+                        </span>
+                        <span>{tips[0].text}</span>
+                      </div>
+                      {tips.slice(1).map((t, i) => (
+                        <div
+                          key={`last-${i}`}
+                          aria-hidden="true"
+                          className="flex items-start gap-3 text-sm text-paper/75 leading-relaxed select-none pointer-events-none"
+                        >
+                          <span
+                            className={`tracked shrink-0 mt-0.5 px-2 py-0.5 border text-[9px] ${
+                              t.typ === "byte"
+                                ? "border-paper/30 text-paper/60"
+                                : "border-brand-green/50 text-brand-green"
+                            }`}
+                          >
+                            {t.typ === "byte" ? "Överlapp" : "Komplement"}
+                          </span>
+                          <span className="blur-[5px] opacity-60">
+                            {i % 2 === 0
+                              ? "Det här tipset går jag igenom i samtalet, tillsammans med resten av er karta."
+                              : "Även det här förslaget sparar jag till samtalet, det bygger på era system."}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                    {tips.length > 1 && (
+                      <p className="mt-4 pt-4 border-t border-paper/10 text-sm text-paper/75 leading-relaxed">
+                        Jag ser{" "}
+                        <span className="font-semibold text-paper">
+                          {tips.length - 1 === 1 ? "en sak till" : `${tips.length - 1} saker till`}
+                        </span>{" "}
+                        i er karta. Dem går vi igenom i ett{" "}
+                        <Link
+                          to="/boka"
+                          onClick={sparaBokningsKontext}
+                          className="font-semibold text-paper border-b border-brand-green hover:text-brand-green"
+                        >
+                          kostnadsfritt samtal
+                        </Link>
+                        .
+                      </p>
+                    )}
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+        </Reveal>
+      </div>
+    </section>
+  );
+}
