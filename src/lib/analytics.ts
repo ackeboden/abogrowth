@@ -74,8 +74,12 @@ export function laddaAnalytics() {
   // @ts-expect-error ga-disable är Googles egen avstängningsflagga
   window[`ga-disable-${GA_MATID}`] = false;
   window.dataLayer = window.dataLayer || [];
-  window.gtag = function gtag(...args: unknown[]) {
-    window.dataLayer!.push(args);
+  // OBS: gtag.js behandlar BARA äkta arguments-objekt i dataLayer som
+  // kommandon; en vanlig array (t.ex. via rest-parametrar) ignoreras tyst
+  // och då når ingenting Google trots att allt ser rätt ut lokalt.
+  window.gtag = function gtag() {
+    // eslint-disable-next-line prefer-rest-params
+    window.dataLayer!.push(arguments);
   };
   window.gtag("js", new Date());
   window.gtag("config", GA_MATID, { anonymize_ip: true });
