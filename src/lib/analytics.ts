@@ -69,10 +69,14 @@ export function sparaSamtycke(val: "ja" | "nej") {
 let laddad = false;
 
 export function laddaAnalytics() {
-  if (laddad || !GA_MATID || typeof window === "undefined") return;
-  laddad = true;
+  if (!GA_MATID || typeof window === "undefined") return;
+  // Avstängningsflaggan måste nollas FÖRE laddad-vakten: ångrar man ett
+  // nej tillbaka till ja i samma session är skriptet redan laddat, och
+  // utan den här raden förblir spårningen avstängd till nästa omladdning.
   // @ts-expect-error ga-disable är Googles egen avstängningsflagga
   window[`ga-disable-${GA_MATID}`] = false;
+  if (laddad) return;
+  laddad = true;
   window.dataLayer = window.dataLayer || [];
   // OBS: gtag.js behandlar BARA äkta arguments-objekt i dataLayer som
   // kommandon; en vanlig array (t.ex. via rest-parametrar) ignoreras tyst

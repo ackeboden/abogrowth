@@ -511,7 +511,9 @@ export function Contact() {
           meddelande: form.message,
         }).toString(),
       });
-      if (!res.ok) throw new Error(String(res.status));
+      // I dev-läge saknas Netlify-mottagaren; släpp igenom så flödet går
+      // att klicka igenom lokalt (samma undantag som Systemkollen).
+      if (!res.ok && import.meta.env.PROD) throw new Error(String(res.status));
       setStatus("sent");
     } catch {
       setStatus("error");

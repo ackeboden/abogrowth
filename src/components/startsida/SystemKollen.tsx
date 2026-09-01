@@ -206,6 +206,14 @@ const aiEtiketter: Record<Kategori, string> = {
 
 // Bytestips när två valda system gör samma jobb. Nyckel = overlapp-grupp,
 // "standard" är fallback.
+// Specialfallen (regelgrupper) beter sig inte som kategorins typfall och
+// behöver egna AI-texter: WordPress är en sajt utan butik, betalsystemen
+// bokför inte. Övriga faller tillbaka på kategoritexten ovan.
+const aiEtiketterGrupp: Partial<Record<RegelToken, string>> = {
+  webbplats: "AI:n skriver utkast till texter och innehåll på sajten",
+  betalning: "AI:n sammanfattar betalflödena och flaggar det som sticker ut",
+};
+
 const overlappTexter: Record<string, string> = {
   standard: "{a} och {b} gör i stort sett samma jobb. Ett av dem brukar räcka.",
   kontorspaket:
@@ -373,7 +381,13 @@ export function SystemKollen() {
 
   const laggTill = (namn: string, kat: Kategori) => {
     if (n >= MAX_SYSTEM) return;
-    if (valda.some((v) => v.namn.toLowerCase() === namn.toLowerCase())) return;
+    if (valda.some((v) => v.namn.toLowerCase() === namn.toLowerCase())) {
+      // Dubblett: lägg inte till, men städa sök/kategorifrågan så att
+      // gränssnittet aldrig fastnar i ett läge där knapparna inget gör.
+      setSok("");
+      setOkand(null);
+      return;
+    }
     if (n === 0) skickaHandelse("systemkollen_start");
     setValda((s) => [...s, { namn, kat }]);
     setSok("");
@@ -405,8 +419,14 @@ export function SystemKollen() {
       const prefix = `${A.namn} + ${B.namn}: `;
       if (tokA === "ai" || tokB === "ai") {
         const partner = tokA === "ai" ? B : A;
+        const partnerTok = tokA === "ai" ? tokB : tokA;
         if (partner.kat === "ai") continue;
-        lankar.push({ a: i, b: j, text: prefix + aiEtiketter[partner.kat], ai: true });
+        lankar.push({
+          a: i,
+          b: j,
+          text: prefix + (aiEtiketterGrupp[partnerTok] ?? aiEtiketter[partner.kat]),
+          ai: true,
+        });
         continue;
       }
       const regel = kopplingsregler.find(
@@ -495,6 +515,12 @@ export function SystemKollen() {
   // Netlify-mottagaren, då släpps man vidare ändå.
   const skickaLead = async (e: React.FormEvent) => {
     e.preventDefault();
+    // Grinden kräver minst två system, men taggarna går att ta bort medan
+    // formuläret är öppet: validera igen här så tomma leads aldrig skickas.
+    if (n < 2) {
+      setFas("bygga");
+      return;
+    }
     setSkickar(true);
     setFel(false);
     try {
@@ -556,7 +582,10 @@ export function SystemKollen() {
                     if (e.key === "Enter") {
                       e.preventDefault();
                       if (forslag.length > 0) laggTill(forslag[0].namn, forslag[0].kat);
-                      else if (sok.trim().length >= 2) setOkand(sok.trim());
+                      // Samma spärr som fritextknappen: är söktexten ett redan
+                      // valt system ska ingen kategorifråga öppnas (knapparna
+                      // i den vore döda eftersom laggTill stoppar dubbletter).
+                      else if (sok.trim().length >= 2 && !exaktTraff) setOkand(sok.trim());
                     }
                   }}
                   placeholder={n >= MAX_SYSTEM ? "Max 12 system" : "Sök era system: Fortnox, HubSpot, Slack ..."}

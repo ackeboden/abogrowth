@@ -39,6 +39,7 @@ export function PriceEmbed() {
       try {
         const body = iframe.contentDocument?.body;
         if (body && "ResizeObserver" in window) {
+          ro?.disconnect();
           ro = new ResizeObserver(measure);
           ro.observe(body);
         }
@@ -47,7 +48,11 @@ export function PriceEmbed() {
       }
     };
     iframe.addEventListener("load", onLoad);
-    if (iframe.contentDocument?.readyState === "complete") onLoad();
+    // Fånga fallet att load redan hunnit avfyras, men INTE det initiala
+    // about:blank-dokumentet (som också rapporterar "complete" och annars
+    // skulle krympa iframen till minimihöjd innan riktiga sidan laddats).
+    const doc = iframe.contentDocument;
+    if (doc?.readyState === "complete" && doc.URL !== "about:blank") onLoad();
 
     // Förälderns viewport-ändring ändrar iframens bredd → innehållet reflow:ar
     // en frame senare. Mät om efter reflow (nästa frame + en uppföljning), då
@@ -225,7 +230,23 @@ export function Footer() {
             <li><Link to="/resan" className="hover:text-paper">Resan</Link></li>
             <li><Link to="/sa-gar-det-till" className="hover:text-paper">Så går det till</Link></li>
             <li><Link to="/case" className="hover:text-paper">Case</Link></li>
-            <li><Link to="/" hash="kontakt" className="hover:text-paper">Kontakt</Link></li>
+            <li>
+              {/* Samma workaround som Headerns navlänkar: på startsidan
+                  scrollar routern inte vid hash-navigering inom samma route */}
+              <Link
+                to="/"
+                hash="kontakt"
+                onClick={(e) => {
+                  if (window.location.pathname === "/") {
+                    e.preventDefault();
+                    document.getElementById("kontakt")?.scrollIntoView({ behavior: "smooth" });
+                  }
+                }}
+                className="hover:text-paper"
+              >
+                Kontakt
+              </Link>
+            </li>
             <li><Link to="/integritet" className="hover:text-paper">Integritet & cookies</Link></li>
             <li>
               <button
