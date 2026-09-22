@@ -158,7 +158,7 @@ function SystemMap() {
 const steps = [
   { n: "01", t: "Kartläggning", b: "1–2 veckor. Jag går igenom era arbetsflöden och system: vad ni har, vad som faktiskt används och var tiden läcker." },
   { n: "02", t: "Systemstrategi & val", b: "1–2 veckor. Ni får en konkret plan: vilka verktyg ni behöver, i vilken ordning de ska på plats och vad det kostar." },
-  { n: "03", t: "Införande & uppföljning", b: "Löpande. Jag konfigurerar, integrerar och utbildar teamet. Sedan mäter jag effekten och justerar tills det sitter." },
+  { n: "03", t: "Införande & uppföljning", b: "I etapper. Jag konfigurerar, integrerar och utbildar teamet. Sedan mäter jag effekten och justerar tills det sitter." },
 ];
 
 const useCases = [
