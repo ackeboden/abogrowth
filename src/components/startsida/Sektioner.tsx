@@ -120,7 +120,7 @@ export const faqItems = [
   },
   {
     q: "Hur snabbt ser vi resultat?",
-    a: "Kartläggningen tar en till två veckor och de första konkreta leverablerna kommer oftast inom en månad. Sedan är vi ärlig: att hålla ordning i systemen är ett löpande arbete, och vi säger vad som går snabbt och vad som kräver uthållighet.",
+    a: "Kartläggningen tar en till två veckor och de första konkreta leverablerna kommer oftast inom en månad. Sedan är vi ärliga: att hålla ordning i systemen är ett löpande arbete, och vi säger vad som går snabbt och vad som kräver uthållighet.",
   },
   {
     q: "Vilka företag jobbar ni med?",
@@ -452,18 +452,18 @@ function ProcessLine() {
 
 export function Faq() {
   return (
-    <section id="faq" className="border-b border-line bg-mist">
+    <section id="faq" className="bg-ink text-paper">
       <div className="mx-auto max-w-6xl px-6 py-24 md:py-32 grid md:grid-cols-12 gap-12 items-start">
         <Reveal className="md:col-span-4">
           <div className="eyebrow mb-5">Vanliga frågor</div>
           <h2 className="display-heading text-3xl md:text-4xl">
             Undrar ni något? <span className="text-brand-green">Fler har undrat samma sak.</span>
           </h2>
-          <p className="mt-6 text-ink/70 leading-relaxed">
+          <p className="mt-6 text-paper/70 leading-relaxed">
             Hittar ni inte svaret här?{" "}
             <a
               href={`mailto:${CONTACT_EMAIL}`}
-              className="font-semibold border-b-2 border-brand-green pb-0.5 hover:text-brand-green"
+              className="font-semibold text-paper border-b-2 border-brand-green pb-0.5 hover:text-brand-green"
             >
               Mejla oss
             </a>{" "}
@@ -471,7 +471,7 @@ export function Faq() {
           </p>
           <Link
             to="/pris"
-            className="mt-8 group inline-flex items-center gap-2 bg-ink text-paper px-5 py-3 text-sm font-semibold hover:bg-brand-green transition-colors"
+            className="mt-8 group inline-flex items-center gap-2 bg-brand-green text-paper px-5 py-3 text-sm font-semibold hover:bg-paper hover:text-ink transition-colors"
           >
             Räkna ut ett riktpris
             <ArrowUpRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" strokeWidth={2.5} />
@@ -480,12 +480,12 @@ export function Faq() {
         <div className="md:col-span-8 space-y-3">
           {faqItems.map((f, i) => (
             <Reveal key={f.q} delay={i * 70}>
-              <details className="faq bg-paper border border-line hover:border-brand-green/40 transition-colors">
+              <details className="faq bg-white/[0.04] border border-paper/15 hover:border-brand-green/50 transition-colors">
                 <summary className="flex items-center justify-between gap-4 cursor-pointer list-none p-4 md:p-6 text-sm md:text-base font-semibold">
                   {f.q}
                   <Plus className="faq-icon h-4 w-4 shrink-0 text-brand-green" strokeWidth={2.5} />
                 </summary>
-                <p className="px-4 pb-4 md:px-6 md:pb-6 -mt-1 text-sm text-ink/70 leading-relaxed max-w-2xl">{f.a}</p>
+                <p className="px-4 pb-4 md:px-6 md:pb-6 -mt-1 text-sm text-paper/70 leading-relaxed max-w-2xl">{f.a}</p>
               </details>
             </Reveal>
           ))}
