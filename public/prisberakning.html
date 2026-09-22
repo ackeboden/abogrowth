@@ -206,7 +206,7 @@ const SERVICES = {
     desc: "Struktur, integration, automation",
     questions: [
       { id: "antal", label: "Hur många system/verktyg behöver ses över eller kopplas ihop?",
-        options: [ {label:"1–3 system",hours:6}, {label:"4–7 system",hours:16}, {label:"8 eller fler",hours:28} ] },
+        options: [ {label:"3–8 system",hours:6}, {label:"9–14 system",hours:16}, {label:"15 eller fler",hours:28} ] },
       { id: "ai", label: "Hur mycket AI/automation vill ni ha hjälp med?",
         options: [ {label:"Ingen, bara struktur",hours:0}, {label:"Några processer",hours:8}, {label:"Mycket, genomgående",hours:20} ] },
       { id: "spridning", label: "Hur spridd/rörig är er nuvarande data och verktygsflora?",
@@ -219,7 +219,7 @@ const SERVICES = {
     note: "Löpande stöd efter införandet kan bli aktuellt längre fram, det tar vi i samtalet.",
     activities: (a) => {
       const list = ["Kartläggning av nuvarande system och verktyg"];
-      if (a.antal !== "1–3 system") list.push("Konsolidering och integration mellan system");
+      if (a.antal !== "3–8 system") list.push("Konsolidering och integration mellan system");
       if (a.ai !== "Ingen, bara struktur") list.push("Identifiering av AI-automation med tydlig tidsbesparing");
       if (a.spridning === "Helt spridd, ingen överblick") list.push("Sanering och sammanslagning av spridd data");
       if (a.utbildning !== "Nej") list.push("Utbildning/onboarding av teamet i nya arbetssätt");
