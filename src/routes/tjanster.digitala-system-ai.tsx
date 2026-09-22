@@ -173,7 +173,7 @@ function Page() {
       <Header />
       <main>
         <PageHero
-          eyebrow="Tjänst 01 · Digitala system & AI"
+          eyebrow="Digitala system & AI"
           title={<>Strategin först. <span className="text-brand-green">Tekniken sedan.</span></>}
           intro="Vi kartlägger era arbetsflöden, väljer rätt system och AI-verktyg, inför dem och utbildar teamet. Ni får en digital helhet som hänger samman och en vardag där systemen jobbar åt er, inte tvärtom."
         />

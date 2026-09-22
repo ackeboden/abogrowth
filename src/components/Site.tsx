@@ -1,6 +1,6 @@
 import { Link, useRouterState } from "@tanstack/react-router";
 import { useEffect, useId, useRef, useState } from "react";
-import { ArrowUpRight, Linkedin, Menu, X } from "lucide-react";
+import { ArrowUpRight, ChevronDown, Linkedin, Menu, X } from "lucide-react";
 import { Logo } from "./Logo";
 
 export const CONTACT_EMAIL = "alexander@abogrowth.se";
@@ -107,8 +107,30 @@ export function useIsMobile() {
 
 // Alla "Boka ett samtal"-knappar leder till /boka-sidan med Netlify-formuläret.
 
+// Tjänsterna i menyn. Färgen följer sajtens färgsystem: grönt för grunden
+// (systemen), blått för de två tjänster som bygger vidare på den.
+const TJANSTER = [
+  {
+    to: "/tjanster/digitala-system-ai",
+    titel: "Digitala system & AI",
+    rad: "Ordning i systemfloran, integrationer och AI som gör nytta",
+    grund: true,
+  },
+  {
+    to: "/tjanster/affarsutveckling",
+    titel: "Affärsutveckling",
+    rad: "Tillväxtanalys och en plan som går att genomföra",
+    grund: false,
+  },
+  {
+    to: "/tjanster/optimerade-kampanjer",
+    titel: "Optimerade kampanjer",
+    rad: "Annonsering som mäts mot affären, inte mot klick",
+    grund: false,
+  },
+] as const;
+
 const NAV_LINKS = [
-  { label: "Tjänster", to: "/", hash: "tjanster" },
   { label: "Resan", to: "/resan" },
   { label: "Pris", to: "/pris" },
   { label: "Arbetssätt", to: "/", hash: "arbetssatt" },
@@ -117,10 +139,33 @@ const NAV_LINKS = [
 
 export function Header() {
   const [open, setOpen] = useState(false);
+  const [tjOpen, setTjOpen] = useState(false);
+  const tjRef = useRef<HTMLDivElement>(null);
   const { location } = useRouterState();
+  const paTjanstesida = location.pathname.startsWith("/tjanster");
 
-  // Stäng mobilmenyn vid navigering och lås bakgrundsscroll när den är öppen.
-  useEffect(() => setOpen(false), [location.href]);
+  // Stäng menyerna vid navigering och lås bakgrundsscroll när mobilmenyn är öppen.
+  useEffect(() => {
+    setOpen(false);
+    setTjOpen(false);
+  }, [location.href]);
+
+  // Tjänstemenyn stängs vid klick utanför och med Escape.
+  useEffect(() => {
+    if (!tjOpen) return;
+    const utanfor = (e: MouseEvent) => {
+      if (tjRef.current && !tjRef.current.contains(e.target as Node)) setTjOpen(false);
+    };
+    const esc = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setTjOpen(false);
+    };
+    document.addEventListener("mousedown", utanfor);
+    document.addEventListener("keydown", esc);
+    return () => {
+      document.removeEventListener("mousedown", utanfor);
+      document.removeEventListener("keydown", esc);
+    };
+  }, [tjOpen]);
   useEffect(() => {
     document.body.style.overflow = open ? "hidden" : "";
     return () => {
@@ -145,6 +190,63 @@ export function Header() {
       <div className="mx-auto max-w-6xl px-6 h-16 flex items-center justify-between">
         <Link to="/"><Logo /></Link>
         <nav className="hidden md:flex items-center gap-8 text-sm">
+          <div ref={tjRef} className="relative">
+            <button
+              type="button"
+              onClick={() => setTjOpen((o) => !o)}
+              aria-expanded={tjOpen}
+              aria-controls="tjanstemeny"
+              className={`inline-flex items-center gap-1 hover:text-brand-green transition-colors ${
+                paTjanstesida || tjOpen ? "text-brand-green" : ""
+              }`}
+            >
+              Tjänster
+              <ChevronDown
+                className={`h-3.5 w-3.5 transition-transform ${tjOpen ? "rotate-180" : ""}`}
+                strokeWidth={2.5}
+              />
+            </button>
+            {tjOpen && (
+              <div
+                id="tjanstemeny"
+                className="absolute left-1/2 top-full mt-4 w-80 -translate-x-1/2 bg-white border border-line shadow-xl"
+              >
+                {TJANSTER.map((t) => (
+                  <Link
+                    key={t.to}
+                    to={t.to}
+                    className="group flex gap-3 p-4 border-b border-line last:border-b-0 hover:bg-paper transition-colors"
+                  >
+                    <span
+                      aria-hidden="true"
+                      className={`mt-1 h-8 w-1 shrink-0 ${t.grund ? "bg-brand-green" : "bg-brand-blue"}`}
+                    />
+                    <span>
+                      <span className="block font-semibold text-ink group-hover:text-brand-green transition-colors">
+                        {t.titel}
+                      </span>
+                      <span className="block mt-0.5 text-xs text-ink/65 leading-snug">{t.rad}</span>
+                    </span>
+                  </Link>
+                ))}
+                <Link
+                  to="/"
+                  hash="tjanster"
+                  onClick={(e) => {
+                    setTjOpen(false);
+                    if (location.pathname === "/") {
+                      e.preventDefault();
+                      document.getElementById("tjanster")?.scrollIntoView({ behavior: "smooth" });
+                    }
+                  }}
+                  className="flex items-center justify-between px-4 py-3 bg-paper text-xs font-semibold text-ink/75 hover:text-brand-green transition-colors"
+                >
+                  Se alla tjänster
+                  <ArrowUpRight className="h-3.5 w-3.5" strokeWidth={2.5} />
+                </Link>
+              </div>
+            )}
+          </div>
           {NAV_LINKS.map((l) => (
             <Link
               key={l.label}
@@ -181,6 +283,20 @@ export function Header() {
           id="mobilmeny"
           className="md:hidden absolute inset-x-0 top-16 h-[calc(100vh-4rem)] bg-paper border-t border-line px-6 py-8 flex flex-col gap-1 overflow-y-auto"
         >
+          <div className="pt-2 pb-3 border-b border-line">
+            <div className="tracked text-[10px] text-subtle mb-2">Tjänster</div>
+            {TJANSTER.map((t) => (
+              <Link
+                key={t.to}
+                to={t.to}
+                onClick={() => setOpen(false)}
+                className="flex items-center gap-3 py-2.5 text-lg font-semibold hover:text-brand-green transition-colors"
+              >
+                <span aria-hidden="true" className={`h-5 w-1 ${t.grund ? "bg-brand-green" : "bg-brand-blue"}`} />
+                {t.titel}
+              </Link>
+            ))}
+          </div>
           {NAV_LINKS.map((l) => (
             <Link
               key={l.label}
