@@ -84,7 +84,7 @@ function BookingForm() {
   if (status === "sent") {
     return (
       <div className="bg-white border border-line p-8 md:p-10 shadow-sm">
-        <div className="w-10 h-10 flex items-center justify-center bg-brand-green text-paper mb-6">
+        <div className="w-10 h-10 flex items-center justify-center bg-brand-green-strong text-paper mb-6">
           <Check className="h-5 w-5" strokeWidth={2.5} />
         </div>
         <h2 className="display-heading text-2xl mb-3">Tack {form.namn.trim().split(" ")[0]}!</h2>
@@ -92,7 +92,7 @@ function BookingForm() {
           Er förfrågan är skickad. Vi hör av oss på {form.epost.trim()} inom ett dygn med förslag på tider.
         </p>
         <div className="mt-8">
-          <Link to="/" className="text-sm text-subtle hover:text-ink">← Tillbaka till startsidan</Link>
+          <Link to="/" className="text-sm text-ink/65 hover:text-ink">← Tillbaka till startsidan</Link>
         </div>
       </div>
     );
@@ -105,7 +105,7 @@ function BookingForm() {
       <Field label="Företag (valfritt)" name="foretag" value={form.foretag} onChange={set("foretag")} />
       <Field label="Telefon (valfritt)" name="telefon" type="tel" value={form.telefon} onChange={set("telefon")} />
       <div>
-        <label htmlFor="meddelande" className="tracked text-[10px] text-subtle block mb-2">
+        <label htmlFor="meddelande" className="tracked text-[11px] text-ink/65 block mb-2">
           Vad vill ni prata om? (valfritt)
         </label>
         <textarea
@@ -129,12 +129,12 @@ function BookingForm() {
       <button
         type="submit"
         disabled={!canSubmit}
-        className="inline-flex items-center gap-2 bg-ink text-paper px-6 py-3.5 text-sm font-semibold hover:bg-brand-green transition-colors disabled:bg-subtle disabled:cursor-not-allowed"
+        className="inline-flex items-center gap-2 bg-brand-green-strong text-paper px-6 py-3.5 text-sm font-semibold hover:bg-ink transition-colors disabled:bg-subtle disabled:cursor-not-allowed"
       >
         {status === "sending" ? "Skickar…" : "Boka samtal"}
         <ArrowUpRight className="h-4 w-4" strokeWidth={2.5} />
       </button>
-      <p className="text-xs text-subtle">
+      <p className="text-xs text-ink/65">
         Vi svarar inom ett dygn. Går även bra att mejla direkt till {CONTACT_EMAIL}.
       </p>
     </form>
@@ -153,7 +153,7 @@ function Field({
 }) {
   return (
     <div>
-      <label htmlFor={name} className="tracked text-[10px] text-subtle block mb-2">
+      <label htmlFor={name} className="tracked text-[11px] text-ink/65 block mb-2">
         {label}{required && " *"}
       </label>
       <input
@@ -176,7 +176,7 @@ function Page() {
       <main>
         <PageHero
           eyebrow="Boka ett samtal"
-          title={<>Låt oss <span className="text-brand-green">ta ett första samtal</span>.</>}
+          title={<>Låt oss <span className="text-brand-green-strong">ta ett första samtal</span>.</>}
           intro="Fyll i formuläret så hör vi av oss inom ett dygn med förslag på tider. Ett kort samtal där vi lyssnar, ställer frågor och ser om vi kan hjälpa till."
         />
 
@@ -187,14 +187,14 @@ function Page() {
               <ul className="space-y-4">
                 {loften.map((l) => (
                   <li key={l} className="flex items-start gap-3 text-sm text-ink/80">
-                    <Check className="h-4 w-4 mt-0.5 shrink-0 text-brand-green" strokeWidth={2.5} />
+                    <Check className="h-4 w-4 mt-0.5 shrink-0 text-brand-green-strong" strokeWidth={2.5} />
                     {l}
                   </li>
                 ))}
               </ul>
               <p className="mt-8 text-sm text-ink/60 leading-relaxed">
                 Vill ni veta exakt hur ett samtal går till?{" "}
-                <Link to="/sa-gar-det-till" className="font-semibold border-b-2 border-brand-green pb-0.5 hover:text-brand-green">
+                <Link to="/sa-gar-det-till" className="font-semibold border-b-2 border-brand-green pb-0.5 hover:text-brand-green-strong">
                   Så går det till
                 </Link>
               </p>

@@ -61,7 +61,7 @@ function Page() {
       <main>
         <PageHero
           eyebrow="Så går det till"
-          title={<>Ett första samtal är <span className="text-brand-green">bara ett samtal</span>.</>}
+          title={<>Ett första samtal är <span className="text-brand-green-strong">bara ett samtal</span>.</>}
           intro="Att höra av sig ska vara det enklaste steget, inte det svåraste. Här är exakt vad som händer när ni bokar, så att ni vet vad ni säger ja till."
         />
 
@@ -70,14 +70,14 @@ function Page() {
             <div className="md:col-span-4">
               <div className="eyebrow mb-5">Steg för steg</div>
               <h2 className="display-heading text-3xl md:text-4xl">
-                Från mejl till förslag på <span className="text-brand-green">under en vecka</span>.
+                Från mejl till förslag på <span className="text-brand-green-strong">under en vecka</span>.
               </h2>
             </div>
             <div className="md:col-span-8 space-y-6">
               {steps.map((s, i) => (
                 <Reveal key={s.n} delay={i * 110}>
                   <div className="bg-white border border-line p-5 md:p-8 shadow-sm hover:shadow-md hover:border-brand-green/40 transition-all flex gap-6">
-                    <div className="tracked text-xs text-brand-green pt-1 w-10 shrink-0">{s.n}</div>
+                    <div className="tracked text-xs text-brand-green-strong pt-1 w-10 shrink-0">{s.n}</div>
                     <div>
                       <h3 className="display-heading text-lg mb-2">{s.t}</h3>
                       <p className="text-sm text-ink/70 leading-relaxed">{s.b}</p>
@@ -94,7 +94,7 @@ function Page() {
             <div className="md:col-span-5">
               <div className="eyebrow mb-5">Mitt löfte</div>
               <h2 className="display-heading text-3xl md:text-4xl">
-                Det ni <span className="text-brand-green">inte</span> behöver oroa er för.
+                Det ni <span className="text-brand-green-strong">inte</span> behöver oroa er för.
               </h2>
               <p className="mt-6 text-ink/75 leading-relaxed">
                 Vi vet att "boka ett samtal" ofta betyder säljpitch. Så jobbar
@@ -107,7 +107,7 @@ function Page() {
               <ul className="space-y-4">
                 {promises.map((p) => (
                   <li key={p} className="flex items-start gap-3 border border-line bg-paper p-4 md:p-5 text-sm text-ink/80">
-                    <Check className="h-4 w-4 mt-0.5 shrink-0 text-brand-green" strokeWidth={2.5} />
+                    <Check className="h-4 w-4 mt-0.5 shrink-0 text-brand-green-strong" strokeWidth={2.5} />
                     {p}
                   </li>
                 ))}
@@ -120,7 +120,7 @@ function Page() {
         <section className="bg-mist text-ink border-y border-line">
           <div className="mx-auto max-w-6xl px-6 py-20 md:py-24 grid md:grid-cols-12 gap-10 items-center">
             <div className="md:col-span-8">
-              <div className="eyebrow mb-4 text-brand-green">Nästa steg</div>
+              <div className="eyebrow mb-4 text-brand-green-strong">Nästa steg</div>
               <h2 className="display-heading text-3xl md:text-5xl text-ink">Nu vet ni hur det går till.</h2>
               <p className="mt-5 text-ink/75 max-w-xl leading-relaxed">
                 Ett mejl med ett par rader räcker. Vi tar det därifrån.
@@ -129,11 +129,11 @@ function Page() {
             <div className="md:col-span-4 md:text-right">
               <Link
                 to="/boka"
-                className="inline-flex items-center gap-2 bg-brand-green text-paper px-6 py-4 text-sm font-semibold hover:bg-ink hover:text-paper transition-colors"
+                className="inline-flex items-center gap-2 bg-brand-green-strong text-paper px-6 py-3.5 text-sm font-semibold hover:bg-ink hover:text-paper transition-colors"
               >
                 Boka ett samtal <ArrowUpRight className="h-4 w-4" strokeWidth={2.5} />
               </Link>
-              <div className="mt-3 text-xs text-subtle">
+              <div className="mt-3 text-xs text-ink/65">
                 Eller mejla direkt: <a href={`mailto:${CONTACT_EMAIL}`} className="underline hover:text-ink">{CONTACT_EMAIL}</a>
               </div>
             </div>
@@ -143,11 +143,11 @@ function Page() {
         <section className="border-b border-line">
           <div className="mx-auto max-w-6xl px-6 py-16 flex flex-wrap items-center justify-between gap-6">
             <Link to="/" hash="tjanster" className="group inline-flex items-center gap-3 text-sm font-semibold">
-              <span className="tracked text-xs text-subtle">Nyfikna på vad vi gör?</span>
-              <span className="border-b-2 border-brand-green pb-0.5 group-hover:text-brand-green">Se våra tjänster</span>
-              <ArrowUpRight className="h-4 w-4 text-brand-green" strokeWidth={2.5} />
+              <span className="tracked text-xs text-ink/65">Nyfikna på vad vi gör?</span>
+              <span className="border-b-2 border-brand-green pb-0.5 group-hover:text-brand-green-strong">Se våra tjänster</span>
+              <ArrowUpRight className="h-4 w-4 text-brand-green-strong" strokeWidth={2.5} />
             </Link>
-            <Link to="/" className="text-sm text-subtle hover:text-ink">← Tillbaka till startsidan</Link>
+            <Link to="/" className="text-sm text-ink/65 hover:text-ink">← Tillbaka till startsidan</Link>
           </div>
         </section>
       </main>

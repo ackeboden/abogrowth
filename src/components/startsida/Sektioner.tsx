@@ -149,7 +149,7 @@ export function Services() {
           <div className="max-w-3xl">
             <div className="eyebrow mb-5">Vad vi gör</div>
             <h2 className="display-heading text-3xl md:text-5xl">
-              En grund. <span className="text-brand-green">Två som bygger vidare.</span>
+              En grund. <span className="text-brand-green-strong">Två som bygger vidare.</span>
             </h2>
             <p className="mt-6 text-ink/70 leading-relaxed max-w-2xl">
               Kärnan är att få ordning i era digitala system och AI-verktyg. När
@@ -176,12 +176,12 @@ export function Services() {
                   {s.num}
                 </span>
                 <div className="flex items-start justify-between mb-8 min-h-6">
-                  <span className="tracked text-xs text-subtle">{s.num}</span>
+                  <span className="tracked text-xs text-ink/65">{s.num}</span>
                   {s.tag && (
                     <span
-                      className={`text-[10px] tracked px-2 py-1 ${
+                      className={`text-[11px] tracked px-2 py-1 ${
                         s.featured
-                          ? "bg-brand-green text-paper"
+                          ? "bg-brand-green-strong text-paper"
                           : "bg-brand-blue/10 text-brand-blue border border-brand-blue/30"
                       }`}
                     >
@@ -189,24 +189,24 @@ export function Services() {
                     </span>
                   )}
                 </div>
-                <h3 className={`display-heading text-xl lg:text-2xl lg:min-h-16 mb-4 transition-colors ${s.featured ? "group-hover:text-brand-green" : "group-hover:text-brand-blue"}`}>
+                <h3 className={`display-heading text-xl lg:text-2xl lg:min-h-16 mb-4 transition-colors ${s.featured ? "group-hover:text-brand-green-strong" : "group-hover:text-brand-blue"}`}>
                   {s.title}
                 </h3>
                 {/* min-höjd på lg så "Ni får" börjar på samma rad i alla korten */}
                 <p className="text-sm text-ink/70 leading-relaxed mb-6 lg:min-h-[7.5rem]">{s.body}</p>
                 <div className="mb-8">
-                  <div className="tracked text-[10px] text-subtle mb-3">Ni får</div>
+                  <div className="tracked text-[11px] text-ink/65 mb-3">Ni får</div>
                   <ul className="space-y-2.5">
                     {s.deliverables.map((d) => (
                       <li key={d} className="flex items-start gap-2.5 text-sm text-ink/80">
-                        <Check className={`h-4 w-4 mt-0.5 shrink-0 ${s.featured ? "text-brand-green" : "text-brand-blue"}`} strokeWidth={2.5} />
+                        <Check className={`h-4 w-4 mt-0.5 shrink-0 ${s.featured ? "text-brand-green-strong" : "text-brand-blue"}`} strokeWidth={2.5} />
                         {d}
                       </li>
                     ))}
                   </ul>
                 </div>
                 {s.href && (
-                  <div className="mt-auto pt-6 border-t border-line inline-flex items-center gap-1.5 text-sm font-semibold text-brand-green">
+                  <div className={`mt-auto pt-6 border-t border-line inline-flex items-center gap-1.5 text-sm font-semibold ${s.featured ? "text-brand-green-strong" : "text-brand-blue-strong"}`}>
                     Läs mer{" "}
                     <ArrowUpRight
                       className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-0.5"
@@ -219,7 +219,7 @@ export function Services() {
             const shared = `group relative overflow-hidden h-full bg-white border p-5 md:p-10 flex flex-col transition-all duration-300 hover:shadow-md hover:-translate-y-1 ${
               s.featured
                 ? "border-brand-green/50 shadow-md hover:border-brand-green"
-                : "border-line shadow-sm hover:border-brand-green/40"
+                : "border-line shadow-sm hover:border-brand-blue/50"
             }`;
             return (
               <Reveal key={s.num} delay={i * 130}>
@@ -289,7 +289,7 @@ export function Varde() {
           <div className="max-w-3xl">
             <div className="eyebrow mb-5">Värdet</div>
             <h2 className="display-heading text-3xl md:text-5xl">
-              Vad får ni <span className="text-brand-green">ut av det?</span>
+              Vad får ni <span className="text-brand-green-strong">ut av det?</span>
             </h2>
             <p className="mt-6 text-ink/70 leading-relaxed max-w-2xl">
               Leverabler i all ära, men det som räknas är effekten i vardagen
@@ -316,7 +316,7 @@ export function Varde() {
                 <div className="flex items-center justify-between gap-3 mb-7 min-h-7">
                   <h3 className="display-heading text-lg">{t.tjanst}</h3>
                   {t.huvud && (
-                    <span className="text-[10px] tracked px-2 py-1 bg-brand-green text-paper shrink-0">
+                    <span className="text-[11px] tracked px-2 py-1 bg-brand-green-strong text-paper shrink-0">
                       Huvudtjänst
                     </span>
                   )}
@@ -345,9 +345,9 @@ export function Process() {
       <div className="relative mx-auto max-w-6xl px-6 py-24 md:py-32">
         <Reveal>
           <div className="max-w-3xl">
-            <div className="eyebrow mb-5 text-brand-green">Hur vi jobbar</div>
+            <div className="eyebrow mb-5 text-brand-green-strong">Hur vi jobbar</div>
             <h2 className="display-heading text-3xl md:text-5xl text-ink">
-              Fyra steg. <span className="text-brand-green">Varje uppdrag.</span>
+              Fyra steg. <span className="text-brand-green-strong">Varje uppdrag.</span>
             </h2>
             <p className="mt-6 text-ink/75 max-w-2xl leading-relaxed">
               Vi börjar alltid i nuläget: hur ni faktiskt arbetar och vilka
@@ -363,7 +363,7 @@ export function Process() {
           {processSteps.map((p, i) => (
             <Reveal key={p.step} delay={i * 110} className="bg-paper">
               <div className="h-full p-5 md:p-8 transition-colors duration-300 hover:bg-mist">
-                <div className="tracked text-xs text-brand-green mb-6">{p.step}</div>
+                <div className="tracked text-xs text-brand-green-strong mb-6">{p.step}</div>
                 <h3 className="display-heading text-lg mb-3 text-ink">{p.title}</h3>
                 <p className="text-sm text-ink/70 leading-relaxed">{p.body}</p>
               </div>
@@ -374,14 +374,14 @@ export function Process() {
         {/* Visar att samma metod bär alla tre tjänsterna, med systemen som grund. */}
         <Reveal delay={120}>
           <div className="mt-16">
-            <div className="tracked text-[10px] text-brand-green mb-6">Samma metod, per tjänst</div>
+            <div className="tracked text-[11px] text-brand-green-strong mb-6">Samma metod, per tjänst</div>
             <div className="grid gap-px bg-line border border-line md:grid-cols-3">
               {methodPerService.map((m) => (
                 <div key={m.service} className="bg-paper p-5 md:p-8">
                   <h3 className="display-heading text-base mb-4 text-ink">
                     {m.service}
                     {m.primary && (
-                      <span className="ml-2 align-middle text-[10px] tracked bg-brand-green text-paper px-2 py-0.5">
+                      <span className="ml-2 align-middle text-[11px] tracked bg-brand-green-strong text-paper px-2 py-0.5">
                         Grunden
                       </span>
                     )}
@@ -389,7 +389,7 @@ export function Process() {
                   <ol className="space-y-2">
                     {m.flow.map((f, n) => (
                       <li key={f} className="flex items-start gap-2.5 text-sm text-ink/70 leading-relaxed">
-                        <span className="tracked text-[10px] text-brand-green mt-1 shrink-0">0{n + 1}</span>
+                        <span className="tracked text-[11px] text-brand-green-strong mt-1 shrink-0">0{n + 1}</span>
                         {f}
                       </li>
                     ))}
@@ -455,15 +455,15 @@ export function Faq() {
     <section id="faq" className="bg-ink text-paper">
       <div className="mx-auto max-w-6xl px-6 py-24 md:py-32 grid md:grid-cols-12 gap-12 items-start">
         <Reveal className="md:col-span-4">
-          <div className="eyebrow mb-5">Vanliga frågor</div>
+          <div className="mb-5 text-[0.7rem] font-bold uppercase tracking-[0.22em] text-paper/70">Vanliga frågor</div>
           <h2 className="display-heading text-3xl md:text-4xl">
-            Undrar ni något? <span className="text-brand-green">Fler har undrat samma sak.</span>
+            Undrar ni något? <span className="text-brand-green-strong">Fler har undrat samma sak.</span>
           </h2>
           <p className="mt-6 text-paper/70 leading-relaxed">
             Hittar ni inte svaret här?{" "}
             <a
               href={`mailto:${CONTACT_EMAIL}`}
-              className="font-semibold text-paper border-b-2 border-brand-green pb-0.5 hover:text-brand-green"
+              className="font-semibold text-paper border-b-2 border-brand-green pb-0.5 hover:text-brand-green-strong"
             >
               Mejla oss
             </a>{" "}
@@ -471,7 +471,7 @@ export function Faq() {
           </p>
           <Link
             to="/pris"
-            className="mt-8 group inline-flex items-center gap-2 bg-brand-green text-paper px-5 py-3 text-sm font-semibold hover:bg-paper hover:text-ink transition-colors"
+            className="mt-8 group inline-flex items-center gap-2 bg-brand-green-strong text-paper px-6 py-3.5 text-sm font-semibold hover:bg-paper hover:text-ink transition-colors"
           >
             Räkna ut ett riktpris
             <ArrowUpRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" strokeWidth={2.5} />
@@ -483,7 +483,7 @@ export function Faq() {
               <details className="faq bg-white/[0.04] border border-paper/15 hover:border-brand-green/50 transition-colors">
                 <summary className="flex items-center justify-between gap-4 cursor-pointer list-none p-4 md:p-6 text-sm md:text-base font-semibold">
                   {f.q}
-                  <Plus className="faq-icon h-4 w-4 shrink-0 text-brand-green" strokeWidth={2.5} />
+                  <Plus className="faq-icon h-4 w-4 shrink-0 text-brand-green-strong" strokeWidth={2.5} />
                 </summary>
                 <p className="px-4 pb-4 md:px-6 md:pb-6 -mt-1 text-sm text-paper/70 leading-relaxed max-w-2xl">{f.a}</p>
               </details>
@@ -534,7 +534,7 @@ export function Contact() {
         <Reveal className="md:col-span-5">
           <div className="eyebrow mb-5">Kontakt</div>
           <h2 className="display-heading text-3xl md:text-5xl">
-            Berätta vad ni <span className="text-brand-green">vill uppnå</span>.
+            Berätta vad ni <span className="text-brand-green-strong">vill uppnå</span>.
           </h2>
           <p className="mt-6 text-ink/75 leading-relaxed">
             Några rader räcker. Vi svarar inom ett dygn och föreslår ett kort
@@ -542,17 +542,17 @@ export function Contact() {
           </p>
           <div className="mt-10 space-y-4 text-sm">
             <div>
-              <div className="tracked text-[10px] text-subtle mb-1">E-post</div>
-              <a href={`mailto:${CONTACT_EMAIL}`} className="font-semibold border-b-2 border-brand-green pb-0.5 hover:text-brand-green">
+              <div className="tracked text-[11px] text-ink/65 mb-1">E-post</div>
+              <a href={`mailto:${CONTACT_EMAIL}`} className="relative font-semibold border-b-2 border-brand-green pb-0.5 hover:text-brand-green-strong after:absolute after:-inset-x-1 after:-inset-y-3 after:content-['']">
                 {CONTACT_EMAIL}
               </a>
             </div>
             <div>
-              <div className="tracked text-[10px] text-subtle mb-1">Webb</div>
+              <div className="tracked text-[11px] text-ink/65 mb-1">Webb</div>
               <div>abogrowth.se</div>
             </div>
             <div>
-              <div className="tracked text-[10px] text-subtle mb-1">Ort</div>
+              <div className="tracked text-[11px] text-ink/65 mb-1">Ort</div>
               <div>Stockholm, Sverige</div>
             </div>
           </div>
@@ -578,7 +578,7 @@ export function Contact() {
                 <Field label="Namn" name="name" value={form.name} onChange={(v) => setForm({ ...form, name: v })} required />
                 <Field label="E-post" name="email" type="email" value={form.email} onChange={(v) => setForm({ ...form, email: v })} required />
                 <div>
-                  <label htmlFor="message" className="tracked text-[10px] text-subtle block mb-2">Meddelande *</label>
+                  <label htmlFor="message" className="tracked text-[11px] text-ink/65 block mb-2">Meddelande *</label>
                   <textarea
                     id="message"
                     name="message"
@@ -603,7 +603,7 @@ export function Contact() {
                 >
                   {status === "sending" ? "Skickar…" : "Skicka"} <ArrowUpRight className="h-4 w-4" strokeWidth={2.5} />
                 </button>
-                <p className="text-xs text-subtle">
+                <p className="text-xs text-ink/65">
                   Vi svarar inom ett dygn. Går även bra att mejla direkt till {CONTACT_EMAIL}.
                 </p>
               </>
@@ -623,7 +623,7 @@ function Field({
 }) {
   return (
     <div>
-      <label htmlFor={name} className="tracked text-[10px] text-subtle block mb-2">
+      <label htmlFor={name} className="tracked text-[11px] text-ink/65 block mb-2">
         {label}{required && " *"}
       </label>
       <input

@@ -55,7 +55,7 @@ function Page() {
           eyebrow="Om ABO Growth"
           title={
             <>
-              Den ni pratar med är <span className="text-brand-green">den som levererar</span>.
+              Den ni pratar med är <span className="text-brand-green-strong">den som levererar</span>.
             </>
           }
           intro="ABO Growth hjälper mindre bolag att få ordning i sina digitala system och AI-verktyg. Affärsutveckling och kampanjer bygger vidare på samma grund."
@@ -66,30 +66,30 @@ function Page() {
             <Reveal className="md:col-span-5">
               <div className="eyebrow mb-5">Personen bakom</div>
               <h2 className="display-heading text-3xl md:text-4xl">
-                Alexander, <span className="text-brand-green">grundare</span>.
+                Alexander, <span className="text-brand-green-strong">grundare</span>.
               </h2>
               <div className="mt-10 pt-6 border-t border-line grid grid-cols-2 gap-6">
                 <Stat label="Bas" value="Stockholm" />
                 <Stat label="Kärna" value="System & AI" />
               </div>
               <div className="mt-8 text-sm">
-                <div className="tracked text-[10px] text-subtle mb-1">Kontakt</div>
+                <div className="tracked text-[11px] text-ink/65 mb-1">Kontakt</div>
                 <a
                   href={`mailto:${CONTACT_EMAIL}`}
-                  className="font-semibold border-b-2 border-brand-green pb-0.5 hover:text-brand-green"
+                  className="font-semibold border-b-2 border-brand-green pb-0.5 hover:text-brand-green-strong"
                 >
                   {CONTACT_EMAIL}
                 </a>
               </div>
               <div className="mt-8">
-                <div className="tracked text-[10px] text-subtle mb-2">LinkedIn</div>
+                <div className="tracked text-[11px] text-ink/65 mb-2">LinkedIn</div>
                 <a
                   href={LINKEDIN_URL}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="group inline-flex items-center gap-2.5 border border-line bg-paper px-4 py-2.5 text-sm font-semibold transition-colors hover:border-brand-green hover:text-brand-green"
+                  className="group inline-flex items-center gap-2.5 border border-line bg-paper px-4 py-2.5 text-sm font-semibold transition-colors hover:border-brand-green hover:text-brand-green-strong"
                 >
-                  <Linkedin className="h-4 w-4 text-brand-green" strokeWidth={2} />
+                  <Linkedin className="h-4 w-4 text-brand-green-strong" strokeWidth={2} />
                   Alexander Bodén
                   <ArrowUpRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" strokeWidth={2.5} />
                 </a>
@@ -130,7 +130,7 @@ function Page() {
               <div className="max-w-3xl">
                 <div className="eyebrow mb-5">Så jobbar vi</div>
                 <h2 className="display-heading text-3xl md:text-5xl text-ink">
-                  Fyra principer. <span className="text-brand-green">Inga undantag.</span>
+                  Fyra principer. <span className="text-brand-green-strong">Inga undantag.</span>
                 </h2>
               </div>
             </Reveal>
@@ -138,7 +138,7 @@ function Page() {
               {principles.map((p, i) => (
                 <Reveal key={p.title} delay={i * 110}>
                   <div className="h-full border border-line bg-white p-5 md:p-8 transition-all duration-300 hover:border-brand-green/50 hover:bg-mist hover:-translate-y-1">
-                    <div className="w-10 h-10 flex items-center justify-center bg-brand-green/15 text-brand-green mb-6">
+                    <div className="w-10 h-10 flex items-center justify-center bg-brand-green/15 text-brand-green-strong mb-6">
                       <p.icon className="h-5 w-5" strokeWidth={2} />
                     </div>
                     <h3 className="display-heading text-lg mb-3 text-ink">{p.title}</h3>
@@ -153,11 +153,11 @@ function Page() {
         <section className="border-b border-line">
           <div className="mx-auto max-w-6xl px-6 py-16 flex flex-wrap items-center justify-between gap-6">
             <Link to="/sa-gar-det-till" className="group inline-flex items-center gap-3 text-sm font-semibold">
-              <span className="tracked text-xs text-subtle">Nyfikna?</span>
-              <span className="border-b-2 border-brand-green pb-0.5 group-hover:text-brand-green">Så går ett första samtal till</span>
-              <ArrowUpRight className="h-4 w-4 text-brand-green" strokeWidth={2.5} />
+              <span className="tracked text-xs text-ink/65">Nyfikna?</span>
+              <span className="border-b-2 border-brand-green pb-0.5 group-hover:text-brand-green-strong">Så går ett första samtal till</span>
+              <ArrowUpRight className="h-4 w-4 text-brand-green-strong" strokeWidth={2.5} />
             </Link>
-            <Link to="/" hash="tjanster" className="text-sm text-subtle hover:text-ink">
+            <Link to="/" hash="tjanster" className="text-sm text-ink/65 hover:text-ink">
               Se våra tjänster →
             </Link>
           </div>
@@ -173,7 +173,7 @@ function Page() {
 function Stat({ label, value }: { label: string; value: string }) {
   return (
     <div>
-      <div className="tracked text-[10px] text-subtle mb-1">{label}</div>
+      <div className="tracked text-[11px] text-ink/65 mb-1">{label}</div>
       <div className="font-bold">{value}</div>
     </div>
   );

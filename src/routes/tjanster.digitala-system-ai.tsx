@@ -59,7 +59,7 @@ function SystemMap() {
         <Reveal className="max-w-2xl">
           <div className="eyebrow mb-5">Helheten</div>
           <h2 className="display-heading text-3xl md:text-4xl">
-            Från spridda verktyg till <span className="text-brand-green">ett system</span>.
+            Från spridda verktyg till <span className="text-brand-green-strong">ett system</span>.
           </h2>
           <p className="mt-6 text-ink/75 leading-relaxed">
             Så här tänker vi: affären i mitten, verktygen runt omkring, valda
@@ -120,7 +120,7 @@ function SystemMap() {
               <div
                 className={`sysmap-node-box whitespace-nowrap px-3 py-1.5 md:px-5 md:py-2.5 text-xs md:text-sm font-semibold ${
                   n.hub
-                    ? "bg-brand-green text-paper shadow-md"
+                    ? "bg-brand-green-strong text-paper shadow-md"
                     : "bg-white border border-line text-ink/80 shadow-sm"
                 }`}
                 style={{ animationDelay: `${1.6 + i * 0.8}s` }}
@@ -137,13 +137,13 @@ function SystemMap() {
             </div>
           ))}
         </div>
-        <p className="mt-8 text-sm text-subtle max-w-xl">
+        <p className="mt-8 text-sm text-ink/65 max-w-xl">
           Boxarna är exempel. Vilka som ingår hos er avgörs av strategin, inte
           av trenderna. Vill ni se er egen karta?{" "}
           <Link
             to="/"
             hash="systemkollen"
-            className="font-semibold text-ink border-b-2 border-brand-green pb-0.5 hover:text-brand-green"
+            className="font-semibold text-ink border-b-2 border-brand-green pb-0.5 hover:text-brand-green-strong"
           >
             Gör systemkollen
           </Link>
@@ -174,8 +174,9 @@ function Page() {
       <main>
         <PageHero
           eyebrow="Digitala system & AI"
-          title={<>Strategin först. <span className="text-brand-green">Tekniken sedan.</span></>}
+          title={<>Strategin först. <span className="text-brand-green-strong">Tekniken sedan.</span></>}
           intro="Vi kartlägger era arbetsflöden, väljer rätt system och AI-verktyg, inför dem och utbildar teamet. Ni får en digital helhet som hänger samman och en vardag där systemen jobbar åt er, inte tvärtom."
+          cta
         />
 
         <SystemMap />
@@ -185,7 +186,7 @@ function Page() {
             <Reveal className="max-w-2xl">
               <div className="eyebrow mb-5">Min hållning</div>
               <h2 className="display-heading text-3xl md:text-4xl">
-                Verktyg ska <span className="text-brand-green">tjäna affären</span>, inte tvärtom.
+                Verktyg ska <span className="text-brand-green-strong">tjäna affären</span>, inte tvärtom.
               </h2>
               <p className="mt-6 text-ink/75 leading-relaxed">
                 Ny teknik är billig. Fel val är dyrt. Frågan är inte vilket
@@ -197,7 +198,7 @@ function Page() {
           </div>
         </section>
 
-        <section className="border-b border-line">
+        <section className="border-b border-line bg-mist">
           <div className="mx-auto max-w-6xl px-6 py-20 md:py-28">
             <Reveal>
               <div className="eyebrow mb-5">Vad ni får</div>
@@ -211,7 +212,7 @@ function Page() {
               {deliverables.map((d, i) => (
                 <Reveal key={d.t} delay={i * 90}>
                   <div className="h-full bg-white border border-line p-5 md:p-8 shadow-sm transition-all duration-300 hover:shadow-md hover:border-brand-green/40 hover:-translate-y-1">
-                    <Check className="h-5 w-5 text-brand-green mb-4" strokeWidth={2.5} />
+                    <Check className="h-5 w-5 text-brand-green-strong mb-4" strokeWidth={2.5} />
                     <h3 className="display-heading text-lg mb-3">{d.t}</h3>
                     <p className="text-sm text-ink/70 leading-relaxed">{d.b}</p>
                   </div>
@@ -225,7 +226,7 @@ function Page() {
           <div className="mx-auto max-w-6xl px-6 py-20 md:py-28 grid md:grid-cols-12 gap-12">
             <Reveal className="md:col-span-4">
               <div className="eyebrow mb-5">Upplägg</div>
-              <h2 className="display-heading text-3xl md:text-4xl">Tre faser. <span className="text-brand-green">Tydliga milstolpar.</span></h2>
+              <h2 className="display-heading text-3xl md:text-4xl">Tre faser. <span className="text-brand-green-strong">Tydliga milstolpar.</span></h2>
               <p className="mt-6 text-ink/75 leading-relaxed">
                 Ett uppdrag hos oss har alltid en tydlig början, konkreta
                 beslutspunkter och ett slut ni själva väljer. Inga eviga
@@ -236,7 +237,7 @@ function Page() {
               {steps.map((s, i) => (
                 <Reveal key={s.n} delay={i * 110}>
                   <div className="bg-paper border border-line p-5 md:p-8 shadow-sm transition-all duration-300 hover:shadow-md hover:border-brand-green/40 hover:-translate-y-1 flex gap-6">
-                    <div className="tracked text-xs text-brand-green pt-1 w-10 shrink-0">{s.n}</div>
+                    <div className="tracked text-xs text-brand-green-strong pt-1 w-10 shrink-0">{s.n}</div>
                     <div>
                       <h3 className="display-heading text-lg mb-2">{s.t}</h3>
                       <p className="text-sm text-ink/70 leading-relaxed">{s.b}</p>
@@ -258,7 +259,7 @@ function Page() {
               {useCases.map((u, i) => (
                 <Reveal key={u.t} delay={i * 120}>
                   <div className="group border-t-2 border-brand-green pt-6 transition-transform duration-300 hover:-translate-y-1">
-                    <div className="tracked text-xs text-subtle mb-3 transition-colors group-hover:text-brand-green">0{i + 1}</div>
+                    <div className="tracked text-xs text-ink/65 mb-3 transition-colors group-hover:text-brand-green-strong">0{i + 1}</div>
                     <h3 className="display-heading text-xl mb-3">{u.t}</h3>
                     <p className="text-sm text-ink/70 leading-relaxed">{u.b}</p>
                   </div>
@@ -276,11 +277,11 @@ function Page() {
         <section className="border-b border-line">
           <div className="mx-auto max-w-6xl px-6 py-16 flex flex-wrap items-center justify-between gap-6">
             <Link to="/tjanster/affarsutveckling" className="group inline-flex items-center gap-3 text-sm font-semibold">
-              <span className="tracked text-xs text-subtle">Nästa tjänst</span>
-              <span className="border-b-2 border-brand-green pb-0.5 group-hover:text-brand-green">Affärsutveckling & tillväxtstrategi</span>
-              <ArrowUpRight className="h-4 w-4 text-brand-green" strokeWidth={2.5} />
+              <span className="tracked text-xs text-ink/65">Nästa tjänst</span>
+              <span className="border-b-2 border-brand-green pb-0.5 group-hover:text-brand-green-strong">Affärsutveckling & tillväxtstrategi</span>
+              <ArrowUpRight className="h-4 w-4 text-brand-green-strong" strokeWidth={2.5} />
             </Link>
-            <Link to="/" className="text-sm text-subtle hover:text-ink">← Tillbaka till startsidan</Link>
+            <Link to="/" className="text-sm text-ink/65 hover:text-ink">← Tillbaka till startsidan</Link>
           </div>
         </section>
       </main>

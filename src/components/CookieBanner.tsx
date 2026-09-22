@@ -50,8 +50,8 @@ export function CookieBanner() {
           (Google Analytics). Den kopplas aldrig till dig som person och
           hjälper hemsidan att bli bättre. Inget laddas förrän du sagt ja,
           och du kan ångra dig när som helst.{" "}
-          <Link to="/integritet" className="font-semibold text-paper border-b border-brand-green hover:text-brand-green">
-            Läs mer
+          <Link to="/integritet" className="font-semibold text-paper border-b border-brand-green hover:text-brand-green-strong">
+            Läs mer om cookies
           </Link>
         </p>
         {/* Båda valen i första lagret, ett klick var (lagkravet). Acceptera
@@ -60,14 +60,14 @@ export function CookieBanner() {
           <button
             type="button"
             onClick={() => valj("nej")}
-            className="text-sm text-paper/60 underline underline-offset-4 hover:text-paper transition-colors"
+            className="relative text-sm text-paper/60 underline underline-offset-4 hover:text-paper transition-colors py-2"
           >
             Avvisa
           </button>
           <button
             type="button"
             onClick={() => valj("ja")}
-            className="bg-brand-green text-paper px-7 py-3 text-sm font-semibold hover:bg-paper hover:text-ink transition-colors"
+            className="bg-brand-green-strong text-paper px-6 py-3.5 text-sm font-semibold hover:bg-paper hover:text-ink transition-colors"
           >
             Acceptera
           </button>

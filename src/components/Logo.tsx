@@ -36,12 +36,16 @@ export function Monogram({ className = "" }: { className?: string }) {
 export function Logo({ inverted = false }: { inverted?: boolean }) {
   return (
     <div
+      role="img"
+      aria-label="ABO Growth"
       className={`inline-flex items-center gap-2.5 leading-none select-none ${
         inverted ? "text-paper" : "text-ink"
       }`}
     >
       <Monogram className="h-8 w-auto shrink-0" />
-      <span className="flex items-baseline gap-1.5">
+      {/* Ordmärket är en del av logotypen: det läses som bildens namn ovan,
+          och logotyper är undantagna från WCAG:s kontrastkrav. */}
+      <span aria-hidden="true" className="flex items-baseline gap-1.5">
         <span className="font-bold text-xl tracked-tight">ABO</span>
         <span className="text-brand-green font-bold text-[10px] tracked">GROWTH</span>
       </span>

@@ -40,7 +40,7 @@ function Page() {
       <main>
         <PageHero
           eyebrow="Case"
-          title={<>Uppdrag som <span className="text-brand-green">visar hur vi jobbar</span>.</>}
+          title={<>Uppdrag som <span className="text-brand-green-strong">visar hur vi jobbar</span>.</>}
           intro="Här samlar vi case från riktiga uppdrag löpande. Vill ni höra hur vi skulle lägga upp arbetet hos er är det snabbaste att ta ett samtal."
         />
 
@@ -52,16 +52,16 @@ function Page() {
               <div className="grid gap-px bg-line md:grid-cols-2 border border-line">
                 {cases.map((c) => (
                   <article key={c.slug} className="bg-paper p-5 md:p-10">
-                    <div className="tracked text-xs text-subtle mb-3">{c.client}</div>
+                    <div className="tracked text-xs text-ink/65 mb-3">{c.client}</div>
                     <h2 className="display-heading text-2xl mb-4">{c.title}</h2>
                     <p className="text-sm text-ink/70 leading-relaxed mb-6">{c.summary}</p>
                     <div className="pt-6 border-t border-line">
-                      <div className="tracked text-[10px] text-brand-green mb-2">Resultat</div>
+                      <div className="tracked text-[11px] text-brand-green-strong mb-2">Resultat</div>
                       <p className="text-sm font-semibold">{c.result}</p>
                     </div>
                     <div className="mt-6 flex flex-wrap gap-2">
                       {c.tags.map((t) => (
-                        <span key={t} className="text-[11px] tracked-tight border border-line px-2.5 py-1 text-subtle">{t}</span>
+                        <span key={t} className="text-[11px] tracked-tight border border-line px-2.5 py-1 text-ink/65">{t}</span>
                       ))}
                     </div>
                   </article>
@@ -96,7 +96,7 @@ function EmptyState() {
       <Link
         to="/"
         hash="arbetssatt"
-        className="mt-8 group inline-flex items-center gap-2 bg-ink text-paper px-5 py-3 text-sm font-semibold hover:bg-brand-green transition-colors"
+        className="mt-8 group inline-flex items-center gap-2 bg-ink text-paper px-6 py-3.5 text-sm font-semibold hover:bg-brand-green transition-colors"
       >
         Se hur vi jobbar
         <ArrowUpRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" strokeWidth={2.5} />

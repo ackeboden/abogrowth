@@ -9,6 +9,7 @@ const rotatingWords = ["systemen", "verktygen", "marknadsföringen", "försäljn
 
 function RotatingWord() {
   const [index, setIndex] = useState(0);
+  const [harRoterat, setHarRoterat] = useState(false);
   const [reduced, setReduced] = useState(false);
 
   useEffect(() => {
@@ -23,6 +24,7 @@ function RotatingWord() {
     if (reduced) return;
     const id = setInterval(() => {
       setIndex((i) => (i + 1) % rotatingWords.length);
+      setHarRoterat(true);
     }, 3000);
     return () => clearInterval(id);
   }, [reduced]);
@@ -31,7 +33,7 @@ function RotatingWord() {
 
   return (
     <span
-      className="relative inline-grid align-baseline text-brand-green"
+      className="relative inline-grid align-baseline text-brand-green-strong"
       aria-live="polite"
     >
       {/* Sizer: reserverar plats för det längsta ordet så rubriken inte hoppar.
@@ -45,7 +47,7 @@ function RotatingWord() {
         aria-hidden="true"
         className="col-start-1 row-start-1 whitespace-nowrap"
       >
-        <Bokstavsrad text={current} bas={0.3} steg={0.05} />
+        <Bokstavsrad text={current} bas={harRoterat ? 0.02 : 0.3} steg={0.05} />
       </span>
     </span>
   );
@@ -64,6 +66,8 @@ type HeroNode = {
   chip?: string;
   rot?: number;
   mobile?: boolean;
+  // Bara från lg-bredd: noder som annars krockar med rubriken på surfplatta
+  franLg?: boolean;
   dx: number;
   dy: number;
   dur: number;
@@ -72,7 +76,7 @@ type HeroNode = {
 const heroNodes: HeroNode[] = [
   { x: 71, y: 16, cx: 62, cy: 42, crot: -16, chip: "CRM", rot: -5, mobile: true, dx: 9, dy: -13, dur: 9 },
   { x: 88, y: 30, cx: 72, cy: 55, crot: 12, chip: "Analys", rot: 4, dx: -11, dy: 9, dur: 11 },
-  { x: 65, y: 46, cx: 58, cy: 60, crot: -9, chip: "AI", rot: -3, mobile: true, dx: 13, dy: 7, dur: 8 },
+  { x: 65, y: 46, cx: 58, cy: 60, crot: -9, chip: "AI", rot: -3, mobile: true, franLg: true, dx: 13, dy: 7, dur: 8 },
   { x: 91, y: 60, cx: 76, cy: 38, crot: 18, chip: "Ekonomi", rot: 6, dx: -8, dy: -11, dur: 12 },
   { x: 76, y: 78, cx: 66, cy: 50, crot: -14, chip: "Nyhetsbrev", rot: -4, mobile: true, dx: 10, dy: 10, dur: 10 },
   { x: 57, y: 12, cx: 70, cy: 62, crot: 10, chip: "Kalkyl", rot: 3, dx: -9, dy: 11, dur: 13 },
@@ -263,7 +267,7 @@ export function Hero() {
 
   return (
     <section ref={ref} id="top" className="snap-start relative bg-paper text-ink overflow-hidden">
-      <div className="relative min-h-svh flex items-center">
+      <div className="relative md:min-h-svh flex md:items-center">
       <div className="hero-par hero-par-1 absolute inset-0" aria-hidden="true">
         <div className="ai-glow" />
       </div>
@@ -282,7 +286,11 @@ export function Hero() {
             <line
               key={`hl-${a}-${b}`}
               className={`${scen === "ordning" ? "hero-link" : "opacity-0"} ${
-                heroNodes[a].mobile && heroNodes[b].mobile ? "" : "hidden md:block"
+                heroNodes[a].franLg || heroNodes[b].franLg
+                  ? "hidden lg:block"
+                  : heroNodes[a].mobile && heroNodes[b].mobile
+                    ? ""
+                    : "hidden md:block"
               }`}
               pathLength={1}
               x1={heroNodes[a].x}
@@ -311,7 +319,7 @@ export function Hero() {
             }}
             className={`hero-node absolute ${kaos ? "hero-node-snap" : ""} ${
               scen === "ordning" ? "hero-drift" : ""
-            } ${nd.mobile ? "" : "hidden md:block"}`}
+            } ${nd.franLg ? "hidden lg:block" : nd.mobile ? "" : "hidden md:block"}`}
             style={{
               left: `${kaos ? nd.cx : nd.x}%`,
               top: `${kaos ? nd.cy : nd.y}%`,
@@ -344,7 +352,7 @@ export function Hero() {
       <div className="hero-glow" aria-hidden="true" />
       <div className="hero-spot" aria-hidden="true" />
       {/* Vertikalt centrerat i skärmhöjden; pt klarar headern ovanpå */}
-      <div className="relative w-full mx-auto max-w-6xl px-6 pt-24 pb-14 md:pt-28 md:pb-20 grid md:grid-cols-12 gap-8 md:gap-12 items-end">
+      <div className="relative w-full mx-auto max-w-6xl px-6 pt-12 pb-14 md:pt-28 md:pb-20 grid md:grid-cols-12 gap-8 md:gap-12 items-end">
         <div className="md:col-span-12">
           <div className="eyebrow mb-8 hero-rise">ABO Growth · Digitala system & AI</div>
           {/* Skärmläsare får hela meningen; bokstavsspelet är rent visuellt.
@@ -359,24 +367,24 @@ export function Hero() {
               <Bokstavsrad text="en gång för alla." bas={0.55} />
             </span>
           </h1>
-          <p className="mt-8 max-w-xl text-lg text-ink/75 leading-relaxed hero-rise [animation-delay:700ms]">
+          <p className="mt-8 max-w-xl text-lg text-ink/75 leading-relaxed">
             Vi skapar ordning: en systemflora som hänger ihop, mindre
             dubbelarbete och en tydlig väg framåt.
           </p>
           <div className="mt-10 flex flex-wrap items-center gap-4 hero-rise [animation-delay:850ms]">
             <Link
               to="/boka"
-              className="inline-flex items-center gap-2 bg-brand-green text-paper px-6 py-3.5 text-sm font-semibold hover:bg-ink hover:text-paper transition-colors"
+              className="inline-flex items-center gap-2 bg-brand-green-strong text-paper px-6 py-3.5 text-sm font-semibold hover:bg-ink hover:text-paper transition-colors"
             >
               Boka ett samtal <ArrowUpRight className="h-4 w-4" strokeWidth={2.5} />
             </Link>
-            <a href="#systemkollen" className="group inline-flex items-center gap-1.5 text-sm font-semibold border-b-2 border-brand-green pb-1 hover:text-brand-green">
+            <a href="#systemkollen" className="group relative inline-flex items-center gap-1.5 text-sm font-semibold border-b-2 border-brand-green pb-1 hover:text-brand-green-strong after:absolute after:-inset-x-2 after:-inset-y-3 after:content-['']">
               Gör systemkollen
               <ArrowDown className="h-3.5 w-3.5 transition-transform group-hover:translate-y-0.5" strokeWidth={2.5} />
             </a>
           </div>
           {/* Svarar på besökarens första fråga: är det här för oss? */}
-          <p className="mt-8 flex items-start gap-2.5 text-sm text-subtle leading-relaxed hero-rise [animation-delay:1000ms]">
+          <p className="mt-8 flex items-start gap-2.5 text-sm text-ink/65 leading-relaxed hero-rise [animation-delay:1000ms]">
             <span aria-hidden="true" className="mt-2 h-px w-6 shrink-0 bg-brand-green" />
             För mindre bolag, från enmansföretag upp till ett femtiotal
             anställda, som inte har någon egen IT-avdelning.

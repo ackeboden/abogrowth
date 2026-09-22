@@ -26,7 +26,7 @@ const GREEN = "#1F8A5C";
 
 /** Enkel figur (person). tone styr färgen. */
 function Figur({ w = 44, tone = "ink" }: { w?: number; tone?: "ink" | "green" | "paper" | "subtle" }) {
-  const color = tone === "green" ? GREEN : tone === "paper" ? "#FAF9F7" : tone === "subtle" ? "#9AA39E" : "#1A1D1F";
+  const color = tone === "green" ? GREEN : tone === "paper" ? "#FAF9F7" : tone === "subtle" ? "#8A8D90" : "#1A1D1F";
   return (
     <svg width={w} viewBox="0 0 44 60" fill="none" aria-hidden="true">
       <circle cx="22" cy="13" r="10" fill={color} />
@@ -65,7 +65,7 @@ function ToolChip({
         style={{ ["--rot" as string]: `${chip.rot ?? 0}deg`, transitionDelay: `${delay}s`, animationDelay: `${delay}s` }}
       >
         {chip.label}
-        {cut && <span aria-hidden="true" className="absolute inset-0 flex items-center justify-center text-subtle text-lg">✕</span>}
+        {cut && <span aria-hidden="true" className="absolute inset-0 flex items-center justify-center text-ink/65 text-lg">✕</span>}
       </div>
     </div>
   );
@@ -76,7 +76,7 @@ function Coin({ x, y, delay }: { x: number; y: number; delay: number }) {
   return (
     <span
       aria-hidden="true"
-      className="resan-coin absolute flex items-center justify-center h-5 w-5 rounded-full bg-amber-200 text-amber-800 text-[9px] font-bold border border-amber-300"
+      className="resan-coin absolute flex items-center justify-center h-5 w-5 rounded-full bg-white text-ink/70 text-[11px] font-bold border border-subtle/60"
       style={{ left: `${x}%`, top: `${y}%`, animationDelay: `${delay}s`, zIndex: 1 }}
     >
       kr
@@ -127,7 +127,7 @@ function ActKaos() {
                 <line
                   key={i}
                   x1={x1} y1={y1} x2={x2} y2={y2}
-                  stroke="#B9433A" strokeOpacity="0.35" strokeWidth="1"
+                  stroke="#8A8D90" strokeOpacity="0.55" strokeWidth="1"
                   strokeDasharray="3 3" vectorEffect="non-scaling-stroke"
                 />
               ))}
@@ -141,7 +141,7 @@ function ActKaos() {
             <div className="resan-fade absolute" style={{ left: "48%", top: "88%", transform: "translate(-50%,-50%)" }}>
               <div className="relative">
                 <Figur w={38} tone="subtle" />
-                <span className="absolute -top-3 -right-3 text-lg font-bold text-[#B9433A]">?</span>
+                <span className="absolute -top-3 -right-3 text-lg font-bold text-ink/70">?</span>
               </div>
             </div>
           </Scene>
@@ -197,7 +197,7 @@ function ActRedaUt() {
             <div className="resan-fade absolute" style={{ left: `${guide.x}%`, top: `${guide.y}%`, transform: "translate(-50%,-50%)", zIndex: 3 }}>
               <div className="flex flex-col items-center">
                 <Figur w={50} tone="green" />
-                <span className="mt-1 tracked text-[9px] text-brand-green whitespace-nowrap">ABO Growth</span>
+                <span className="mt-1 tracked text-[11px] text-brand-green-strong whitespace-nowrap">ABO Growth</span>
               </div>
             </div>
           </Scene>
@@ -232,7 +232,7 @@ function ActOrdning() {
           <div className="mt-8 flex flex-wrap gap-x-6 gap-y-2 text-sm text-ink/80">
             {["Allt hänger ihop", "Lägre verktygskostnad", "Teamet ombord"].map((t) => (
               <span key={t} className="inline-flex items-center gap-2">
-                <Check className="h-4 w-4 text-brand-green" strokeWidth={2.5} /> {t}
+                <Check className="h-4 w-4 text-brand-green-strong" strokeWidth={2.5} /> {t}
               </span>
             ))}
           </div>
@@ -254,7 +254,7 @@ function ActOrdning() {
             </svg>
             {/* Navet */}
             <div className="absolute" style={{ left: `${hub.x}%`, top: `${hub.y}%`, transform: "translate(-50%,-50%)", zIndex: 3 }}>
-              <div className="resan-chip resan-chip--calm bg-brand-green text-paper px-4 py-2 md:px-5 md:py-2.5 text-xs md:text-sm font-semibold shadow-md">
+              <div className="resan-chip resan-chip--calm bg-brand-green-strong text-paper px-4 py-2 md:px-5 md:py-2.5 text-xs md:text-sm font-semibold shadow-md">
                 Er affär
               </div>
             </div>
@@ -286,7 +286,7 @@ function Page() {
       <main>
         <PageHero
           eyebrow="Resan"
-          title={<>Från kaos till <span className="text-brand-green">ordning</span>.</>}
+          title={<>Från kaos till <span className="text-brand-green-strong">ordning</span>.</>}
           intro="Så här kan en resa med oss se ut. Scrolla för att följa med, från spretig verktygsflora som kostar pengar till en struktur som hänger ihop."
         />
 
@@ -297,7 +297,7 @@ function Page() {
         <section className="bg-mist text-ink border-y border-line">
           <div className="mx-auto max-w-6xl px-6 py-16 md:py-20 grid md:grid-cols-12 gap-10 items-center">
             <div className="md:col-span-8">
-              <div className="eyebrow mb-4 text-brand-green">Nästa steg</div>
+              <div className="eyebrow mb-4 text-brand-green-strong">Nästa steg</div>
               <h2 className="display-heading text-3xl md:text-5xl text-ink">Redo för samma resa?</h2>
               <p className="mt-5 text-ink/75 max-w-xl leading-relaxed">
                 Boka ett kort första samtal, så börjar vi där ni står idag.
@@ -306,11 +306,11 @@ function Page() {
             <div className="md:col-span-4 md:text-right">
               <Link
                 to="/boka"
-                className="inline-flex items-center gap-2 bg-brand-green text-paper px-6 py-4 text-sm font-semibold hover:bg-ink hover:text-paper transition-colors"
+                className="inline-flex items-center gap-2 bg-brand-green-strong text-paper px-6 py-3.5 text-sm font-semibold hover:bg-ink hover:text-paper transition-colors"
               >
                 Boka ett samtal <ArrowUpRight className="h-4 w-4" strokeWidth={2.5} />
               </Link>
-              <div className="mt-3 text-xs text-subtle">Svar inom ett dygn.</div>
+              <div className="mt-3 text-xs text-ink/65">Svar inom ett dygn.</div>
             </div>
           </div>
         </section>

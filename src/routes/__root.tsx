@@ -21,7 +21,7 @@ function NotFoundComponent() {
         <div className="max-w-md text-center">
           <div className="eyebrow mb-4">404</div>
           <h1 className="display-heading text-4xl md:text-5xl">
-            Sidan finns <span className="text-brand-green">inte här</span>.
+            Sidan finns <span className="text-brand-green-strong">inte här</span>.
           </h1>
           <p className="mt-5 text-sm text-ink/65 leading-relaxed">
             Sidan du letar efter finns inte eller har flyttats.
@@ -64,7 +64,7 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
           </button>
           <a
             href="/"
-            className="inline-flex items-center justify-center border border-line bg-white px-5 py-2.5 text-sm font-semibold text-ink transition-colors hover:border-brand-green hover:text-brand-green"
+            className="inline-flex items-center justify-center border border-line bg-white px-5 py-2.5 text-sm font-semibold text-ink transition-colors hover:border-brand-green hover:text-brand-green-strong"
           >
             Till startsidan
           </a>

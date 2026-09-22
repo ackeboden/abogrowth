@@ -990,9 +990,9 @@ export function SystemKollen() {
       <div className="relative mx-auto max-w-6xl px-6 py-24 md:py-32">
         <Reveal>
           <div className="max-w-3xl">
-            <div className="eyebrow mb-5">Huvudtjänst · Digitala system & AI</div>
+            <div className="mb-5 text-[0.7rem] font-bold uppercase tracking-[0.22em] text-paper/70">Huvudtjänst · Digitala system & AI</div>
             <h2 className="display-heading text-3xl md:text-5xl text-paper">
-              Gör <span className="text-brand-green">systemkollen</span>.
+              Gör <span className="text-brand-green-strong">systemkollen</span>.
             </h2>
             <p className="mt-6 text-paper/75 leading-relaxed max-w-2xl">
               Skriv in systemen ni faktiskt använder och se er egen karta växa
@@ -1039,14 +1039,14 @@ export function SystemKollen() {
                         className="flex w-full items-center justify-between px-4 py-2.5 text-sm text-left text-ink/85 hover:bg-mist"
                       >
                         <span>{f.namn}</span>
-                        <span className="tracked text-[9px] text-subtle">{kategoriNamn[f.kat]}</span>
+                        <span className="tracked text-[11px] text-ink/65">{kategoriNamn[f.kat]}</span>
                       </button>
                     ))}
                     {sok.trim().length >= 2 && !exaktTraff && (
                       <button
                         type="button"
                         onClick={() => setOkand(sok.trim())}
-                        className="flex w-full items-center gap-2 px-4 py-2.5 text-sm text-left text-brand-green hover:bg-mist border-t border-line"
+                        className="flex w-full items-center gap-2 px-4 py-2.5 text-sm text-left text-brand-green-strong hover:bg-mist border-t border-line"
                       >
                         <Plus className="h-3.5 w-3.5" strokeWidth={2.5} />
                         Lägg till &quot;{sok.trim()}&quot;
@@ -1068,7 +1068,7 @@ export function SystemKollen() {
                         key={kat}
                         type="button"
                         onClick={() => laggTill(okand, kat)}
-                        className="px-3 py-1.5 text-xs font-semibold border border-line text-ink/75 hover:border-brand-green hover:text-ink transition-colors"
+                        className="px-3 py-3 md:py-1.5 text-xs font-semibold border border-line text-ink/75 hover:border-brand-green hover:text-ink transition-colors"
                       >
                         {kategoriNamn[kat]}
                       </button>
@@ -1079,7 +1079,7 @@ export function SystemKollen() {
 
               {/* Snabbval */}
               <div className="mt-4 flex flex-wrap items-center gap-2">
-                <span className="tracked text-[9px] text-paper/50 mr-1">Vanliga:</span>
+                <span className="tracked text-[11px] text-paper/50 mr-1">Vanliga:</span>
                 {snabbval
                   .filter((namn) => !valda.some((v) => v.namn === namn))
                   .slice(0, mobil ? 6 : 10)
@@ -1091,7 +1091,7 @@ export function SystemKollen() {
                         type="button"
                         onClick={() => laggTill(post.namn, post.kat)}
                         disabled={n >= MAX_SYSTEM}
-                        className="px-3 py-1.5 text-xs font-semibold border border-paper/20 text-paper/75 hover:border-brand-green hover:text-paper transition-colors disabled:opacity-40"
+                        className="px-3 py-3 md:py-1.5 text-xs font-semibold border border-paper/20 text-paper/75 hover:border-brand-green hover:text-paper transition-colors disabled:opacity-40"
                       >
                         {namn}
                       </button>
@@ -1112,7 +1112,7 @@ export function SystemKollen() {
                         type="button"
                         onClick={() => taBort(v.namn)}
                         aria-label={`Ta bort ${v.namn}`}
-                        className="text-paper/60 hover:text-paper"
+                        className="p-2 -m-2 text-paper/60 hover:text-paper"
                       >
                         <X className="h-3 w-3" strokeWidth={2.5} />
                       </button>
@@ -1132,7 +1132,7 @@ export function SystemKollen() {
             onClick={() => setEtikett(null)}
           >
             {n === 0 ? (
-              <p className="absolute inset-0 flex items-center justify-center px-8 text-center text-sm text-subtle">
+              <p className="absolute inset-0 flex items-center justify-center px-8 text-center text-sm text-ink/65">
                 Sök eller välj era system ovan, så byggs er karta här.
               </p>
             ) : (
@@ -1232,7 +1232,7 @@ export function SystemKollen() {
                   className="jungle-late absolute"
                   style={{ left: `${hub.x}%`, top: `${hub.y}%`, transform: "translate(-50%, -50%)", transitionDelay: "0.45s", zIndex: 2 }}
                 >
-                  <div className="sysmap-node-box bg-brand-green text-paper shadow-md whitespace-nowrap px-4 py-2 md:px-5 md:py-2.5 text-xs md:text-sm font-semibold">
+                  <div className="sysmap-node-box bg-brand-green-strong text-paper shadow-md whitespace-nowrap px-4 py-2 md:px-5 md:py-2.5 text-xs md:text-sm font-semibold">
                     Er affär
                   </div>
                 </div>
@@ -1246,7 +1246,7 @@ export function SystemKollen() {
                       className="sysmap-node absolute"
                       style={{ left: `${p.x}%`, top: `${p.y}%`, transform: `translate(-50%, -50%) rotate(${rot}deg)`, zIndex: 1 }}
                     >
-                      <div className="jungle-pop sysmap-node-box whitespace-nowrap bg-white border border-line text-ink/80 shadow-sm px-2 py-1 md:px-3 md:py-1.5 text-[10px] md:text-xs font-semibold">
+                      <div className="jungle-pop sysmap-node-box whitespace-nowrap bg-white border border-line text-ink/80 shadow-sm px-2 py-1 md:px-3 md:py-1.5 text-[11px] md:text-xs font-semibold">
                         {v.namn}
                       </div>
                     </div>
@@ -1267,7 +1267,7 @@ export function SystemKollen() {
                     setFas("formular");
                   }}
                   disabled={n < 2}
-                  className="inline-flex items-center gap-2 bg-brand-green text-paper hover:bg-paper hover:text-ink px-6 py-3.5 text-sm font-semibold transition-colors disabled:opacity-40 disabled:pointer-events-none"
+                  className="inline-flex items-center gap-2 bg-brand-green-strong text-paper hover:bg-paper hover:text-ink px-6 py-3.5 text-sm font-semibold transition-colors disabled:opacity-40 disabled:pointer-events-none"
                 >
                   Skapa ordning <ArrowUpRight className="h-4 w-4" strokeWidth={2.5} />
                 </button>
@@ -1320,7 +1320,7 @@ export function SystemKollen() {
                   <button
                     type="submit"
                     disabled={skickar}
-                    className="inline-flex items-center gap-2 bg-brand-green text-paper px-6 py-3 text-sm font-semibold transition-colors hover:bg-ink hover:text-paper disabled:opacity-50"
+                    className="inline-flex items-center gap-2 bg-brand-green-strong text-paper px-6 py-3.5 text-sm font-semibold transition-colors hover:bg-ink hover:text-paper disabled:opacity-50"
                   >
                     {skickar ? "Ordnar ..." : "Ordna min karta"}
                     <ArrowUpRight className="h-4 w-4" strokeWidth={2.5} />
@@ -1328,7 +1328,7 @@ export function SystemKollen() {
                   <button
                     type="button"
                     onClick={() => setFas("bygga")}
-                    className="text-sm text-subtle hover:text-ink underline underline-offset-4"
+                    className="text-sm text-ink/65 hover:text-ink underline underline-offset-4"
                   >
                     Tillbaka
                   </button>
@@ -1343,11 +1343,11 @@ export function SystemKollen() {
                     <p className="display-heading text-xl md:text-2xl text-paper">
                       {k > 0 ? (
                         <>
-                          {n} system. <span className="text-brand-green">Ett förslag: {k} {k === 1 ? "koppling" : "kopplingar"}.</span>
+                          {n} system. <span className="text-brand-green-strong">Ett förslag: {k} {k === 1 ? "koppling" : "kopplingar"}.</span>
                         </>
                       ) : (
                         <>
-                          {n} system, <span className="text-brand-green">inga givna kopplingar.</span>
+                          {n} system, <span className="text-brand-green-strong">inga givna kopplingar.</span>
                         </>
                       )}
                     </p>
@@ -1361,7 +1361,7 @@ export function SystemKollen() {
                     <Link
                       to="/boka"
                       onClick={sparaBokningsKontext}
-                      className="inline-flex items-center gap-2 bg-brand-green text-paper hover:bg-paper hover:text-ink px-6 py-3.5 text-sm font-semibold transition-colors"
+                      className="inline-flex items-center gap-2 bg-brand-green-strong text-paper hover:bg-paper hover:text-ink px-6 py-3.5 text-sm font-semibold transition-colors"
                     >
                       Boka ett samtal <ArrowUpRight className="h-4 w-4" strokeWidth={2.5} />
                     </Link>
@@ -1384,14 +1384,14 @@ export function SystemKollen() {
                     className="jungle-late mt-8 max-w-3xl border border-line bg-white p-5 md:p-6"
                     style={{ transitionDelay: "1.2s" }}
                   >
-                    <p className="tracked text-[10px] text-subtle mb-4">Tips utifrån er karta</p>
+                    <p className="tracked text-[11px] text-ink/65 mb-4">Tips utifrån er karta</p>
                     <div className="space-y-3.5">
                       <div className="flex items-start gap-3 text-sm text-ink/75 leading-relaxed">
                         <span
-                          className={`tracked shrink-0 mt-0.5 px-2 py-0.5 border text-[9px] ${
+                          className={`tracked shrink-0 mt-0.5 px-2 py-0.5 border text-[11px] ${
                             tips[0].typ === "byte"
-                              ? "border-brand-blue/50 text-brand-blue bg-brand-blue/5"
-                              : "border-brand-green/50 text-brand-green bg-brand-green/5"
+                              ? "border-brand-blue/50 text-brand-blue-strong bg-brand-blue/5"
+                              : "border-brand-green/50 text-brand-green-strong bg-brand-green/5"
                           }`}
                         >
                           {tips[0].typ === "byte" ? "Överlapp" : "Komplement"}
@@ -1405,10 +1405,10 @@ export function SystemKollen() {
                           className="flex items-start gap-3 text-sm text-ink/75 leading-relaxed select-none pointer-events-none"
                         >
                           <span
-                            className={`tracked shrink-0 mt-0.5 px-2 py-0.5 border text-[9px] ${
+                            className={`tracked shrink-0 mt-0.5 px-2 py-0.5 border text-[11px] ${
                               t.typ === "byte"
-                                ? "border-brand-blue/50 text-brand-blue bg-brand-blue/5"
-                                : "border-brand-green/50 text-brand-green bg-brand-green/5"
+                                ? "border-brand-blue/50 text-brand-blue-strong bg-brand-blue/5"
+                                : "border-brand-green/50 text-brand-green-strong bg-brand-green/5"
                             }`}
                           >
                             {t.typ === "byte" ? "Överlapp" : "Komplement"}
@@ -1431,7 +1431,7 @@ export function SystemKollen() {
                         <Link
                           to="/boka"
                           onClick={sparaBokningsKontext}
-                          className="font-semibold text-ink border-b border-brand-green hover:text-brand-green"
+                          className="font-semibold text-ink border-b border-brand-green hover:text-brand-green-strong"
                         >
                           kostnadsfritt samtal
                         </Link>

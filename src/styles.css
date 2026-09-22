@@ -35,6 +35,8 @@
   --color-paper: var(--paper);
   --color-mist: var(--mist);
   --color-brand-green: var(--brand-green);
+  --color-brand-green-strong: var(--brand-green-strong);
+  --color-brand-blue-strong: var(--brand-blue-strong);
   --color-brand-blue: var(--brand-blue);
   --color-line: var(--line);
   --color-subtle: var(--subtle);
@@ -58,6 +60,16 @@
      delade ytan, och paletten ska hållas liten. */
   --mist: #E7E5E2;
   --brand-green: #1F8A5C;
+  /* Tillgänglig nyans av profilens gröna, för knappar och liten text.
+     #1F8A5C ger 4,1:1 mot vit text och Paper, under WCAG:s krav 4,5:1.
+     #1D8256 ger 4,8:1 respektive 4,6:1 och syns i praktiken inte som
+     en annan färg. Ytor, linjer, markeringar och stor text behåller
+     profilens exakta grönt. */
+  --brand-green-strong: #1D8256;
+  /* Små versaletiketter (eyebrow) står även på Ljusgrå, där krävs en djupare
+     ton för 4,5:1. Samma skäl för liten blå text. */
+  --brand-green-deep: #18704B;
+  --brand-blue-strong: #4D6B87;
   --brand-blue: #5B7B9A;
   --line: #E7E5E2;
   --subtle: #8A8D90;
@@ -112,6 +124,9 @@
 
   html {
     scroll-behavior: smooth;
+    /* Headern är fast och 65 px hög: utan det här landar ankarlänkar
+       (Arbetssätt, Se alla tjänster) med rubriken gömd bakom menyn. */
+    scroll-padding-top: 4.5rem;
     /* Mjukt snäpp mot sektioner som bär .snap-start. proximity i stället
        för mandatory: långa sektioner (FAQ, kontakt) scrollar fritt. */
     scroll-snap-type: y proximity;
@@ -159,7 +174,7 @@ h2.display-heading {
   letter-spacing: 0.22em;
   text-transform: uppercase;
   font-weight: 700;
-  color: var(--brand-green);
+  color: var(--brand-green-deep);
 }
 
 @utility rule {

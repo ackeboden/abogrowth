@@ -52,7 +52,7 @@ function Page() {
           eyebrow="Integritet & cookies"
           title={
             <>
-              Ditt besök, <span className="text-brand-green">dina villkor</span>.
+              Ditt besök, <span className="text-brand-green-strong">dina villkor</span>.
             </>
           }
           intro="Kort och ärligt om vad sajten sparar, varför, och hur du ändrar dig. Ingen juridisk dimma."
@@ -82,7 +82,7 @@ function Page() {
                 <button
                   type="button"
                   onClick={oppnaCookieBanner}
-                  className="inline-flex items-center gap-2 bg-ink text-paper px-5 py-3 text-sm font-semibold hover:bg-brand-green transition-colors"
+                  className="inline-flex items-center gap-2 bg-ink text-paper px-6 py-3.5 text-sm font-semibold hover:bg-brand-green transition-colors"
                 >
                   Öppna cookieinställningarna
                 </button>
@@ -90,7 +90,7 @@ function Page() {
                   Frågor om integritet? Mejla{" "}
                   <a
                     href={`mailto:${CONTACT_EMAIL}`}
-                    className="font-semibold border-b-2 border-brand-green pb-0.5 hover:text-brand-green"
+                    className="font-semibold border-b-2 border-brand-green pb-0.5 hover:text-brand-green-strong"
                   >
                     {CONTACT_EMAIL}
                   </a>

@@ -59,7 +59,7 @@ function KanalMap() {
         <Reveal className="max-w-2xl">
           <div className="eyebrow mb-5">Löpande optimering</div>
           <h2 className="display-heading text-3xl md:text-4xl">
-            Budgeten ska ligga <span className="text-brand-green">där den gör nytta</span>.
+            Budgeten ska ligga <span className="text-brand-green-strong">där den gör nytta</span>.
           </h2>
           <p className="mt-6 text-ink/75 leading-relaxed">
             Vi följer varje kanal mot samma mål. Det som levererar får mer
@@ -117,7 +117,7 @@ function KanalMap() {
               <div
                 className={`sysmap-node-box whitespace-nowrap px-3.5 py-2 md:px-5 md:py-2.5 text-xs md:text-sm font-semibold ${
                   n.hub
-                    ? "bg-brand-green text-paper shadow-md"
+                    ? "bg-brand-green-strong text-paper shadow-md"
                     : "bg-white border border-line text-ink/80 shadow-sm"
                 }`}
                 style={{ animationDelay: `${1.6 + i * 0.8}s` }}
@@ -125,10 +125,10 @@ function KanalMap() {
                 {n.label}
                 {n.status && (
                   <span
-                    className={`sysmap-badge tracked text-[9px] ml-2 px-1.5 py-0.5 align-middle ${
+                    className={`sysmap-badge tracked text-[11px] ml-2 px-1.5 py-0.5 align-middle ${
                       n.statusTyp === "skala"
-                        ? "bg-brand-green text-paper"
-                        : "border border-brand-green/40 text-brand-green"
+                        ? "bg-brand-green-strong text-paper"
+                        : "border border-brand-green/40 text-brand-green-strong"
                     }`}
                     style={{ transitionDelay: `${2 + i * 0.2}s` }}
                   >
@@ -139,7 +139,7 @@ function KanalMap() {
             </div>
           ))}
         </div>
-        <p className="mt-8 text-sm text-subtle max-w-xl">
+        <p className="mt-8 text-sm text-ink/65 max-w-xl">
           Kanalerna är exempel. Vilka som skalas hos er avgör siffrorna, inte vanan.
         </p>
       </div>
@@ -169,8 +169,9 @@ function Page() {
       <main>
         <PageHero
           eyebrow="Optimerade kampanjer"
-          title={<>Rätt budskap, på rätt kanaler, <span className="text-brand-green">optimerat löpande</span>.</>}
+          title={<>Rätt budskap, på rätt kanaler, <span className="text-brand-green-strong">optimerat löpande</span>.</>}
           intro="En stödtjänst som drar nytta av era ihopkopplade system. Vi börjar i affärsmålet, hittar var er målgrupp finns och väljer kanaler därefter. Sedan optimerar vi mot resultat, inte mot att synas för synandets skull."
+          cta
         />
 
         <KanalMap />
@@ -185,7 +186,7 @@ function Page() {
               {deliverables.map((d, i) => (
                 <Reveal key={d.t} delay={i * 90}>
                   <div className="h-full bg-white border border-line p-5 md:p-8 shadow-sm transition-all duration-300 hover:shadow-md hover:border-brand-green/40 hover:-translate-y-1">
-                    <Check className="h-5 w-5 text-brand-green mb-4" strokeWidth={2.5} />
+                    <Check className="h-5 w-5 text-brand-green-strong mb-4" strokeWidth={2.5} />
                     <h3 className="display-heading text-lg mb-3">{d.t}</h3>
                     <p className="text-sm text-ink/70 leading-relaxed">{d.b}</p>
                   </div>
@@ -195,17 +196,17 @@ function Page() {
           </div>
         </section>
 
-        <section className="border-b border-line">
+        <section className="border-b border-line bg-mist">
           <div className="mx-auto max-w-6xl px-6 py-20 md:py-28 grid md:grid-cols-12 gap-12">
             <Reveal className="md:col-span-4">
               <div className="eyebrow mb-5">Upplägg</div>
-              <h2 className="display-heading text-3xl md:text-4xl">Tre faser. <span className="text-brand-green">Tydliga milstolpar.</span></h2>
+              <h2 className="display-heading text-3xl md:text-4xl">Tre faser. <span className="text-brand-green-strong">Tydliga milstolpar.</span></h2>
             </Reveal>
             <div className="md:col-span-8 space-y-6">
               {steps.map((s, i) => (
                 <Reveal key={s.n} delay={i * 110}>
                   <div className="bg-white border border-line p-5 md:p-8 shadow-sm transition-all duration-300 hover:shadow-md hover:border-brand-green/40 hover:-translate-y-1 flex gap-6">
-                    <div className="tracked text-xs text-brand-green pt-1 w-10 shrink-0">{s.n}</div>
+                    <div className="tracked text-xs text-brand-green-strong pt-1 w-10 shrink-0">{s.n}</div>
                     <div>
                       <h3 className="display-heading text-lg mb-2">{s.t}</h3>
                       <p className="text-sm text-ink/70 leading-relaxed">{s.b}</p>
@@ -225,11 +226,11 @@ function Page() {
         <section className="border-b border-line">
           <div className="mx-auto max-w-6xl px-6 py-16 flex flex-wrap items-center justify-between gap-6">
             <Link to="/tjanster/digitala-system-ai" className="group inline-flex items-center gap-3 text-sm font-semibold">
-              <span className="tracked text-xs text-subtle">Nästa tjänst</span>
-              <span className="border-b-2 border-brand-green pb-0.5 group-hover:text-brand-green">Digitala system & AI-verktyg</span>
-              <ArrowUpRight className="h-4 w-4 text-brand-green" strokeWidth={2.5} />
+              <span className="tracked text-xs text-ink/65">Nästa tjänst</span>
+              <span className="border-b-2 border-brand-green pb-0.5 group-hover:text-brand-green-strong">Digitala system & AI-verktyg</span>
+              <ArrowUpRight className="h-4 w-4 text-brand-green-strong" strokeWidth={2.5} />
             </Link>
-            <Link to="/" className="text-sm text-subtle hover:text-ink">← Tillbaka till startsidan</Link>
+            <Link to="/" className="text-sm text-ink/65 hover:text-ink">← Tillbaka till startsidan</Link>
           </div>
         </section>
       </main>

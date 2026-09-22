@@ -196,8 +196,8 @@ export function Header() {
               onClick={() => setTjOpen((o) => !o)}
               aria-expanded={tjOpen}
               aria-controls="tjanstemeny"
-              className={`inline-flex items-center gap-1 hover:text-brand-green transition-colors ${
-                paTjanstesida || tjOpen ? "text-brand-green" : ""
+              className={`inline-flex items-center gap-1 py-2.5 hover:text-brand-green-strong transition-colors ${
+                paTjanstesida || tjOpen ? "text-brand-green-strong" : ""
               }`}
             >
               Tjänster
@@ -209,7 +209,7 @@ export function Header() {
             {tjOpen && (
               <div
                 id="tjanstemeny"
-                className="absolute left-1/2 top-full mt-4 w-80 -translate-x-1/2 bg-white border border-line shadow-xl"
+                className="absolute left-1/2 top-full mt-2 w-80 -translate-x-1/2 bg-white border border-line shadow-xl"
               >
                 {TJANSTER.map((t) => (
                   <Link
@@ -222,7 +222,7 @@ export function Header() {
                       className={`mt-1 h-8 w-1 shrink-0 ${t.grund ? "bg-brand-green" : "bg-brand-blue"}`}
                     />
                     <span>
-                      <span className="block font-semibold text-ink group-hover:text-brand-green transition-colors">
+                      <span className="block font-semibold text-ink group-hover:text-brand-green-strong transition-colors">
                         {t.titel}
                       </span>
                       <span className="block mt-0.5 text-xs text-ink/65 leading-snug">{t.rad}</span>
@@ -239,7 +239,7 @@ export function Header() {
                       document.getElementById("tjanster")?.scrollIntoView({ behavior: "smooth" });
                     }
                   }}
-                  className="flex items-center justify-between px-4 py-3 bg-paper text-xs font-semibold text-ink/75 hover:text-brand-green transition-colors"
+                  className="flex items-center justify-between px-4 py-3 bg-paper text-xs font-semibold text-ink/75 hover:text-brand-green-strong transition-colors"
                 >
                   Se alla tjänster
                   <ArrowUpRight className="h-3.5 w-3.5" strokeWidth={2.5} />
@@ -253,15 +253,15 @@ export function Header() {
               to={l.to}
               hash={"hash" in l ? l.hash : undefined}
               onClick={onNavClick(l)}
-              className="hover:text-brand-green transition-colors"
-              activeProps={l.to !== "/" ? { className: "text-brand-green" } : undefined}
+              className="py-2.5 hover:text-brand-green-strong transition-colors"
+              activeProps={l.to !== "/" ? { className: "text-brand-green-strong" } : undefined}
             >
               {l.label}
             </Link>
           ))}
           <Link
             to="/boka"
-            className="inline-flex items-center gap-1.5 bg-ink text-paper px-4 py-2 hover:bg-brand-green transition-colors font-semibold"
+            className="inline-flex items-center gap-1.5 bg-brand-green-strong text-paper px-4 py-2 hover:bg-ink transition-colors font-semibold"
           >
             Boka ett samtal <ArrowUpRight className="h-3.5 w-3.5" strokeWidth={2.5} />
           </Link>
@@ -272,7 +272,7 @@ export function Header() {
           aria-expanded={open}
           aria-controls="mobilmeny"
           aria-label={open ? "Stäng menyn" : "Öppna menyn"}
-          className="md:hidden inline-flex items-center justify-center h-10 w-10 -mr-2 text-ink hover:text-brand-green transition-colors"
+          className="md:hidden inline-flex items-center justify-center h-11 w-11 -mr-2 text-ink hover:text-brand-green-strong transition-colors"
         >
           {open ? <X className="h-6 w-6" strokeWidth={2} /> : <Menu className="h-6 w-6" strokeWidth={2} />}
         </button>
@@ -284,13 +284,13 @@ export function Header() {
           className="md:hidden absolute inset-x-0 top-16 h-[calc(100vh-4rem)] bg-paper border-t border-line px-6 py-8 flex flex-col gap-1 overflow-y-auto"
         >
           <div className="pt-2 pb-3 border-b border-line">
-            <div className="tracked text-[10px] text-subtle mb-2">Tjänster</div>
+            <div className="tracked text-[11px] text-ink/65 mb-2">Tjänster</div>
             {TJANSTER.map((t) => (
               <Link
                 key={t.to}
                 to={t.to}
                 onClick={() => setOpen(false)}
-                className="flex items-center gap-3 py-2.5 text-lg font-semibold hover:text-brand-green transition-colors"
+                className="flex items-center gap-3 py-2.5 text-lg font-semibold hover:text-brand-green-strong transition-colors"
               >
                 <span aria-hidden="true" className={`h-5 w-1 ${t.grund ? "bg-brand-green" : "bg-brand-blue"}`} />
                 {t.titel}
@@ -303,7 +303,7 @@ export function Header() {
               to={l.to}
               hash={"hash" in l ? l.hash : undefined}
               onClick={onNavClick(l)}
-              className="py-4 text-lg font-semibold border-b border-line hover:text-brand-green transition-colors"
+              className="py-4 text-lg font-semibold border-b border-line hover:text-brand-green-strong transition-colors"
             >
               {l.label}
             </Link>
@@ -311,7 +311,7 @@ export function Header() {
           <Link
             to="/boka"
             onClick={() => setOpen(false)}
-            className="mt-8 inline-flex items-center justify-center gap-2 bg-ink text-paper px-6 py-4 text-sm font-semibold hover:bg-brand-green transition-colors"
+            className="mt-8 inline-flex items-center justify-center gap-2 bg-brand-green-strong text-paper px-6 py-3.5 text-sm font-semibold hover:bg-ink transition-colors"
           >
             Boka ett samtal <ArrowUpRight className="h-4 w-4" strokeWidth={2.5} />
           </Link>
@@ -335,17 +335,17 @@ export function Footer() {
           </p>
         </div>
         <div>
-          <div className="tracked text-[10px] text-brand-green mb-3">Sidor</div>
+          <div className="tracked text-[11px] text-paper/60 mb-3">Sidor</div>
           <ul className="space-y-2 text-sm">
-            <li><Link to="/tjanster/digitala-system-ai" className="hover:text-paper">Digitala system & AI</Link></li>
-            <li><Link to="/tjanster/affarsutveckling" className="hover:text-paper">Affärsutveckling</Link></li>
-            <li><Link to="/tjanster/optimerade-kampanjer" className="hover:text-paper">Optimerade kampanjer</Link></li>
-            <li><Link to="/pris" className="hover:text-paper">Prisuppskattning</Link></li>
-            <li><Link to="/boka" className="hover:text-paper">Boka ett samtal</Link></li>
-            <li><Link to="/om" className="hover:text-paper">Om</Link></li>
-            <li><Link to="/resan" className="hover:text-paper">Resan</Link></li>
-            <li><Link to="/sa-gar-det-till" className="hover:text-paper">Så går det till</Link></li>
-            <li><Link to="/case" className="hover:text-paper">Case</Link></li>
+            <li><Link to="/tjanster/digitala-system-ai" className="hover:text-paper relative after:absolute after:-inset-x-1 after:-inset-y-1.5 after:content-['']">Digitala system & AI</Link></li>
+            <li><Link to="/tjanster/affarsutveckling" className="hover:text-paper relative after:absolute after:-inset-x-1 after:-inset-y-1.5 after:content-['']">Affärsutveckling</Link></li>
+            <li><Link to="/tjanster/optimerade-kampanjer" className="hover:text-paper relative after:absolute after:-inset-x-1 after:-inset-y-1.5 after:content-['']">Optimerade kampanjer</Link></li>
+            <li><Link to="/pris" className="hover:text-paper relative after:absolute after:-inset-x-1 after:-inset-y-1.5 after:content-['']">Prisuppskattning</Link></li>
+            <li><Link to="/boka" className="hover:text-paper relative after:absolute after:-inset-x-1 after:-inset-y-1.5 after:content-['']">Boka ett samtal</Link></li>
+            <li><Link to="/om" className="hover:text-paper relative after:absolute after:-inset-x-1 after:-inset-y-1.5 after:content-['']">Om</Link></li>
+            <li><Link to="/resan" className="hover:text-paper relative after:absolute after:-inset-x-1 after:-inset-y-1.5 after:content-['']">Resan</Link></li>
+            <li><Link to="/sa-gar-det-till" className="hover:text-paper relative after:absolute after:-inset-x-1 after:-inset-y-1.5 after:content-['']">Så går det till</Link></li>
+            <li><Link to="/case" className="hover:text-paper relative after:absolute after:-inset-x-1 after:-inset-y-1.5 after:content-['']">Case</Link></li>
             <li>
               {/* Samma workaround som Headerns navlänkar: på startsidan
                   scrollar routern inte vid hash-navigering inom samma route */}
@@ -358,17 +358,17 @@ export function Footer() {
                     document.getElementById("kontakt")?.scrollIntoView({ behavior: "smooth" });
                   }
                 }}
-                className="hover:text-paper"
+                className="hover:text-paper relative after:absolute after:-inset-x-1 after:-inset-y-1.5 after:content-['']"
               >
                 Kontakt
               </Link>
             </li>
-            <li><Link to="/integritet" className="hover:text-paper">Integritet & cookies</Link></li>
+            <li><Link to="/integritet" className="hover:text-paper relative after:absolute after:-inset-x-1 after:-inset-y-1.5 after:content-['']">Integritet & cookies</Link></li>
             <li>
               <button
                 type="button"
                 onClick={() => window.dispatchEvent(new Event("visa-cookiebanner"))}
-                className="hover:text-paper"
+                className="hover:text-paper relative after:absolute after:-inset-x-1 after:-inset-y-1.5 after:content-['']"
               >
                 Cookieinställningar
               </button>
@@ -376,9 +376,9 @@ export function Footer() {
           </ul>
         </div>
         <div>
-          <div className="tracked text-[10px] text-brand-green mb-3">Kontakt</div>
+          <div className="tracked text-[11px] text-paper/60 mb-3">Kontakt</div>
           <ul className="space-y-2 text-sm">
-            <li><a href={`mailto:${CONTACT_EMAIL}`} className="hover:text-paper">{CONTACT_EMAIL}</a></li>
+            <li><a href={`mailto:${CONTACT_EMAIL}`} className="hover:text-paper relative after:absolute after:-inset-x-1 after:-inset-y-1.5 after:content-['']">{CONTACT_EMAIL}</a></li>
             <li>Stockholm, Sverige</li>
           </ul>
           <a
@@ -388,7 +388,7 @@ export function Footer() {
             aria-label="Alexander Bodén på LinkedIn (öppnas i ny flik)"
             className="mt-5 inline-flex items-center gap-2 border border-paper/25 px-3 py-2 text-sm transition-colors hover:border-brand-green hover:text-paper"
           >
-            <Linkedin className="h-4 w-4 text-brand-green" strokeWidth={2} />
+            <Linkedin className="h-4 w-4 text-brand-green-strong" strokeWidth={2} />
             LinkedIn
           </a>
         </div>
@@ -410,14 +410,14 @@ export function BookingCTA({
     <section className="bg-brand-green text-ink">
       <div className="mx-auto max-w-6xl px-6 py-16 md:py-20 grid md:grid-cols-12 gap-10 items-center">
         <div className="md:col-span-8">
-          <div className="tracked text-[10px] text-ink/80 mb-4">Boka samtal</div>
+          <div className="tracked text-[11px] text-ink/80 mb-4">Boka samtal</div>
           <h2 className="display-heading text-3xl md:text-5xl text-ink">{title}</h2>
           <p className="mt-5 text-ink max-w-xl leading-relaxed">{body}</p>
         </div>
         <div className="md:col-span-4 md:text-right">
           <Link
             to="/boka"
-            className="inline-flex items-center gap-2 bg-paper text-ink px-6 py-4 text-sm font-semibold hover:bg-ink hover:text-paper transition-colors"
+            className="inline-flex items-center gap-2 bg-paper text-ink px-6 py-3.5 text-sm font-semibold hover:bg-ink hover:text-paper transition-colors"
           >
             Boka ett samtal <ArrowUpRight className="h-4 w-4" strokeWidth={2.5} />
           </Link>
@@ -437,10 +437,13 @@ export function PageHero({
   eyebrow,
   title,
   intro,
+  cta = false,
 }: {
   eyebrow: string;
   title: React.ReactNode;
   intro: string;
+  /** Tjänstesidorna: visa bokning och priskalkyl redan i första skärmen. */
+  cta?: boolean;
 }) {
   return (
     <section className="border-b border-line">
@@ -448,6 +451,22 @@ export function PageHero({
         <div className="eyebrow mb-6">{eyebrow}</div>
         <h1 className="display-heading text-[40px] leading-[1.05] md:text-[68px] max-w-4xl">{title}</h1>
         <p className="mt-8 max-w-2xl text-lg text-ink/75 leading-relaxed">{intro}</p>
+        {cta && (
+          <div className="mt-10 flex flex-wrap items-center gap-x-6 gap-y-4">
+            <Link
+              to="/boka"
+              className="inline-flex items-center gap-2 bg-brand-green-strong text-paper px-6 py-3.5 text-sm font-semibold hover:bg-ink transition-colors"
+            >
+              Boka ett samtal <ArrowUpRight className="h-4 w-4" strokeWidth={2.5} />
+            </Link>
+            <Link
+              to="/pris"
+              className="relative text-sm font-semibold border-b-2 border-brand-green pb-1 hover:text-brand-green-strong transition-colors after:absolute after:-inset-x-2 after:-inset-y-3 after:content-['']"
+            >
+              Räkna ut ett riktpris
+            </Link>
+          </div>
+        )}
       </div>
     </section>
   );
