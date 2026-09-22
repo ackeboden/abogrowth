@@ -291,12 +291,12 @@ export function BookingCTA({
   body = "Boka ett kort första samtal. Vi lyssnar, ställer frågor och föreslår ett upplägg.",
 }: { title?: string; body?: string }) {
   return (
-    <section className="bg-brand-green text-paper">
+    <section className="bg-brand-green text-ink">
       <div className="mx-auto max-w-6xl px-6 py-16 md:py-20 grid md:grid-cols-12 gap-10 items-center">
         <div className="md:col-span-8">
-          <div className="tracked text-[10px] text-paper/70 mb-4">Boka samtal</div>
-          <h2 className="display-heading text-3xl md:text-5xl text-paper">{title}</h2>
-          <p className="mt-5 text-paper/85 max-w-xl leading-relaxed">{body}</p>
+          <div className="tracked text-[10px] text-ink/80 mb-4">Boka samtal</div>
+          <h2 className="display-heading text-3xl md:text-5xl text-ink">{title}</h2>
+          <p className="mt-5 text-ink max-w-xl leading-relaxed">{body}</p>
         </div>
         <div className="md:col-span-4 md:text-right">
           <Link
@@ -305,9 +305,9 @@ export function BookingCTA({
           >
             Boka ett samtal <ArrowUpRight className="h-4 w-4" strokeWidth={2.5} />
           </Link>
-          <div className="mt-3 text-xs text-paper/70">Svar inom ett dygn.</div>
+          <div className="mt-3 text-xs text-ink">Svar inom ett dygn.</div>
           <div className="mt-2 text-xs">
-            <Link to="/sa-gar-det-till" className="text-paper/80 underline underline-offset-4 hover:text-paper transition-colors">
+            <Link to="/sa-gar-det-till" className="text-ink underline underline-offset-4 hover:text-paper transition-colors">
               Så går det till →
             </Link>
           </div>
