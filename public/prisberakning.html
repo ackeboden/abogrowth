@@ -200,6 +200,30 @@
 <script>
 const RATE = 500;
 
+// Bolagets storlek frågas EN gång och styr pristrappan för alla valda
+// tjänster: större bolag betyder fler personer, fler system och mer
+// samordning. Trappan flyttar både timmarna (mult) och intervallets golv
+// och tak, annars äter golvet och taket upp skillnaden i små och stora
+// uppdrag och trappan syns inte alls.
+const FORETAG = {
+  title: "Ert företag",
+  questions: [
+    { id: "anstallda", label: "Hur många anställda är ni?",
+      options: [
+        { label:"1–10 anställda",  mult:1,   projekt:[15000,35000], lopande:[10000,25000] },
+        { label:"11–24 anställda", mult:1.4, projekt:[20000,45000], lopande:[13000,32000] },
+        { label:"25 eller fler",   mult:1.8, projekt:[25000,60000], lopande:[16000,40000] }
+      ] }
+  ]
+};
+const FORETAG_STEG = "_foretag";
+
+function foretagsNiva() {
+  const svar = (answers[FORETAG_STEG] || {}).anstallda;
+  const opts = FORETAG.questions[0].options;
+  return opts.find(o => o.label === svar) || opts[0];
+}
+
 const SERVICES = {
   system: {
     title: "Digitala system & AI",
@@ -233,8 +257,6 @@ const SERVICES = {
     questions: [
       { id: "omfattning", label: "Vad vill ni ha hjälp med?",
         options: [ {label:"Enbart tillväxtanalys",hours:10,type:"projekt"}, {label:"Analys + handlingsplan",hours:20,type:"projekt"}, {label:"Analys, plan och löpande uppföljning",hours:20,type:"löpande"} ] },
-      { id: "storlek", label: "Ungefärlig storlek på företaget?",
-        options: [ {label:"Under 10 anställda",mult:1}, {label:"10–50 anställda",mult:1.4}, {label:"Fler än 50 anställda",mult:1.8} ] },
       { id: "marknader", label: "Hur många marknader/segment ska analysen täcka?",
         options: [ {label:"En marknad/ett segment",hours:0}, {label:"Ett par marknader/segment",hours:6}, {label:"Flera marknader/segment",hours:14} ] },
       { id: "implementering", label: "Vill ni ha stöd vid genomförandet, eller bara strategin/planen?",
@@ -301,6 +323,8 @@ Object.entries(SERVICES).forEach(([key, svc]) => {
 
 document.getElementById("startBtn").addEventListener("click", () => {
   flatSteps = [];
+  answers[FORETAG_STEG] = answers[FORETAG_STEG] || {};
+  FORETAG.questions.forEach(q => flatSteps.push({ serviceKey: FORETAG_STEG, question: q }));
   selected.forEach(key => {
     SERVICES[key].questions.forEach(q => flatSteps.push({ serviceKey: key, question: q }));
   });
@@ -311,7 +335,7 @@ document.getElementById("startBtn").addEventListener("click", () => {
 
 function renderStep() {
   const step = flatSteps[stepIndex];
-  const svc = SERVICES[step.serviceKey];
+  const svc = step.serviceKey === FORETAG_STEG ? FORETAG : SERVICES[step.serviceKey];
   const q = step.question;
 
   document.getElementById("qServiceTag").textContent = svc.title;
@@ -401,19 +425,23 @@ function calcService(key) {
     if (opt.mult !== undefined) mult = opt.mult;
     if (opt.type !== undefined) type = opt.type;
   });
-  hours = hours * mult;
+  const niva = foretagsNiva();
+  hours = hours * mult * niva.mult;
   let low, high;
   if (type === "projekt") {
-    // Riktprisintervall per tjänst: håll ett engångsprojekt inom ~15–35 tkr.
+    // Riktprisintervall per tjänst. Golv och tak kommer ur pristrappan:
+    // 15–35 tkr för minsta bolagen, 20–45 och 25–60 tkr för de större.
+    const [golv, tak] = niva.projekt;
     const raw = hours * RATE;
-    low = Math.min(30000, Math.max(15000, Math.round(raw * 0.9 / 1000) * 1000));
-    high = Math.min(35000, Math.max(low + 5000, Math.round(raw * 1.3 / 1000) * 1000));
+    low = Math.min(tak - 5000, Math.max(golv, Math.round(raw * 0.9 / 1000) * 1000));
+    high = Math.min(tak, Math.max(low + 5000, Math.round(raw * 1.3 / 1000) * 1000));
   } else {
-    // Löpande samarbete per tjänst: håll månadspriset inom ~10–25 tkr/mån.
+    // Löpande samarbete per tjänst, samma trappa: 10–25, 13–32, 16–40 tkr/mån.
+    const [golv, tak] = niva.lopande;
     const monthlyHours = Math.round(hours * 0.4) + 4;
     const raw = monthlyHours * RATE;
-    low = Math.min(20000, Math.max(10000, Math.round(raw * 0.9 / 500) * 500));
-    high = Math.min(25000, Math.max(low + 3000, Math.round(raw * 1.3 / 500) * 500));
+    low = Math.min(tak - 5000, Math.max(golv, Math.round(raw * 0.9 / 500) * 500));
+    high = Math.min(tak, Math.max(low + 3000, Math.round(raw * 1.3 / 500) * 500));
   }
   return { title: svc.title, type, low, high, activities: svc.activities(a), note: svc.note };
 }
@@ -451,6 +479,7 @@ function finish() {
   });
 
   let answerLines = [];
+  answerLines.push(`${FORETAG.questions[0].label} -> ${(answers[FORETAG_STEG] || {}).anstallda || "ej angivet"}`);
   Array.from(selected).forEach(key => {
     const svc = SERVICES[key];
     answerLines.push(`${svc.title}:`);
