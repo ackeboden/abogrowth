@@ -745,21 +745,53 @@ function beraknaTips(valda: ValtSystem[]): Tips[] {
   return tips.slice(0, 4);
 }
 
-// Kaosplatser för upp till 12 noder (index-styrt, deterministiskt).
-const kaosPlatser = [
-  { x: 34, y: 26, r: -9 },
-  { x: 62, y: 22, r: 7 },
-  { x: 46, y: 48, r: -6 },
-  { x: 70, y: 54, r: 11 },
-  { x: 28, y: 60, r: 8 },
-  { x: 55, y: 34, r: -12 },
-  { x: 38, y: 74, r: 6 },
-  { x: 66, y: 76, r: -8 },
-  { x: 22, y: 42, r: -5 },
-  { x: 50, y: 64, r: 9 },
-  { x: 78, y: 36, r: -7 },
-  { x: 42, y: 14, r: 10 },
-];
+// Kartans platser i byggläget (procent av kartytan, r = lutning i grader).
+// Snabbvalen ligger som klickbara spökrutor på "spok"-platserna och tänds
+// på sin egen plats när man väljer dem; system som läggs till via sökningen
+// tar "extra"-platserna. Rutnätet är skevt men glest nog att de längsta
+// namnen ("Google Workspace") inte krockar: fyra kolumner på dator, två på
+// mobil där kartan är smal. Summan av platser täcker alltid MAX_SYSTEM.
+type Plats = { x: number; y: number; r: number };
+const PLATSER_DATOR: { spok: Plats[]; extra: Plats[] } = {
+  spok: [
+    { x: 15, y: 13, r: -5 },
+    { x: 62, y: 12, r: 4 },
+    { x: 85, y: 16, r: -3 },
+    { x: 18, y: 37, r: 6 },
+    { x: 41, y: 41, r: -4 },
+    { x: 86, y: 40, r: 5 },
+    { x: 38, y: 60, r: -6 },
+    { x: 61, y: 65, r: 3 },
+    { x: 17, y: 87, r: 5 },
+    { x: 63, y: 88, r: -4 },
+  ],
+  extra: [
+    { x: 39, y: 17, r: 6 },
+    { x: 64, y: 35, r: -5 },
+    { x: 14, y: 63, r: 4 },
+    { x: 84, y: 61, r: -6 },
+    { x: 40, y: 85, r: 5 },
+    { x: 86, y: 84, r: -3 },
+  ],
+};
+const PLATSER_MOBIL: { spok: Plats[]; extra: Plats[] } = {
+  spok: [
+    { x: 25, y: 9, r: -4 },
+    { x: 74, y: 24, r: 5 },
+    { x: 24, y: 41, r: -5 },
+    { x: 75, y: 56, r: 4 },
+    { x: 26, y: 73, r: -3 },
+    { x: 72, y: 89, r: 5 },
+  ],
+  extra: [
+    { x: 73, y: 11, r: 5 },
+    { x: 27, y: 26, r: -4 },
+    { x: 72, y: 43, r: 4 },
+    { x: 28, y: 58, r: -5 },
+    { x: 73, y: 75, r: 3 },
+    { x: 25, y: 90, r: -4 },
+  ],
+};
 
 export function SystemKollen() {
   const [valda, setValda] = useState<ValtSystem[]>([]);
@@ -782,7 +814,37 @@ export function SystemKollen() {
     const vinkel = -Math.PI / 2 + (i * 2 * Math.PI) / Math.max(n, 1);
     return { x: hub.x + rx * Math.cos(vinkel), y: hub.y + ry * Math.sin(vinkel) };
   };
-  const kaosPos = (i: number) => kaosPlatser[i % kaosPlatser.length];
+  // Placering i byggläget. Ett valt snabbval tänds på sin egen spökplats;
+  // system från sökningen tar extraplatserna, och när de tar slut lånar de
+  // en spökplats vars system inte är valt (den spökrutan göms då).
+  const platser = mobil ? PLATSER_MOBIL : PLATSER_DATOR;
+  const spokNamn = snabbval.slice(0, platser.spok.length);
+  const platsFor = new Map<string, Plats>();
+  const lanade = new Set<number>();
+  valda.forEach((v) => {
+    const gi = spokNamn.indexOf(v.namn);
+    if (gi >= 0) platsFor.set(v.namn, platser.spok[gi]);
+  });
+  const lediga = spokNamn
+    .map((_, gi) => gi)
+    .filter((gi) => !valda.some((v) => v.namn === spokNamn[gi]));
+  let nastaExtra = 0;
+  valda.forEach((v) => {
+    if (platsFor.has(v.namn)) return;
+    if (nastaExtra < platser.extra.length) {
+      platsFor.set(v.namn, platser.extra[nastaExtra++]);
+    } else {
+      const gi = lediga.pop();
+      if (gi !== undefined) {
+        lanade.add(gi);
+        platsFor.set(v.namn, platser.spok[gi]);
+      }
+    }
+  });
+  const spokrutor = spokNamn
+    .map((namn, gi) => ({ namn, kat: katalogPost(namn)!.kat, plats: platser.spok[gi], gi }))
+    .filter((g) => !valda.some((v) => v.namn === g.namn) && !lanade.has(g.gi));
+  const kaosPos = (i: number): Plats => platsFor.get(valda[i].namn) ?? { x: 50, y: 50, r: 0 };
   const pos = (i: number) => (ordnad ? orderedPos(i) : kaosPos(i));
 
   // Sökförslag: katalogträffar som inte redan är valda, max 6.
@@ -984,466 +1046,477 @@ export function SystemKollen() {
     }
   };
 
+  // Mörka formulärfält: samma stil för sökfält och leadformulär
+  const faltKlass =
+    "w-full bg-white/[0.06] border border-paper/20 px-4 text-base text-paper placeholder:text-paper/45 focus:outline-none focus:border-brand-green";
+
   return (
     <section id="systemkollen" className="snap-start relative min-h-svh bg-ink text-paper overflow-hidden">
       <div className="ai-glow" aria-hidden="true" />
-      <div className="relative mx-auto max-w-6xl px-6 py-24 md:py-32">
-        <Reveal>
-          <div className="max-w-3xl">
-            <div className="mb-5 text-[0.7rem] font-bold uppercase tracking-[0.22em] text-paper/70">Huvudtjänst · Digitala system & AI</div>
-            <h2 className="display-heading text-3xl md:text-5xl text-paper">
-              Gör <span className="text-brand-green-strong">systemkollen</span>.
+      {/* Tre block: A (rubrik + sök), B (kartan), C (knapp/formulär/resultat).
+          På dator står A och C till vänster och kartan till höger över båda
+          raderna; på mobil kommer de i ordningen A, B, C, så knappen hamnar
+          under kartan där man just valt sina system. */}
+      <div className="relative mx-auto max-w-6xl px-6 py-24 md:py-32 grid gap-8 lg:grid-cols-12 lg:grid-rows-[auto_1fr] lg:gap-x-12 lg:gap-y-8">
+        {/* A */}
+        <div className="lg:col-span-5 lg:row-start-1">
+          <Reveal>
+            <div className="mb-5 text-[0.7rem] font-bold uppercase tracking-[0.22em] text-paper/70">
+              Huvudtjänst · Digitala system & AI
+            </div>
+            <h2 className="display-heading text-3xl md:text-5xl lg:text-[2.6rem] text-paper">
+              Gör <span className="text-brand-green">systemkollen</span>.
             </h2>
-            <p className="mt-6 text-paper/75 leading-relaxed max-w-2xl">
-              Skriv in systemen ni faktiskt använder och se er egen karta växa
-              fram. Sedan ordnar vi den: kartan som landar är vårt förslag på
-              hur allt kan jobba ihop.
+            <p className="mt-6 text-paper/75 leading-relaxed">
+              Klicka på systemen ni använder, eller sök efter fler. Sedan ordnar
+              vi kartan: det som landar är vårt förslag på hur allt kan jobba ihop.
             </p>
-          </div>
-        </Reveal>
+          </Reveal>
 
-        <Reveal delay={120}>
-          {/* Sökfält + snabbval (döljs när kartan är ordnad) */}
           {!ordnad && (
-            <div className="mt-10 max-w-2xl">
-              <div className="relative">
-                <input
-                  type="text"
-                  value={sok}
-                  onChange={(e) => {
-                    setSok(e.target.value);
-                    setOkand(null);
-                  }}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter") {
-                      e.preventDefault();
-                      if (forslag.length > 0) laggTill(forslag[0].namn, forslag[0].kat);
-                      // Samma spärr som fritextknappen: är söktexten ett redan
-                      // valt system ska ingen kategorifråga öppnas (knapparna
-                      // i den vore döda eftersom laggTill stoppar dubbletter).
-                      else if (sok.trim().length >= 2 && !exaktTraff) setOkand(sok.trim());
-                    }
-                  }}
-                  placeholder={n >= MAX_SYSTEM ? "Max 12 system" : "Sök era system: Fortnox, HubSpot, Slack ..."}
-                  disabled={n >= MAX_SYSTEM}
-                  aria-label="Sök efter system"
-                  className="w-full bg-white border border-line px-4 py-3.5 text-base text-ink placeholder:text-subtle focus:outline-none focus:border-brand-green disabled:opacity-50"
-                />
-                {(forslag.length > 0 || (sok.trim().length >= 2 && !exaktTraff)) && (
-                  <div className="absolute inset-x-0 top-full mt-1 z-20 bg-white border border-line shadow-xl">
-                    {forslag.map((f) => (
-                      <button
-                        key={f.namn}
-                        type="button"
-                        onClick={() => laggTill(f.namn, f.kat)}
-                        className="flex w-full items-center justify-between px-4 py-2.5 text-sm text-left text-ink/85 hover:bg-mist"
+            <Reveal delay={120}>
+              <div className="mt-8">
+                <div className="relative">
+                  <input
+                    type="text"
+                    value={sok}
+                    onChange={(e) => {
+                      setSok(e.target.value);
+                      setOkand(null);
+                    }}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") {
+                        e.preventDefault();
+                        if (forslag.length > 0) laggTill(forslag[0].namn, forslag[0].kat);
+                        // Samma spärr som fritextknappen: är söktexten ett redan
+                        // valt system ska ingen kategorifråga öppnas (knapparna
+                        // i den vore döda eftersom laggTill stoppar dubbletter).
+                        else if (sok.trim().length >= 2 && !exaktTraff) setOkand(sok.trim());
+                      }
+                    }}
+                    placeholder={n >= MAX_SYSTEM ? "Max 12 system" : "Sök fler system: Visma, Zendesk ..."}
+                    disabled={n >= MAX_SYSTEM}
+                    aria-label="Sök efter system"
+                    className={`${faltKlass} py-3.5 disabled:opacity-50`}
+                  />
+                  {(forslag.length > 0 || (sok.trim().length >= 2 && !exaktTraff)) && (
+                    <div className="absolute inset-x-0 top-full mt-1 z-30 bg-ink border border-paper/20 shadow-2xl">
+                      {forslag.map((f) => (
+                        <button
+                          key={f.namn}
+                          type="button"
+                          onClick={() => laggTill(f.namn, f.kat)}
+                          className="flex w-full items-center justify-between gap-3 px-4 py-2.5 text-sm text-left text-paper/85 hover:bg-white/10"
+                        >
+                          <span>{f.namn}</span>
+                          <span className="tracked text-[11px] text-paper/55">{kategoriNamn[f.kat]}</span>
+                        </button>
+                      ))}
+                      {sok.trim().length >= 2 && !exaktTraff && (
+                        <button
+                          type="button"
+                          onClick={() => setOkand(sok.trim())}
+                          className="flex w-full items-center gap-2 px-4 py-2.5 text-sm text-left text-paper hover:bg-white/10 border-t border-paper/10"
+                        >
+                          <Plus className="h-3.5 w-3.5 text-brand-green" strokeWidth={2.5} />
+                          Lägg till &quot;{sok.trim()}&quot;
+                        </button>
+                      )}
+                    </div>
+                  )}
+                </div>
+
+                {/* Kategorifråga för okända system */}
+                {okand && (
+                  <div className="mt-3 border border-brand-green/40 bg-white/[0.04] p-4">
+                    <p className="text-sm text-paper/75 mb-3">
+                      Vad är <span className="font-semibold text-paper">{okand}</span> för sorts system?
+                    </p>
+                    <div className="flex flex-wrap gap-2">
+                      {(Object.keys(kategoriNamn) as Kategori[]).map((kat) => (
+                        <button
+                          key={kat}
+                          type="button"
+                          onClick={() => laggTill(okand, kat)}
+                          className="px-3 py-3 md:py-1.5 text-xs font-semibold border border-paper/20 text-paper/80 hover:border-brand-green hover:text-paper transition-colors"
+                        >
+                          {kategoriNamn[kat]}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* Valda system: kan tas bort här */}
+                {n > 0 && (
+                  <div className="mt-4 flex flex-wrap items-center gap-2">
+                    {valda.map((v) => (
+                      <span
+                        key={v.namn}
+                        className="inline-flex items-center gap-1.5 bg-brand-green/15 border border-brand-green/40 text-paper px-2.5 py-1 text-xs font-semibold"
                       >
-                        <span>{f.namn}</span>
-                        <span className="tracked text-[11px] text-ink/65">{kategoriNamn[f.kat]}</span>
-                      </button>
+                        {v.namn}
+                        <button
+                          type="button"
+                          onClick={() => taBort(v.namn)}
+                          aria-label={`Ta bort ${v.namn}`}
+                          className="p-2 -m-2 text-paper/60 hover:text-paper"
+                        >
+                          <X className="h-3 w-3" strokeWidth={2.5} />
+                        </button>
+                      </span>
                     ))}
-                    {sok.trim().length >= 2 && !exaktTraff && (
-                      <button
-                        type="button"
-                        onClick={() => setOkand(sok.trim())}
-                        className="flex w-full items-center gap-2 px-4 py-2.5 text-sm text-left text-brand-green-strong hover:bg-mist border-t border-line"
-                      >
-                        <Plus className="h-3.5 w-3.5" strokeWidth={2.5} />
-                        Lägg till &quot;{sok.trim()}&quot;
-                      </button>
-                    )}
+                    <span className="text-xs text-paper/55">{n}/{MAX_SYSTEM}</span>
                   </div>
                 )}
               </div>
+            </Reveal>
+          )}
+        </div>
 
-              {/* Kategorifråga för okända system */}
-              {okand && (
-                <div className="mt-3 border border-brand-green/40 bg-white p-4">
-                  <p className="text-sm text-ink/75 mb-3">
-                    Vad är <span className="font-semibold text-ink">{okand}</span> för sorts system?
-                  </p>
-                  <div className="flex flex-wrap gap-2">
-                    {(Object.keys(kategoriNamn) as Kategori[]).map((kat) => (
-                      <button
-                        key={kat}
-                        type="button"
-                        onClick={() => laggTill(okand, kat)}
-                        className="px-3 py-3 md:py-1.5 text-xs font-semibold border border-line text-ink/75 hover:border-brand-green hover:text-ink transition-colors"
-                      >
-                        {kategoriNamn[kat]}
-                      </button>
-                    ))}
-                  </div>
-                </div>
+        {/* B: kartan */}
+        <div className="lg:col-span-7 lg:col-start-6 lg:row-start-1 lg:row-span-2 lg:self-start lg:sticky lg:top-24">
+          <Reveal delay={180}>
+            <div
+              className={`sysmap karta-rutnat relative h-96 lg:h-[34rem] border border-paper/10 bg-white/[0.02] ${
+                ordnad ? "is-visible" : ""
+              }`}
+              onClick={() => setEtikett(null)}
+            >
+              {/* Spökrutor: de vanligaste systemen, klickbara direkt i kartan */}
+              {fas === "bygga" &&
+                n < MAX_SYSTEM &&
+                spokrutor.map((g) => (
+                  <button
+                    key={g.namn}
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      laggTill(g.namn, g.kat);
+                    }}
+                    aria-label={`Lägg till ${g.namn}`}
+                    className="absolute z-[1] inline-flex items-center gap-1 whitespace-nowrap border border-dashed border-paper/30 bg-ink/60 px-2.5 py-1.5 text-[11px] md:text-xs font-semibold text-paper/65 transition-colors hover:border-brand-green hover:bg-brand-green/15 hover:text-paper"
+                    style={{
+                      left: `${g.plats.x}%`,
+                      top: `${g.plats.y}%`,
+                      transform: `translate(-50%, -50%) rotate(${g.plats.r}deg)`,
+                    }}
+                  >
+                    <Plus className="h-3 w-3" strokeWidth={2.5} />
+                    {g.namn}
+                  </button>
+                ))}
+
+              {n === 0 && fas === "bygga" && (
+                <p className="pointer-events-none absolute inset-x-0 bottom-3 text-center text-[11px] text-paper/50">
+                  Klicka på systemen ni använder
+                </p>
               )}
 
-              {/* Snabbval */}
-              <div className="mt-4 flex flex-wrap items-center gap-2">
-                <span className="tracked text-[11px] text-paper/50 mr-1">Vanliga:</span>
-                {snabbval
-                  .filter((namn) => !valda.some((v) => v.namn === namn))
-                  .slice(0, mobil ? 6 : 10)
-                  .map((namn) => {
-                    const post = systemKatalog.find((s) => s.namn === namn)!;
+              {n > 0 && (
+                <>
+                  <svg className="absolute inset-0 h-full w-full" viewBox="0 0 100 100" preserveAspectRatio="none" fill="none" aria-hidden="true">
+                    {tangle.map(([a, b]) => (
+                      <line
+                        key={`t-${a}-${b}`}
+                        className="jungle-tangle"
+                        x1={kaosPos(a).x}
+                        y1={kaosPos(a).y}
+                        x2={kaosPos(b).x}
+                        y2={kaosPos(b).y}
+                        stroke="#8A8D90"
+                        strokeWidth="1"
+                        vectorEffect="non-scaling-stroke"
+                      />
+                    ))}
+                    {valda.map((v, i) => (
+                      <line
+                        key={`o-${v.namn}`}
+                        className="sysmap-link"
+                        pathLength={1}
+                        x1={hub.x}
+                        y1={hub.y}
+                        x2={orderedPos(i).x}
+                        y2={orderedPos(i).y}
+                        stroke="#1F8A5C"
+                        strokeOpacity="0.7"
+                        strokeWidth="1.25"
+                        vectorEffect="non-scaling-stroke"
+                        style={{ transitionDelay: `${0.55 + i * 0.06}s` }}
+                      />
+                    ))}
+                    {lankar.map((l, j) => (
+                      <path
+                        key={`s-${l.a}-${l.b}`}
+                        className="sysmap-link"
+                        pathLength={1}
+                        d={arcPath(l.a, l.b).d}
+                        stroke="#5B7B9A"
+                        strokeOpacity={l.ai ? "0.5" : etikett === j ? "1" : "0.85"}
+                        strokeWidth={l.ai ? "0.75" : etikett === j ? "1.75" : "1.1"}
+                        fill="none"
+                        vectorEffect="non-scaling-stroke"
+                        style={{ transitionDelay: `${1.3 + j * 0.09}s` }}
+                      />
+                    ))}
+                  </svg>
+                  <span className="sysmap-hub-ring" style={{ left: `${hub.x}%`, top: `${hub.y}%` }} />
+                  {/* Kopplingsmarkörer: hover/tryck visar förslaget i klartext */}
+                  {ordnad &&
+                    lankar.map((l, j) => {
+                      const p = markorPos(l.a, l.b);
+                      if (p.dold) return null;
+                      return (
+                        <button
+                          key={`m-${l.a}-${l.b}`}
+                          type="button"
+                          aria-label={l.text}
+                          onMouseEnter={() => setEtikett(j)}
+                          onMouseLeave={() => setEtikett((v) => (v === j ? null : v))}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setEtikett((v) => (v === j ? null : j));
+                          }}
+                          className="jungle-late absolute flex h-6 w-6 items-center justify-center"
+                          style={{
+                            left: `${p.x}%`,
+                            top: `${p.y}%`,
+                            transform: "translate(-50%, -50%)",
+                            transitionDelay: `${1.6 + j * 0.05}s`,
+                          }}
+                        >
+                          <span
+                            className={`block rounded-full transition-all ${
+                              etikett === j ? "h-3 w-3 bg-brand-blue shadow-[0_0_10px_rgba(91,123,154,0.9)]" : "h-2 w-2 bg-brand-blue"
+                            }`}
+                          />
+                        </button>
+                      );
+                    })}
+                  {/* Etiketten */}
+                  {ordnad && etikett !== null && lankar[etikett] && (
+                    <div
+                      className="absolute z-20 max-w-[260px] -translate-x-1/2 bg-white text-ink text-xs font-semibold leading-snug px-3 py-2 shadow-lg border border-line pointer-events-none"
+                      style={{
+                        left: `${Math.min(80, Math.max(20, markorPos(lankar[etikett].a, lankar[etikett].b).x))}%`,
+                        top: `${Math.max(4, markorPos(lankar[etikett].a, lankar[etikett].b).y - 10)}%`,
+                      }}
+                    >
+                      {lankar[etikett].text}
+                    </div>
+                  )}
+                  {/* Navet */}
+                  <div
+                    className="jungle-late absolute"
+                    style={{ left: `${hub.x}%`, top: `${hub.y}%`, transform: "translate(-50%, -50%)", transitionDelay: "0.45s", zIndex: 2 }}
+                  >
+                    <div className="sysmap-node-box bg-brand-green-strong text-paper shadow-md whitespace-nowrap px-4 py-2 md:px-5 md:py-2.5 text-xs md:text-sm font-semibold">
+                      Er affär
+                    </div>
+                  </div>
+                  {/* Systemnoderna med riktiga namn */}
+                  {valda.map((v, i) => {
+                    const p = pos(i);
+                    const rot = ordnad ? 0 : kaosPos(i).r;
                     return (
-                      <button
-                        key={namn}
-                        type="button"
-                        onClick={() => laggTill(post.namn, post.kat)}
-                        disabled={n >= MAX_SYSTEM}
-                        className="px-3 py-3 md:py-1.5 text-xs font-semibold border border-paper/20 text-paper/75 hover:border-brand-green hover:text-paper transition-colors disabled:opacity-40"
+                      <div
+                        key={v.namn}
+                        className="sysmap-node absolute"
+                        style={{ left: `${p.x}%`, top: `${p.y}%`, transform: `translate(-50%, -50%) rotate(${rot}deg)`, zIndex: 2 }}
                       >
-                        {namn}
-                      </button>
+                        <div className="jungle-pop sysmap-node-box whitespace-nowrap bg-white border border-line text-ink/85 shadow-md px-2.5 py-1.5 md:px-3 text-[11px] md:text-xs font-semibold">
+                          {v.namn}
+                        </div>
+                      </div>
                     );
                   })}
-              </div>
+                </>
+              )}
+            </div>
+          </Reveal>
+        </div>
 
-              {/* Valda system som borttagbara taggar */}
-              {n > 0 && (
-                <div className="mt-4 flex flex-wrap items-center gap-2">
-                  {valda.map((v) => (
-                    <span
-                      key={v.namn}
-                      className="inline-flex items-center gap-1.5 bg-brand-green/15 border border-brand-green/40 text-paper px-2.5 py-1 text-xs font-semibold"
-                    >
-                      {v.namn}
-                      <button
-                        type="button"
-                        onClick={() => taBort(v.namn)}
-                        aria-label={`Ta bort ${v.namn}`}
-                        className="p-2 -m-2 text-paper/60 hover:text-paper"
+        {/* C: knapp, formulär eller resultat */}
+        <div className="lg:col-span-5 lg:row-start-2">
+          {fas === "bygga" && (
+            <div className="flex flex-wrap items-center gap-4">
+              <button
+                type="button"
+                onClick={() => {
+                  skickaHandelse("systemkollen_grind", { antal_system: n });
+                  setFas("formular");
+                }}
+                disabled={n < 2}
+                className="inline-flex items-center gap-2 bg-brand-green-strong text-paper hover:bg-paper hover:text-ink px-6 py-3.5 text-sm font-semibold transition-colors disabled:bg-white/10 disabled:text-paper/40 disabled:pointer-events-none"
+              >
+                Skapa ordning <ArrowUpRight className="h-4 w-4" strokeWidth={2.5} />
+              </button>
+              <span className="text-sm text-paper/60">
+                {n === 0 ? "Välj minst två system." : n === 1 ? "Välj ett system till." : `${n} system valda.`}
+              </span>
+            </div>
+          )}
+
+          {fas === "formular" && (
+            <form onSubmit={skickaLead} className="border border-paper/15 bg-white/[0.04] p-5 md:p-6">
+              <p className="text-sm text-paper/75 leading-relaxed mb-5">
+                Fyll i så ordnar vi er karta. Vi hör av oss med tankar om er
+                systemflora, kostnadsfritt och utan förpliktelser.
+              </p>
+              <div className="grid gap-3 sm:grid-cols-2">
+                <input
+                  type="text"
+                  required
+                  value={lead.namn}
+                  onChange={(e) => setLead({ ...lead, namn: e.target.value })}
+                  placeholder="Namn *"
+                  aria-label="Namn"
+                  className={`${faltKlass} py-3`}
+                />
+                <input
+                  type="email"
+                  required
+                  value={lead.epost}
+                  onChange={(e) => setLead({ ...lead, epost: e.target.value })}
+                  placeholder="E-post *"
+                  aria-label="E-post"
+                  className={`${faltKlass} py-3`}
+                />
+                <input
+                  type="text"
+                  value={lead.foretag}
+                  onChange={(e) => setLead({ ...lead, foretag: e.target.value })}
+                  placeholder="Företag (valfritt)"
+                  aria-label="Företag"
+                  className={`${faltKlass} py-3 sm:col-span-2`}
+                />
+              </div>
+              {fel && (
+                <p className="mt-3 text-sm text-paper/75">
+                  Något gick fel vid skickandet. Prova igen om en stund.
+                </p>
+              )}
+              <div className="mt-5 flex flex-wrap items-center gap-4">
+                <button
+                  type="submit"
+                  disabled={skickar}
+                  className="inline-flex items-center gap-2 bg-brand-green-strong text-paper px-6 py-3.5 text-sm font-semibold transition-colors hover:bg-paper hover:text-ink disabled:opacity-50"
+                >
+                  {skickar ? "Ordnar ..." : "Ordna min karta"}
+                  <ArrowUpRight className="h-4 w-4" strokeWidth={2.5} />
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setFas("bygga")}
+                  className="py-2 text-sm text-paper/60 hover:text-paper underline underline-offset-4"
+                >
+                  Tillbaka
+                </button>
+              </div>
+            </form>
+          )}
+
+          {fas === "ordnad" && (
+            <div className="jungle-result is-visible">
+              <div className="jungle-late" style={{ transitionDelay: "0.9s" }}>
+                <p className="display-heading text-xl md:text-2xl text-paper">
+                  {k > 0 ? (
+                    <>
+                      {n} system. <span className="text-brand-green">Ett förslag: {k} {k === 1 ? "koppling" : "kopplingar"}.</span>
+                    </>
+                  ) : (
+                    <>
+                      {n} system, <span className="text-brand-green">inga givna kopplingar.</span>
+                    </>
+                  )}
+                </p>
+                <p className="mt-2 text-sm text-paper/70 leading-relaxed">
+                  {k > 0
+                    ? `${mobil ? "Tryck" : "Håll muspekaren"} på punkterna längs linjerna så ser ni vad varje koppling gör. Vi hör av oss med våra tankar.`
+                    : "Era system saknar självklara kopplingar i vår regelbok, vilket i sig säger något. Vi hör av oss med våra tankar."}
+                </p>
+              </div>
+              <div className="jungle-late mt-6 flex flex-wrap items-center gap-4" style={{ transitionDelay: "1.05s" }}>
+                <Link
+                  to="/boka"
+                  onClick={sparaBokningsKontext}
+                  className="inline-flex items-center gap-2 bg-brand-green-strong text-paper hover:bg-paper hover:text-ink px-6 py-3.5 text-sm font-semibold transition-colors"
+                >
+                  Boka ett samtal <ArrowUpRight className="h-4 w-4" strokeWidth={2.5} />
+                </Link>
+                <button
+                  type="button"
+                  onClick={reset}
+                  className="py-2 text-sm text-paper/60 hover:text-paper underline underline-offset-4"
+                >
+                  Börja om
+                </button>
+              </div>
+              {/* Bara första tipset visas i klartext: resten är samtalets
+                  värde och följer med i leadet så Alexander kommer förberedd.
+                  De låsta raderna visar äkta etiketter men PLATSHÅLLARTEXT
+                  bakom blurret: riktiga tips i DOM:en hade gått att läsa
+                  genom att plocka bort filtret i utvecklarverktygen. */}
+              {tips.length > 0 && (
+                <div
+                  className="jungle-late mt-8 border border-paper/15 bg-white/[0.04] p-5 md:p-6"
+                  style={{ transitionDelay: "1.2s" }}
+                >
+                  <p className="tracked text-[11px] text-paper/55 mb-4">Tips utifrån er karta</p>
+                  <div className="space-y-3.5">
+                    <div className="flex items-start gap-3 text-sm text-paper/80 leading-relaxed">
+                      <span
+                        className={`tracked shrink-0 mt-0.5 px-2 py-0.5 border text-[11px] text-paper/90 ${
+                          tips[0].typ === "byte" ? "border-brand-blue bg-brand-blue/20" : "border-brand-green bg-brand-green/20"
+                        }`}
                       >
-                        <X className="h-3 w-3" strokeWidth={2.5} />
-                      </button>
-                    </span>
-                  ))}
-                  <span className="text-xs text-paper/50">{n}/{MAX_SYSTEM}</span>
+                        {tips[0].typ === "byte" ? "Överlapp" : "Komplement"}
+                      </span>
+                      <span>{tips[0].text}</span>
+                    </div>
+                    {tips.slice(1).map((t, i) => (
+                      <div
+                        key={`last-${i}`}
+                        aria-hidden="true"
+                        className="flex items-start gap-3 text-sm text-paper/80 leading-relaxed select-none pointer-events-none"
+                      >
+                        <span
+                          className={`tracked shrink-0 mt-0.5 px-2 py-0.5 border text-[11px] text-paper/90 ${
+                            t.typ === "byte" ? "border-brand-blue bg-brand-blue/20" : "border-brand-green bg-brand-green/20"
+                          }`}
+                        >
+                          {t.typ === "byte" ? "Överlapp" : "Komplement"}
+                        </span>
+                        <span className="blur-[5px] opacity-60">
+                          {i % 2 === 0
+                            ? "Det här tipset går vi igenom i samtalet, tillsammans med resten av er karta."
+                            : "Även det här förslaget sparar vi till samtalet, det bygger på era system."}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                  {tips.length > 1 && (
+                    <p className="mt-4 pt-4 border-t border-paper/10 text-sm text-paper/75 leading-relaxed">
+                      Vi ser{" "}
+                      <span className="font-semibold text-paper">
+                        {tips.length - 1 === 1 ? "en sak till" : `${tips.length - 1} saker till`}
+                      </span>{" "}
+                      i er karta. Dem går vi igenom i ett{" "}
+                      <Link
+                        to="/boka"
+                        onClick={sparaBokningsKontext}
+                        className="font-semibold text-paper border-b border-brand-green hover:text-brand-green"
+                      >
+                        kostnadsfritt samtal
+                      </Link>
+                      .
+                    </p>
+                  )}
                 </div>
               )}
             </div>
           )}
-
-          {/* Kartan */}
-          <div
-            className={`sysmap relative mt-8 h-[21rem] md:h-96 border border-paper/10 bg-paper shadow-md ${
-              ordnad ? "is-visible" : ""
-            }`}
-            onClick={() => setEtikett(null)}
-          >
-            {n === 0 ? (
-              <p className="absolute inset-0 flex items-center justify-center px-8 text-center text-sm text-ink/65">
-                Sök eller välj era system ovan, så byggs er karta här.
-              </p>
-            ) : (
-              <>
-                <svg className="absolute inset-0 h-full w-full" viewBox="0 0 100 100" preserveAspectRatio="none" fill="none" aria-hidden="true">
-                  {tangle.map(([a, b]) => (
-                    <line
-                      key={`t-${a}-${b}`}
-                      className="jungle-tangle"
-                      x1={kaosPos(a).x}
-                      y1={kaosPos(a).y}
-                      x2={kaosPos(b).x}
-                      y2={kaosPos(b).y}
-                      stroke="#8A8D90"
-                      strokeWidth="1"
-                      vectorEffect="non-scaling-stroke"
-                    />
-                  ))}
-                  {valda.map((v, i) => (
-                    <line
-                      key={`o-${v.namn}`}
-                      className="sysmap-link"
-                      pathLength={1}
-                      x1={hub.x}
-                      y1={hub.y}
-                      x2={orderedPos(i).x}
-                      y2={orderedPos(i).y}
-                      stroke="#1F8A5C"
-                      strokeOpacity="0.5"
-                      strokeWidth="1.25"
-                      vectorEffect="non-scaling-stroke"
-                      style={{ transitionDelay: `${0.55 + i * 0.06}s` }}
-                    />
-                  ))}
-                  {lankar.map((l, j) => (
-                    <path
-                      key={`s-${l.a}-${l.b}`}
-                      className="sysmap-link"
-                      pathLength={1}
-                      d={arcPath(l.a, l.b).d}
-                      stroke="#5B7B9A"
-                      strokeOpacity={l.ai ? "0.4" : etikett === j ? "1" : "0.75"}
-                      strokeWidth={l.ai ? "0.75" : etikett === j ? "1.75" : "1"}
-                      fill="none"
-                      vectorEffect="non-scaling-stroke"
-                      style={{ transitionDelay: `${1.3 + j * 0.09}s` }}
-                    />
-                  ))}
-                </svg>
-                <span className="sysmap-hub-ring" style={{ left: `${hub.x}%`, top: `${hub.y}%` }} />
-                {/* Kopplingsmarkörer: hover/tryck visar förslaget i klartext */}
-                {ordnad &&
-                  lankar.map((l, j) => {
-                    const p = markorPos(l.a, l.b);
-                    if (p.dold) return null;
-                    return (
-                      <button
-                        key={`m-${l.a}-${l.b}`}
-                        type="button"
-                        aria-label={l.text}
-                        onMouseEnter={() => setEtikett(j)}
-                        onMouseLeave={() => setEtikett((v) => (v === j ? null : v))}
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setEtikett((v) => (v === j ? null : j));
-                        }}
-                        className="jungle-late absolute flex h-6 w-6 items-center justify-center"
-                        style={{
-                          left: `${p.x}%`,
-                          top: `${p.y}%`,
-                          transform: "translate(-50%, -50%)",
-                          transitionDelay: `${1.6 + j * 0.05}s`,
-                        }}
-                      >
-                        <span
-                          className={`block rounded-full transition-all ${
-                            etikett === j ? "h-3 w-3 bg-brand-blue shadow-[0_0_10px_rgba(91,123,154,0.9)]" : "h-2 w-2 bg-brand-blue/70"
-                          }`}
-                        />
-                      </button>
-                    );
-                  })}
-                {/* Etiketten */}
-                {ordnad && etikett !== null && lankar[etikett] && (
-                  <div
-                    className="absolute z-20 max-w-[260px] -translate-x-1/2 bg-white text-ink text-xs font-semibold leading-snug px-3 py-2 shadow-lg border border-line pointer-events-none"
-                    style={{
-                      left: `${Math.min(80, Math.max(20, markorPos(lankar[etikett].a, lankar[etikett].b).x))}%`,
-                      top: `${Math.max(4, markorPos(lankar[etikett].a, lankar[etikett].b).y - 10)}%`,
-                    }}
-                  >
-                    {lankar[etikett].text}
-                  </div>
-                )}
-                {/* Navet */}
-                <div
-                  className="jungle-late absolute"
-                  style={{ left: `${hub.x}%`, top: `${hub.y}%`, transform: "translate(-50%, -50%)", transitionDelay: "0.45s", zIndex: 2 }}
-                >
-                  <div className="sysmap-node-box bg-brand-green-strong text-paper shadow-md whitespace-nowrap px-4 py-2 md:px-5 md:py-2.5 text-xs md:text-sm font-semibold">
-                    Er affär
-                  </div>
-                </div>
-                {/* Systemnoderna med riktiga namn */}
-                {valda.map((v, i) => {
-                  const p = pos(i);
-                  const rot = ordnad ? 0 : kaosPos(i).r;
-                  return (
-                    <div
-                      key={v.namn}
-                      className="sysmap-node absolute"
-                      style={{ left: `${p.x}%`, top: `${p.y}%`, transform: `translate(-50%, -50%) rotate(${rot}deg)`, zIndex: 1 }}
-                    >
-                      <div className="jungle-pop sysmap-node-box whitespace-nowrap bg-white border border-line text-ink/80 shadow-sm px-2 py-1 md:px-3 md:py-1.5 text-[11px] md:text-xs font-semibold">
-                        {v.namn}
-                      </div>
-                    </div>
-                  );
-                })}
-              </>
-            )}
-          </div>
-
-          {/* Under kartan: knapp / grind / resultat beroende på fas */}
-          <div className="mt-8 min-h-14">
-            {fas === "bygga" && (
-              <div className="flex flex-wrap items-center gap-4">
-                <button
-                  type="button"
-                  onClick={() => {
-                    skickaHandelse("systemkollen_grind", { antal_system: n });
-                    setFas("formular");
-                  }}
-                  disabled={n < 2}
-                  className="inline-flex items-center gap-2 bg-brand-green-strong text-paper hover:bg-paper hover:text-ink px-6 py-3.5 text-sm font-semibold transition-colors disabled:opacity-40 disabled:pointer-events-none"
-                >
-                  Skapa ordning <ArrowUpRight className="h-4 w-4" strokeWidth={2.5} />
-                </button>
-                <span className="text-sm text-paper/60">
-                  {n < 2 ? "Välj minst två system." : `${n} system valda.`}
-                </span>
-              </div>
-            )}
-
-            {fas === "formular" && (
-              <form onSubmit={skickaLead} className="max-w-xl border border-brand-green/40 bg-white p-5 md:p-6">
-                <p className="text-sm text-ink/75 leading-relaxed mb-5">
-                  Fyll i så ordnar vi er karta. Vi hör av oss med tankar om
-                  er systemflora, kostnadsfritt och utan förpliktelser.
-                </p>
-                <div className="grid gap-3 sm:grid-cols-2">
-                  <input
-                    type="text"
-                    required
-                    value={lead.namn}
-                    onChange={(e) => setLead({ ...lead, namn: e.target.value })}
-                    placeholder="Namn *"
-                    aria-label="Namn"
-                    className="w-full bg-paper border border-line px-4 py-3 text-base text-ink placeholder:text-subtle focus:outline-none focus:border-brand-green"
-                  />
-                  <input
-                    type="email"
-                    required
-                    value={lead.epost}
-                    onChange={(e) => setLead({ ...lead, epost: e.target.value })}
-                    placeholder="E-post *"
-                    aria-label="E-post"
-                    className="w-full bg-paper border border-line px-4 py-3 text-base text-ink placeholder:text-subtle focus:outline-none focus:border-brand-green"
-                  />
-                  <input
-                    type="text"
-                    value={lead.foretag}
-                    onChange={(e) => setLead({ ...lead, foretag: e.target.value })}
-                    placeholder="Företag (valfritt)"
-                    aria-label="Företag"
-                    className="w-full bg-paper border border-line px-4 py-3 text-base text-ink placeholder:text-subtle focus:outline-none focus:border-brand-green sm:col-span-2"
-                  />
-                </div>
-                {fel && (
-                  <p className="mt-3 text-sm text-ink/75">
-                    Något gick fel vid skickandet. Prova igen om en stund.
-                  </p>
-                )}
-                <div className="mt-5 flex flex-wrap items-center gap-4">
-                  <button
-                    type="submit"
-                    disabled={skickar}
-                    className="inline-flex items-center gap-2 bg-brand-green-strong text-paper px-6 py-3.5 text-sm font-semibold transition-colors hover:bg-ink hover:text-paper disabled:opacity-50"
-                  >
-                    {skickar ? "Ordnar ..." : "Ordna min karta"}
-                    <ArrowUpRight className="h-4 w-4" strokeWidth={2.5} />
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setFas("bygga")}
-                    className="text-sm text-ink/65 hover:text-ink underline underline-offset-4"
-                  >
-                    Tillbaka
-                  </button>
-                </div>
-              </form>
-            )}
-
-            {fas === "ordnad" && (
-              <div className="jungle-result is-visible">
-                <div className="grid md:grid-cols-12 gap-6 items-center">
-                  <div className="jungle-late md:col-span-7" style={{ transitionDelay: "0.9s" }}>
-                    <p className="display-heading text-xl md:text-2xl text-paper">
-                      {k > 0 ? (
-                        <>
-                          {n} system. <span className="text-brand-green-strong">Ett förslag: {k} {k === 1 ? "koppling" : "kopplingar"}.</span>
-                        </>
-                      ) : (
-                        <>
-                          {n} system, <span className="text-brand-green-strong">inga givna kopplingar.</span>
-                        </>
-                      )}
-                    </p>
-                    <p className="mt-2 text-sm text-paper/70 leading-relaxed">
-                      {k > 0
-                        ? `${mobil ? "Tryck" : "Håll muspekaren"} på punkterna längs linjerna så ser ni vad varje koppling gör. Vi hör av oss med våra tankar.`
-                        : "Era system saknar självklara kopplingar i vår regelbok, vilket i sig säger något. Vi hör av oss med våra tankar."}
-                    </p>
-                  </div>
-                  <div className="jungle-late md:col-span-5 flex flex-wrap items-center gap-4 md:justify-end" style={{ transitionDelay: "1.05s" }}>
-                    <Link
-                      to="/boka"
-                      onClick={sparaBokningsKontext}
-                      className="inline-flex items-center gap-2 bg-brand-green-strong text-paper hover:bg-paper hover:text-ink px-6 py-3.5 text-sm font-semibold transition-colors"
-                    >
-                      Boka ett samtal <ArrowUpRight className="h-4 w-4" strokeWidth={2.5} />
-                    </Link>
-                    <button
-                      type="button"
-                      onClick={reset}
-                      className="text-sm text-paper/60 hover:text-paper underline underline-offset-4"
-                    >
-                      Börja om
-                    </button>
-                  </div>
-                </div>
-                {/* Bara första tipset visas i klartext: resten är samtalets
-                    värde och följer med i leadet så Alexander kommer förberedd.
-                    De låsta raderna visar äkta etiketter men PLATSHÅLLARTEXT
-                    bakom blurret: riktiga tips i DOM:en hade gått att läsa
-                    genom att plocka bort filtret i utvecklarverktygen. */}
-                {tips.length > 0 && (
-                  <div
-                    className="jungle-late mt-8 max-w-3xl border border-line bg-white p-5 md:p-6"
-                    style={{ transitionDelay: "1.2s" }}
-                  >
-                    <p className="tracked text-[11px] text-ink/65 mb-4">Tips utifrån er karta</p>
-                    <div className="space-y-3.5">
-                      <div className="flex items-start gap-3 text-sm text-ink/75 leading-relaxed">
-                        <span
-                          className={`tracked shrink-0 mt-0.5 px-2 py-0.5 border text-[11px] ${
-                            tips[0].typ === "byte"
-                              ? "border-brand-blue/50 text-brand-blue-strong bg-brand-blue/5"
-                              : "border-brand-green/50 text-brand-green-strong bg-brand-green/5"
-                          }`}
-                        >
-                          {tips[0].typ === "byte" ? "Överlapp" : "Komplement"}
-                        </span>
-                        <span>{tips[0].text}</span>
-                      </div>
-                      {tips.slice(1).map((t, i) => (
-                        <div
-                          key={`last-${i}`}
-                          aria-hidden="true"
-                          className="flex items-start gap-3 text-sm text-ink/75 leading-relaxed select-none pointer-events-none"
-                        >
-                          <span
-                            className={`tracked shrink-0 mt-0.5 px-2 py-0.5 border text-[11px] ${
-                              t.typ === "byte"
-                                ? "border-brand-blue/50 text-brand-blue-strong bg-brand-blue/5"
-                                : "border-brand-green/50 text-brand-green-strong bg-brand-green/5"
-                            }`}
-                          >
-                            {t.typ === "byte" ? "Överlapp" : "Komplement"}
-                          </span>
-                          <span className="blur-[5px] opacity-60">
-                            {i % 2 === 0
-                              ? "Det här tipset går vi igenom i samtalet, tillsammans med resten av er karta."
-                              : "Även det här förslaget sparar vi till samtalet, det bygger på era system."}
-                          </span>
-                        </div>
-                      ))}
-                    </div>
-                    {tips.length > 1 && (
-                      <p className="mt-4 pt-4 border-t border-line text-sm text-ink/75 leading-relaxed">
-                        Vi ser{" "}
-                        <span className="font-semibold text-ink">
-                          {tips.length - 1 === 1 ? "en sak till" : `${tips.length - 1} saker till`}
-                        </span>{" "}
-                        i er karta. Dem går vi igenom i ett{" "}
-                        <Link
-                          to="/boka"
-                          onClick={sparaBokningsKontext}
-                          className="font-semibold text-ink border-b border-brand-green hover:text-brand-green-strong"
-                        >
-                          kostnadsfritt samtal
-                        </Link>
-                        .
-                      </p>
-                    )}
-                  </div>
-                )}
-              </div>
-            )}
-          </div>
-        </Reveal>
+        </div>
       </div>
     </section>
   );
