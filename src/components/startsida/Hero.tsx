@@ -278,7 +278,7 @@ export function Hero() {
           linjen bär mobilheron i stället. */}
       <div ref={layerRef} className="hero-net hero-par hero-par-3 absolute inset-0 hidden md:block" aria-hidden="true">
         <svg className="absolute inset-0 h-full w-full" viewBox="0 0 100 100" preserveAspectRatio="none" fill="none">
-          {heroLinks.map(([a, b, delay]) => (
+          {heroLinks.map(([a, b, delay], i) => (
             <line
               key={`hl-${a}-${b}`}
               className={`${scen === "ordning" ? "hero-link" : "opacity-0"} ${
@@ -289,8 +289,8 @@ export function Hero() {
               y1={heroNodes[a].y}
               x2={heroNodes[b].x}
               y2={heroNodes[b].y}
-              stroke="#1F8A5C"
-              strokeOpacity="0.55"
+              stroke={i % 3 === 1 ? "#5B7B9A" : "#1F8A5C"}
+              strokeOpacity={i % 3 === 1 ? "0.6" : "0.55"}
               strokeWidth="1"
               vectorEffect="non-scaling-stroke"
               style={{ animationDelay: `${delay}s` }}
@@ -323,8 +323,12 @@ export function Hero() {
           >
             {nd.chip ? (
               <span
-                className="hero-chip-box block -translate-x-1/2 -translate-y-1/2 whitespace-nowrap bg-white border border-line shadow-sm px-2.5 py-1 text-[11px] font-semibold text-ink/65"
-                style={{ rotate: `${kaos ? (nd.crot ?? 0) : (nd.rot ?? 0)}deg` }}
+                className="hero-chip-box block -translate-x-1/2 -translate-y-1/2 whitespace-nowrap bg-white border border-line shadow-sm px-2.5 py-1 text-[11px] font-semibold text-ink/70"
+                style={{
+                  rotate: `${kaos ? (nd.crot ?? 0) : (nd.rot ?? 0)}deg`,
+                  borderLeftWidth: 3,
+                  borderLeftColor: i % 2 === 0 ? "var(--brand-green)" : "var(--brand-blue)",
+                }}
               >
                 {nd.chip}
               </span>
@@ -337,6 +341,7 @@ export function Hero() {
         <div ref={cursorRef} className="hero-cursor" />
       </div>
       {/* Ljuskägla som följer musen (döljs på pekskärm och vid reduced motion) */}
+      <div className="hero-glow" aria-hidden="true" />
       <div className="hero-spot" aria-hidden="true" />
       {/* Vertikalt centrerat i skärmhöjden; pt klarar headern ovanpå */}
       <div className="relative w-full mx-auto max-w-6xl px-6 pt-24 pb-14 md:pt-28 md:pb-20 grid md:grid-cols-12 gap-8 md:gap-12 items-end">

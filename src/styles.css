@@ -219,6 +219,18 @@ h2.display-heading {
   transform: translate(calc(var(--par-x, 0) * 34px), calc(var(--par-y, 0) * 22px));
 }
 
+/* Statiskt ljus i heron: grönt uppe till höger där nätet bor, blått nere
+   till vänster som motvikt. Profilens två accentfärger ger ytan djup nu när
+   heron är ljus; utan det blir den platt så fort nätet vilar. */
+.hero-glow {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(55% 65% at 82% 28%, rgba(31, 138, 92, 0.13), transparent 70%),
+    radial-gradient(45% 55% at 8% 92%, rgba(91, 123, 154, 0.12), transparent 70%);
+}
+
 /* Grön ljuskägla som följer muspekaren över heron. Döljs på pekskärm. */
 .hero-spot {
   position: absolute;

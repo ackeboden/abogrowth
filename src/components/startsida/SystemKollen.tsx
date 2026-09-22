@@ -1161,7 +1161,7 @@ export function SystemKollen() {
                       x2={orderedPos(i).x}
                       y2={orderedPos(i).y}
                       stroke="#1F8A5C"
-                      strokeOpacity="0.35"
+                      strokeOpacity="0.5"
                       strokeWidth="1.25"
                       vectorEffect="non-scaling-stroke"
                       style={{ transitionDelay: `${0.55 + i * 0.06}s` }}
@@ -1173,8 +1173,8 @@ export function SystemKollen() {
                       className="sysmap-link"
                       pathLength={1}
                       d={arcPath(l.a, l.b).d}
-                      stroke="#1F8A5C"
-                      strokeOpacity={l.ai ? "0.3" : etikett === j ? "1" : "0.8"}
+                      stroke="#5B7B9A"
+                      strokeOpacity={l.ai ? "0.4" : etikett === j ? "1" : "0.75"}
                       strokeWidth={l.ai ? "0.75" : etikett === j ? "1.75" : "1"}
                       fill="none"
                       vectorEffect="non-scaling-stroke"
@@ -1209,7 +1209,7 @@ export function SystemKollen() {
                       >
                         <span
                           className={`block rounded-full transition-all ${
-                            etikett === j ? "h-3 w-3 bg-brand-green shadow-[0_0_10px_rgba(31,138,92,0.8)]" : "h-2 w-2 bg-brand-green/70"
+                            etikett === j ? "h-3 w-3 bg-brand-blue shadow-[0_0_10px_rgba(91,123,154,0.9)]" : "h-2 w-2 bg-brand-blue/70"
                           }`}
                         />
                       </button>
@@ -1390,8 +1390,8 @@ export function SystemKollen() {
                         <span
                           className={`tracked shrink-0 mt-0.5 px-2 py-0.5 border text-[9px] ${
                             tips[0].typ === "byte"
-                              ? "border-line text-ink/65"
-                              : "border-brand-green/50 text-brand-green"
+                              ? "border-brand-blue/50 text-brand-blue bg-brand-blue/5"
+                              : "border-brand-green/50 text-brand-green bg-brand-green/5"
                           }`}
                         >
                           {tips[0].typ === "byte" ? "Överlapp" : "Komplement"}
@@ -1407,8 +1407,8 @@ export function SystemKollen() {
                           <span
                             className={`tracked shrink-0 mt-0.5 px-2 py-0.5 border text-[9px] ${
                               t.typ === "byte"
-                                ? "border-line text-ink/65"
-                                : "border-brand-green/50 text-brand-green"
+                                ? "border-brand-blue/50 text-brand-blue bg-brand-blue/5"
+                                : "border-brand-green/50 text-brand-green bg-brand-green/5"
                             }`}
                           >
                             {t.typ === "byte" ? "Överlapp" : "Komplement"}

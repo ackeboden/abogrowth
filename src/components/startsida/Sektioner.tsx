@@ -163,8 +163,12 @@ export function Services() {
           {services.map((s, i) => {
             const inner = (
               <>
-                {/* Grön topplinje markerar spetstjänsten */}
-                {s.featured && <span aria-hidden="true" className="absolute inset-x-0 top-0 h-1 bg-brand-green" />}
+                {/* Topplinjen bär färgsystemet: grönt för grunden, blått för de
+                    två tjänster som bygger vidare på den. */}
+                <span
+                  aria-hidden="true"
+                  className={`absolute inset-x-0 top-0 h-1 ${s.featured ? "bg-brand-green" : "bg-brand-blue"}`}
+                />
                 <span
                   aria-hidden="true"
                   className="pointer-events-none select-none absolute -bottom-5 right-3 display-heading text-[110px] leading-none text-ink/[0.04]"
@@ -178,14 +182,14 @@ export function Services() {
                       className={`text-[10px] tracked px-2 py-1 ${
                         s.featured
                           ? "bg-brand-green text-paper"
-                          : "bg-brand-green/10 text-brand-green border border-brand-green/30"
+                          : "bg-brand-blue/10 text-brand-blue border border-brand-blue/30"
                       }`}
                     >
                       {s.tag}
                     </span>
                   )}
                 </div>
-                <h3 className="display-heading text-xl lg:text-2xl lg:min-h-16 mb-4 group-hover:text-brand-green transition-colors">
+                <h3 className={`display-heading text-xl lg:text-2xl lg:min-h-16 mb-4 transition-colors ${s.featured ? "group-hover:text-brand-green" : "group-hover:text-brand-blue"}`}>
                   {s.title}
                 </h3>
                 {/* min-höjd på lg så "Ni får" börjar på samma rad i alla korten */}
@@ -195,7 +199,7 @@ export function Services() {
                   <ul className="space-y-2.5">
                     {s.deliverables.map((d) => (
                       <li key={d} className="flex items-start gap-2.5 text-sm text-ink/80">
-                        <Check className="h-4 w-4 mt-0.5 shrink-0 text-brand-green" strokeWidth={2.5} />
+                        <Check className={`h-4 w-4 mt-0.5 shrink-0 ${s.featured ? "text-brand-green" : "text-brand-blue"}`} strokeWidth={2.5} />
                         {d}
                       </li>
                     ))}
@@ -300,12 +304,15 @@ export function Varde() {
             <Reveal key={t.tjanst} delay={i * 120}>
               <div
                 className={`relative overflow-hidden bg-paper border p-5 md:p-8 ${
-                  t.huvud ? "border-brand-green/50 shadow-md" : "border-line shadow-sm"
+                  t.huvud ? "border-brand-green/50 shadow-md" : "border-brand-blue/40 shadow-sm"
                 }`}
               >
-                {t.huvud && (
-                  <span aria-hidden="true" className="absolute inset-x-0 top-0 h-1 bg-brand-green" />
-                )}
+                <span
+                  aria-hidden="true"
+                  className={`absolute inset-x-0 top-0 h-1 ${t.huvud ? "bg-brand-green" : "bg-brand-blue"}`}
+                />
+                {/* Korten är fortfarande identiska i form; bara färgen skiljer
+                    grunden från de två som bygger vidare. */}
                 <div className="flex items-center justify-between gap-3 mb-7 min-h-7">
                   <h3 className="display-heading text-lg">{t.tjanst}</h3>
                   {t.huvud && (
@@ -316,7 +323,7 @@ export function Varde() {
                 </div>
                 <ul className="space-y-5">
                   {t.punkter.map((v) => (
-                    <li key={v.rubrik} className="border-l-2 border-brand-green pl-4">
+                    <li key={v.rubrik} className={`border-l-2 pl-4 ${t.huvud ? "border-brand-green" : "border-brand-blue"}`}>
                       <div className="font-semibold text-sm mb-1">{v.rubrik}</div>
                       <p className="text-sm text-ink/65 leading-relaxed">{v.rad}</p>
                     </li>
