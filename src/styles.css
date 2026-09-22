@@ -226,7 +226,7 @@ h2.display-heading {
   pointer-events: none;
   background: radial-gradient(
     280px circle at calc(var(--mx, 70) * 1%) calc(var(--my, 35) * 1%),
-    rgba(31, 138, 92, 0.18),
+    rgba(31, 138, 92, 0.10),
     transparent 70%
   );
 }
@@ -256,8 +256,8 @@ h2.display-heading {
 /* Närhetsreaktion: chips och punkter tänds när pekaren kommer nära */
 .hero-node.is-near .hero-chip-box {
   border-color: rgba(31, 138, 92, 0.7);
-  box-shadow: 0 0 20px rgba(31, 138, 92, 0.35);
-  color: var(--paper);
+  box-shadow: 0 0 18px rgba(31, 138, 92, 0.22);
+  color: var(--ink);
   scale: 1.08;
 }
 
@@ -581,8 +581,8 @@ details[open] .faq-icon {
   inset: -20%;
   pointer-events: none;
   background:
-    radial-gradient(45% 55% at 78% 25%, rgba(31, 138, 92, 0.16), transparent 70%),
-    radial-gradient(35% 45% at 15% 85%, rgba(91, 123, 154, 0.1), transparent 70%);
+    radial-gradient(45% 55% at 78% 25%, rgba(31, 138, 92, 0.09), transparent 70%),
+    radial-gradient(35% 45% at 15% 85%, rgba(91, 123, 154, 0.07), transparent 70%);
   animation: ai-glow-pulse 10s ease-in-out infinite;
 }
 

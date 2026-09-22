@@ -291,23 +291,23 @@ export function BookingCTA({
   body = "Boka ett kort första samtal. Jag lyssnar, ställer frågor och föreslår ett upplägg.",
 }: { title?: string; body?: string }) {
   return (
-    <section className="bg-ink text-paper">
+    <section className="bg-mist text-ink border-y border-line">
       <div className="mx-auto max-w-6xl px-6 py-16 md:py-20 grid md:grid-cols-12 gap-10 items-center">
         <div className="md:col-span-8">
           <div className="eyebrow mb-4 text-brand-green">Boka samtal</div>
-          <h2 className="display-heading text-3xl md:text-5xl text-paper">{title}</h2>
-          <p className="mt-5 text-paper/70 max-w-xl leading-relaxed">{body}</p>
+          <h2 className="display-heading text-3xl md:text-5xl text-ink">{title}</h2>
+          <p className="mt-5 text-ink/75 max-w-xl leading-relaxed">{body}</p>
         </div>
         <div className="md:col-span-4 md:text-right">
           <Link
             to="/boka"
-            className="inline-flex items-center gap-2 bg-brand-green text-paper px-6 py-4 text-sm font-semibold hover:bg-paper hover:text-ink transition-colors"
+            className="inline-flex items-center gap-2 bg-brand-green text-paper px-6 py-4 text-sm font-semibold hover:bg-ink hover:text-ink transition-colors"
           >
             Boka ett samtal <ArrowUpRight className="h-4 w-4" strokeWidth={2.5} />
           </Link>
-          <div className="mt-3 text-xs text-paper/50">Svar inom ett dygn.</div>
+          <div className="mt-3 text-xs text-subtle">Svar inom ett dygn.</div>
           <div className="mt-2 text-xs">
-            <Link to="/sa-gar-det-till" className="text-paper/60 underline underline-offset-4 hover:text-brand-green transition-colors">
+            <Link to="/sa-gar-det-till" className="text-ink/65 underline underline-offset-4 hover:text-brand-green transition-colors">
               Så går det till →
             </Link>
           </div>

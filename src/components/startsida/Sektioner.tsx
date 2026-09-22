@@ -333,16 +333,16 @@ export function Varde() {
 
 export function Process() {
   return (
-    <section id="arbetssatt" className="relative bg-ink text-paper overflow-hidden">
-      <GrowthLine className="opacity-40" />
+    <section id="arbetssatt" className="relative bg-paper text-ink overflow-hidden">
+      <GrowthLine className="opacity-30" />
       <div className="relative mx-auto max-w-6xl px-6 py-24 md:py-32">
         <Reveal>
           <div className="max-w-3xl">
             <div className="eyebrow mb-5 text-brand-green">Hur jag jobbar</div>
-            <h2 className="display-heading text-3xl md:text-5xl text-paper">
+            <h2 className="display-heading text-3xl md:text-5xl text-ink">
               Fyra steg. <span className="text-brand-green">Varje uppdrag.</span>
             </h2>
-            <p className="mt-6 text-paper/70 max-w-2xl leading-relaxed">
+            <p className="mt-6 text-ink/75 max-w-2xl leading-relaxed">
               Jag börjar alltid i nuläget: hur ni faktiskt arbetar och vilka
               system som bär verksamheten. Systemen är grunden, och när den
               sitter följer allt annat samma fyra steg.
@@ -352,13 +352,13 @@ export function Process() {
 
         <ProcessLine />
 
-        <div className="mt-16 md:mt-5 grid gap-px bg-paper/10 md:grid-cols-4 border border-paper/10">
+        <div className="mt-16 md:mt-5 grid gap-px bg-line md:grid-cols-4 border border-line">
           {processSteps.map((p, i) => (
-            <Reveal key={p.step} delay={i * 110} className="bg-ink">
-              <div className="h-full p-5 md:p-8 transition-colors duration-300 hover:bg-white/5">
+            <Reveal key={p.step} delay={i * 110} className="bg-paper">
+              <div className="h-full p-5 md:p-8 transition-colors duration-300 hover:bg-mist">
                 <div className="tracked text-xs text-brand-green mb-6">{p.step}</div>
-                <h3 className="display-heading text-lg mb-3 text-paper">{p.title}</h3>
-                <p className="text-sm text-paper/65 leading-relaxed">{p.body}</p>
+                <h3 className="display-heading text-lg mb-3 text-ink">{p.title}</h3>
+                <p className="text-sm text-ink/70 leading-relaxed">{p.body}</p>
               </div>
             </Reveal>
           ))}
@@ -368,10 +368,10 @@ export function Process() {
         <Reveal delay={120}>
           <div className="mt-16">
             <div className="tracked text-[10px] text-brand-green mb-6">Samma metod, per tjänst</div>
-            <div className="grid gap-px bg-paper/10 border border-paper/10 md:grid-cols-3">
+            <div className="grid gap-px bg-line border border-line md:grid-cols-3">
               {methodPerService.map((m) => (
-                <div key={m.service} className="bg-ink p-5 md:p-8">
-                  <h3 className="display-heading text-base mb-4 text-paper">
+                <div key={m.service} className="bg-paper p-5 md:p-8">
+                  <h3 className="display-heading text-base mb-4 text-ink">
                     {m.service}
                     {m.primary && (
                       <span className="ml-2 align-middle text-[10px] tracked bg-brand-green text-paper px-2 py-0.5">
@@ -381,7 +381,7 @@ export function Process() {
                   </h3>
                   <ol className="space-y-2">
                     {m.flow.map((f, n) => (
-                      <li key={f} className="flex items-start gap-2.5 text-sm text-paper/65 leading-relaxed">
+                      <li key={f} className="flex items-start gap-2.5 text-sm text-ink/70 leading-relaxed">
                         <span className="tracked text-[10px] text-brand-green mt-1 shrink-0">0{n + 1}</span>
                         {f}
                       </li>

@@ -262,7 +262,7 @@ export function Hero() {
   const kaos = scen === "kaos";
 
   return (
-    <section ref={ref} id="top" className="snap-start relative bg-ink text-paper overflow-hidden">
+    <section ref={ref} id="top" className="snap-start relative bg-paper text-ink overflow-hidden">
       <div className="relative min-h-svh flex items-center">
       <div className="hero-par hero-par-1 absolute inset-0" aria-hidden="true">
         <div className="ai-glow" />
@@ -323,7 +323,7 @@ export function Hero() {
           >
             {nd.chip ? (
               <span
-                className="hero-chip-box block -translate-x-1/2 -translate-y-1/2 whitespace-nowrap bg-white/5 border border-paper/15 shadow-sm px-2.5 py-1 text-[11px] font-semibold text-paper/60"
+                className="hero-chip-box block -translate-x-1/2 -translate-y-1/2 whitespace-nowrap bg-white border border-line shadow-sm px-2.5 py-1 text-[11px] font-semibold text-ink/65"
                 style={{ rotate: `${kaos ? (nd.crot ?? 0) : (nd.rot ?? 0)}deg` }}
               >
                 {nd.chip}
@@ -345,7 +345,7 @@ export function Hero() {
           {/* Skärmläsare får hela meningen; bokstavsspelet är rent visuellt.
               Mobilstorleken skalar med skärmen: annars klipps det längsta
               roterande ordet (marknadsföringen), som inte kan radbrytas. */}
-          <h1 className="display-heading text-paper text-[clamp(30px,9vw,44px)] leading-[1.02] md:text-[clamp(44px,5.8vw,76px)]">
+          <h1 className="display-heading text-ink text-[clamp(30px,9vw,44px)] leading-[1.02] md:text-[clamp(44px,5.8vw,76px)]">
             <span className="sr-only">Få koll på {rotatingWords[0]} en gång för alla.</span>
             <span aria-hidden="true">
               <Bokstavsrad text="Få koll på " bas={0.15} />
@@ -354,14 +354,14 @@ export function Hero() {
               <Bokstavsrad text="en gång för alla." bas={0.55} />
             </span>
           </h1>
-          <p className="mt-8 max-w-xl text-lg text-paper/70 leading-relaxed hero-rise [animation-delay:700ms]">
+          <p className="mt-8 max-w-xl text-lg text-ink/75 leading-relaxed hero-rise [animation-delay:700ms]">
             Jag skapar ordning: en systemflora som hänger ihop, mindre
             dubbelarbete och en tydlig väg framåt.
           </p>
           <div className="mt-10 flex flex-wrap items-center gap-4 hero-rise [animation-delay:850ms]">
             <Link
               to="/boka"
-              className="inline-flex items-center gap-2 bg-brand-green text-paper px-6 py-3.5 text-sm font-semibold hover:bg-paper hover:text-ink transition-colors"
+              className="inline-flex items-center gap-2 bg-brand-green text-paper px-6 py-3.5 text-sm font-semibold hover:bg-ink hover:text-ink transition-colors"
             >
               Boka ett samtal <ArrowUpRight className="h-4 w-4" strokeWidth={2.5} />
             </Link>
@@ -371,7 +371,7 @@ export function Hero() {
             </a>
           </div>
           {/* Svarar på besökarens första fråga: är det här för mig? */}
-          <p className="mt-8 flex items-start gap-2.5 text-sm text-paper/50 leading-relaxed hero-rise [animation-delay:1000ms]">
+          <p className="mt-8 flex items-start gap-2.5 text-sm text-subtle leading-relaxed hero-rise [animation-delay:1000ms]">
             <span aria-hidden="true" className="mt-2 h-px w-6 shrink-0 bg-brand-green" />
             För mindre bolag, från enmansföretag upp till ett femtiotal
             anställda, som inte har någon egen IT-avdelning.
