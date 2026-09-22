@@ -19,7 +19,7 @@ const services: Service[] = [
     title: "Digitala system & AI-verktyg",
     tag: "Huvudtjänst",
     featured: true,
-    body: "Jag hjälper er få koll: kartlägger systemfloran, rensar bland verktygen och kopplar ihop det som ska hänga samman. Sedan visar jag var AI gör verklig nytta.",
+    body: "Vi hjälper er få koll: kartlägger systemfloran, rensar bland verktygen och kopplar ihop det som ska hänga samman. Sedan visar vi var AI gör verklig nytta.",
     href: "/tjanster/digitala-system-ai",
     deliverables: [
       "Kartläggning av era system och verktyg",
@@ -30,7 +30,7 @@ const services: Service[] = [
   {
     num: "02",
     title: "Affärsutveckling & tillväxtstrategi",
-    body: "Jag kartlägger var tillväxten faktiskt finns och bygger en plan som går att genomföra, med prioriterade initiativ som flyttar affären framåt.",
+    body: "Vi kartlägger var tillväxten faktiskt finns och bygger en plan som går att genomföra, med prioriterade initiativ som flyttar affären framåt.",
     href: "/tjanster/affarsutveckling",
     deliverables: [
       "Tillväxtanalys av marknad & konkurrens",
@@ -41,7 +41,7 @@ const services: Service[] = [
   {
     num: "03",
     title: "Optimerade kampanjer",
-    body: "Rätt budskap, i rätt kanal, till rätt målgrupp. Jag bygger, mäter och skruvar löpande så att budgeten jobbar för er, inte tvärtom.",
+    body: "Rätt budskap, i rätt kanal, till rätt målgrupp. Vi bygger, mäter och skruvar löpande så att budgeten jobbar för er, inte tvärtom.",
     href: "/tjanster/optimerade-kampanjer",
     deliverables: [
       "Kampanjstruktur för passande kanaler",
@@ -59,22 +59,22 @@ const processSteps = [
   {
     step: "01",
     title: "Kartlägg",
-    body: "Jag går igenom system, verktyg, licenser och flöden. Var ligger datan, var dubbelarbetas det och var glappar kedjan?",
+    body: "Vi går igenom system, verktyg, licenser och flöden. Var ligger datan, var dubbelarbetas det och var glappar kedjan?",
   },
   {
     step: "02",
     title: "Prioritera",
-    body: "Jag rangordnar efter effekt och insats. Det som ger mest tid tillbaka, eller mest affär, görs först.",
+    body: "Vi rangordnar efter effekt och insats. Det som ger mest tid tillbaka, eller mest affär, görs först.",
   },
   {
     step: "03",
     title: "Genomför",
-    body: "Jag rensar, kopplar ihop och automatiserar. Tydliga faser, deadlines och ägarskap hela vägen fram.",
+    body: "Vi rensar, kopplar ihop och automatiserar. Tydliga faser, deadlines och ägarskap hela vägen fram.",
   },
   {
     step: "04",
     title: "Följ upp",
-    body: "Jag mäter att det används och håller över tid, och bygger vidare där nästa effekt finns.",
+    body: "Vi mäter att det används och håller över tid, och bygger vidare där nästa effekt finns.",
   },
 ];
 
@@ -115,24 +115,24 @@ const methodPerService = [
 // Håll frågor och svar identiska på båda ställena, annars kan Google straffa sidan.
 export const faqItems = [
   {
-    q: "Vad kostar det att jobba med dig?",
-    a: "Det beror på omfattningen. Ett avgränsat projekt kostar mindre än ett löpande samarbete. Vill ni ha en snabb prisbild direkt kan ni testa min priskalkylator. Ni får alltid ett konkret förslag med pris innan jag börjar, och första samtalet är kostnadsfritt. Inga överraskningar på fakturan.",
+    q: "Vad kostar det att jobba med er?",
+    a: "Det beror på omfattningen. Ett avgränsat projekt kostar mindre än ett löpande samarbete. Vill ni ha en snabb prisbild direkt kan ni testa vår priskalkylator. Ni får alltid ett konkret förslag med pris innan vi börjar, och första samtalet är kostnadsfritt. Inga överraskningar på fakturan.",
   },
   {
     q: "Hur snabbt ser vi resultat?",
-    a: "Kartläggningen tar en till två veckor och de första konkreta leverablerna kommer oftast inom en månad. Sedan är jag ärlig: att hålla ordning i systemen är ett löpande arbete, och jag säger vad som går snabbt och vad som kräver uthållighet.",
+    a: "Kartläggningen tar en till två veckor och de första konkreta leverablerna kommer oftast inom en månad. Sedan är vi ärlig: att hålla ordning i systemen är ett löpande arbete, och vi säger vad som går snabbt och vad som kräver uthållighet.",
   },
   {
-    q: "Vilka företag jobbar du med?",
-    a: "Mindre bolag, från enmansföretag upp till ett femtiotal anställda, oftast utan egen IT-avdelning. Jag vet hur det är att växa med begränsade resurser, och upplägget skalas efter er storlek och budget. Ingen betalar för mer än de behöver.",
+    q: "Vilka företag jobbar ni med?",
+    a: "Mindre bolag, från enmansföretag upp till ett femtiotal anställda, oftast utan egen IT-avdelning. Vi vet hur det är att växa med begränsade resurser, och upplägget skalas efter er storlek och budget. Ingen betalar för mer än de behöver.",
   },
   {
     q: "Måste vi köpa en massa nya system och verktyg?",
-    a: "Nej. Jag börjar alltid i strategin: vad ni behöver och varför. Ofta räcker verktygen ni redan har, rätt ihopkopplade. Nya system föreslår jag bara när de löser ett verkligt problem, och jag tjänar ingenting på att ni köper fler licenser.",
+    a: "Nej. Vi börjar alltid i strategin: vad ni behöver och varför. Ofta räcker verktygen ni redan har, rätt ihopkopplade. Nya system föreslår vi bara när de löser ett verkligt problem, och vi tjänar ingenting på att ni köper fler licenser.",
   },
   {
     q: "Är det här mer AI-hype?",
-    a: "Nej. AI är ett verktyg bland flera. Jag använder det där det faktiskt sparar tid och hoppar över det där det inte gör det. Strategin och helheten kommer först, tekniken väljs därefter.",
+    a: "Nej. AI är ett verktyg bland flera. Vi använder det där det faktiskt sparar tid och hoppar över det där det inte gör det. Strategin och helheten kommer först, tekniken väljs därefter.",
   },
   {
     q: "Kan vi börja smått?",
@@ -147,7 +147,7 @@ export function Services() {
       <div className="mx-auto max-w-6xl px-6 py-24 md:py-32">
         <Reveal>
           <div className="max-w-3xl">
-            <div className="eyebrow mb-5">Vad jag gör</div>
+            <div className="eyebrow mb-5">Vad vi gör</div>
             <h2 className="display-heading text-3xl md:text-5xl">
               En grund. <span className="text-brand-green">Två som bygger vidare.</span>
             </h2>
@@ -254,7 +254,7 @@ const vardeTjanster: {
       { rubrik: "Mindre dubbeljobb", rad: "Uppgifter skrivs in en gång och landar rätt överallt." },
       { rubrik: "Tydligare arbetsflöde", rad: "Alla vet var saker finns och vad som händer härnäst." },
       { rubrik: "Modernare verktyg", rad: "Rätt teknik i tiden, utan att jaga varje trend." },
-      { rubrik: "En opartisk rådgivare", rad: "Jag tjänar ingenting på att ni köper fler licenser." },
+      { rubrik: "En opartisk rådgivare", rad: "Vi tjänar ingenting på att ni köper fler licenser." },
     ],
   },
   {
@@ -338,12 +338,12 @@ export function Process() {
       <div className="relative mx-auto max-w-6xl px-6 py-24 md:py-32">
         <Reveal>
           <div className="max-w-3xl">
-            <div className="eyebrow mb-5 text-brand-green">Hur jag jobbar</div>
+            <div className="eyebrow mb-5 text-brand-green">Hur vi jobbar</div>
             <h2 className="display-heading text-3xl md:text-5xl text-ink">
               Fyra steg. <span className="text-brand-green">Varje uppdrag.</span>
             </h2>
             <p className="mt-6 text-ink/75 max-w-2xl leading-relaxed">
-              Jag börjar alltid i nuläget: hur ni faktiskt arbetar och vilka
+              Vi börjar alltid i nuläget: hur ni faktiskt arbetar och vilka
               system som bär verksamheten. Systemen är grunden, och när den
               sitter följer allt annat samma fyra steg.
             </p>
@@ -458,9 +458,9 @@ export function Faq() {
               href={`mailto:${CONTACT_EMAIL}`}
               className="font-semibold border-b-2 border-brand-green pb-0.5 hover:text-brand-green"
             >
-              Mejla mig
+              Mejla oss
             </a>{" "}
-            så svarar jag inom ett dygn.
+            så svarar vi inom ett dygn.
           </p>
           <Link
             to="/pris"
@@ -530,7 +530,7 @@ export function Contact() {
             Berätta vad ni <span className="text-brand-green">vill uppnå</span>.
           </h2>
           <p className="mt-6 text-ink/75 leading-relaxed">
-            Några rader räcker. Jag svarar inom ett dygn och föreslår ett kort
+            Några rader räcker. Vi svarar inom ett dygn och föreslår ett kort
             första samtal, utan förpliktelser.
           </p>
           <div className="mt-10 space-y-4 text-sm">
@@ -560,10 +560,10 @@ export function Contact() {
               <div className="py-10 text-center">
                 <div className="eyebrow mb-3">Tack</div>
                 <p className="display-heading text-2xl">
-                  Tack {form.name.trim().split(" ")[0]}! Jag hör av mig inom ett dygn.
+                  Tack {form.name.trim().split(" ")[0]}! Vi hör av oss inom ett dygn.
                 </p>
                 <p className="mt-4 text-sm text-ink/60">
-                  Jag svarar på {form.email.trim()}.
+                  Vi svarar på {form.email.trim()}.
                 </p>
               </div>
             ) : (
@@ -597,7 +597,7 @@ export function Contact() {
                   {status === "sending" ? "Skickar…" : "Skicka"} <ArrowUpRight className="h-4 w-4" strokeWidth={2.5} />
                 </button>
                 <p className="text-xs text-subtle">
-                  Jag svarar inom ett dygn. Går även bra att mejla direkt till {CONTACT_EMAIL}.
+                  Vi svarar inom ett dygn. Går även bra att mejla direkt till {CONTACT_EMAIL}.
                 </p>
               </>
             )}

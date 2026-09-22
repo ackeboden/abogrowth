@@ -9,7 +9,7 @@ export const Route = createFileRoute("/om")({
       {
         name: "description",
         content:
-          "ABO Growth drivs av Alexander från Stockholm. Jag hjälper mindre bolag få ordning i sina digitala system och AI-verktyg. Strategin först, tekniken sedan och ärliga besked hela vägen.",
+          "ABO Growth drivs av Alexander från Stockholm. Vi hjälper mindre bolag få ordning i sina digitala system och AI-verktyg. Strategin först, tekniken sedan och ärliga besked hela vägen.",
       },
       { property: "og:title", content: "Om ABO Growth" },
       { property: "og:description", content: "Den ni pratar med är den som levererar. Digitala system, AI och struktur, från Stockholm." },
@@ -27,7 +27,7 @@ const principles = [
   {
     icon: Compass,
     title: "Strategin först, tekniken sedan",
-    body: "Jag börjar i affären: mål, flöden, flaskhalsar. Vilka system och verktyg som behövs är en följdfråga, aldrig utgångspunkten.",
+    body: "Vi börjar i affären: mål, flöden, flaskhalsar. Vilka system och verktyg som behövs är en följdfråga, aldrig utgångspunkten.",
   },
   {
     icon: ListChecks,
@@ -37,12 +37,12 @@ const principles = [
   {
     icon: ClipboardList,
     title: "Projektledning som metod",
-    body: "Faser, deadlines och tydligt ägarskap. Strategin är inget värd förrän den är genomförd, så jag driver den hela vägen.",
+    body: "Faser, deadlines och tydligt ägarskap. Strategin är inget värd förrän den är genomförd, så vi driver den hela vägen.",
   },
   {
     icon: Handshake,
     title: "Ärliga besked",
-    body: "Jag säger vad som går snabbt och vad som kräver uthållighet. Och om jag inte är rätt hjälp för er säger jag det också.",
+    body: "Vi säger vad som går snabbt och vad som kräver uthållighet. Och om vi inte är rätt hjälp för er säger vi det också.",
   },
 ];
 
@@ -95,8 +95,9 @@ function Page() {
                 </a>
               </div>
             </Reveal>
-            {/* Hela sajten är i jag-form. Tonen ska vara självsäker och saklig,
-                inga vardagliga effektord. */}
+            {/* UNDANTAG: sajten talar i vi-form, men den här personliga
+                presentationen står kvar i jag-form. Tonen ska vara
+                självsäker och saklig, inga vardagliga effektord. */}
             <Reveal className="md:col-span-7 space-y-6 text-ink/80 leading-relaxed" delay={130}>
               <p>
                 <strong className="block text-ink font-semibold mb-1">Jag driver saker i mål.</strong>
@@ -122,13 +123,13 @@ function Page() {
           </div>
         </section>
 
-        <section className="relative bg-ink text-paper overflow-hidden">
+        <section className="relative bg-paper text-ink overflow-hidden">
           <div className="ai-glow" aria-hidden="true" />
           <div className="relative mx-auto max-w-6xl px-6 py-24 md:py-32">
             <Reveal>
               <div className="max-w-3xl">
-                <div className="eyebrow mb-5">Så jobbar jag</div>
-                <h2 className="display-heading text-3xl md:text-5xl text-paper">
+                <div className="eyebrow mb-5">Så jobbar vi</div>
+                <h2 className="display-heading text-3xl md:text-5xl text-ink">
                   Fyra principer. <span className="text-brand-green">Inga undantag.</span>
                 </h2>
               </div>
@@ -136,12 +137,12 @@ function Page() {
             <div className="mt-14 grid gap-6 md:grid-cols-2">
               {principles.map((p, i) => (
                 <Reveal key={p.title} delay={i * 110}>
-                  <div className="h-full border border-paper/15 bg-white/5 p-5 md:p-8 transition-all duration-300 hover:border-brand-green/50 hover:bg-white/[0.08] hover:-translate-y-1">
+                  <div className="h-full border border-line bg-white p-5 md:p-8 transition-all duration-300 hover:border-brand-green/50 hover:bg-mist hover:-translate-y-1">
                     <div className="w-10 h-10 flex items-center justify-center bg-brand-green/15 text-brand-green mb-6">
                       <p.icon className="h-5 w-5" strokeWidth={2} />
                     </div>
-                    <h3 className="display-heading text-lg mb-3 text-paper">{p.title}</h3>
-                    <p className="text-sm text-paper/65 leading-relaxed">{p.body}</p>
+                    <h3 className="display-heading text-lg mb-3 text-ink">{p.title}</h3>
+                    <p className="text-sm text-ink/70 leading-relaxed">{p.body}</p>
                   </div>
                 </Reveal>
               ))}
@@ -157,7 +158,7 @@ function Page() {
               <ArrowUpRight className="h-4 w-4 text-brand-green" strokeWidth={2.5} />
             </Link>
             <Link to="/" hash="tjanster" className="text-sm text-subtle hover:text-ink">
-              Se mina tjänster →
+              Se våra tjänster →
             </Link>
           </div>
         </section>

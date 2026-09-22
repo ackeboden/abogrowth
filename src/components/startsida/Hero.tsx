@@ -355,13 +355,13 @@ export function Hero() {
             </span>
           </h1>
           <p className="mt-8 max-w-xl text-lg text-ink/75 leading-relaxed hero-rise [animation-delay:700ms]">
-            Jag skapar ordning: en systemflora som hänger ihop, mindre
+            Vi skapar ordning: en systemflora som hänger ihop, mindre
             dubbelarbete och en tydlig väg framåt.
           </p>
           <div className="mt-10 flex flex-wrap items-center gap-4 hero-rise [animation-delay:850ms]">
             <Link
               to="/boka"
-              className="inline-flex items-center gap-2 bg-brand-green text-paper px-6 py-3.5 text-sm font-semibold hover:bg-ink hover:text-ink transition-colors"
+              className="inline-flex items-center gap-2 bg-brand-green text-paper px-6 py-3.5 text-sm font-semibold hover:bg-ink hover:text-paper transition-colors"
             >
               Boka ett samtal <ArrowUpRight className="h-4 w-4" strokeWidth={2.5} />
             </Link>
@@ -370,7 +370,7 @@ export function Hero() {
               <ArrowDown className="h-3.5 w-3.5 transition-transform group-hover:translate-y-0.5" strokeWidth={2.5} />
             </a>
           </div>
-          {/* Svarar på besökarens första fråga: är det här för mig? */}
+          {/* Svarar på besökarens första fråga: är det här för oss? */}
           <p className="mt-8 flex items-start gap-2.5 text-sm text-subtle leading-relaxed hero-rise [animation-delay:1000ms]">
             <span aria-hidden="true" className="mt-2 h-px w-6 shrink-0 bg-brand-green" />
             För mindre bolag, från enmansföretag upp till ett femtiotal

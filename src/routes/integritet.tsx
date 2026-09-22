@@ -20,8 +20,8 @@ export const Route = createFileRoute("/integritet")({
   component: Page,
 });
 
-// Medvetet allmänt hållen och i hemsidans-form i stället för jag-form
-// (Alexanders önskemål, enda undantaget från sajtens jag-röst) så texten
+// Medvetet allmänt hållen och i hemsidans-form i stället för vi-form
+// (Alexanders önskemål, enda undantaget från sajtens vi-röst) så texten
 // inte behöver skrivas om vid teknikbyten. Håll den ändå sann mot vad
 // sajten faktiskt gör; analysverktyget nämns som "för närvarande".
 const block = [

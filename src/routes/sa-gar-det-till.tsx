@@ -10,7 +10,7 @@ export const Route = createFileRoute("/sa-gar-det-till")({
       {
         name: "description",
         content:
-          "Så går första samtalet med ABO Growth till: 30 minuter, kostnadsfritt och utan förberedelsekrav. Jag lyssnar, ställer frågor och föreslår ett upplägg.",
+          "Så går första samtalet med ABO Growth till: 30 minuter, kostnadsfritt och utan förberedelsekrav. Vi lyssnar, ställer frågor och föreslår ett upplägg.",
       },
       { property: "og:title", content: "Så går det till | ABO Growth" },
       { property: "og:description", content: "Första samtalet: 30 minuter, kostnadsfritt, inga förberedelsekrav." },
@@ -28,29 +28,29 @@ const steps = [
   {
     n: "01",
     t: "Ni hör av er",
-    b: "Ett mejl räcker: ett par rader om vilka ni är och vad ni brottas med. Ni behöver inte ha formulerat något färdigt. Jag svarar inom ett dygn med förslag på tider.",
+    b: "Ett mejl räcker: ett par rader om vilka ni är och vad ni brottas med. Ni behöver inte ha formulerat något färdigt. Vi svarar inom ett dygn med förslag på tider.",
   },
   {
     n: "02",
-    t: "Jag förbereder mig",
-    b: "Innan mötet läser jag på om er verksamhet, marknad och digitala närvaro. Ni behöver inte förbereda något. Kom som ni är, jag står för frågorna.",
+    t: "Vi förbereder oss",
+    b: "Innan mötet läser vi på om er verksamhet, marknad och digitala närvaro. Ni behöver inte förbereda något. Kom som ni är, vi står för frågorna.",
   },
   {
     n: "03",
     t: "Första samtalet: 30 minuter",
-    b: "Video eller telefon, ni väljer. Jag lyssnar på var ni står, ställer frågor om mål och flaskhalsar och är ärlig om jag kan hjälpa till, och om jag inte kan.",
+    b: "Video eller telefon, ni väljer. Vi lyssnar på var ni står, ställer frågor om mål och flaskhalsar och är ärlig om vi kan hjälpa till, och om vi inte kan.",
   },
   {
     n: "04",
     t: "Ni får ett förslag",
-    b: "Inom några dagar skickar jag ett kort, konkret förslag: vad jag ser, var jag skulle börja och vad det kostar. Sedan bestämmer ni er i er egen takt.",
+    b: "Inom några dagar skickar vi ett kort, konkret förslag: vad vi ser, var vi skulle börja och vad det kostar. Sedan bestämmer ni er i er egen takt.",
   },
 ];
 
 const promises = [
   "Kostnadsfritt och utan förpliktelser",
   "Inga förberedelser krävs av er",
-  "Ärligt besked, även när svaret är att ni inte behöver mig",
+  "Ärligt besked, även när svaret är att ni inte behöver oss",
   "Inget säljmanus, inga uppföljningssamtal ni inte bett om",
 ];
 
@@ -97,9 +97,9 @@ function Page() {
                 Det ni <span className="text-brand-green">inte</span> behöver oroa er för.
               </h2>
               <p className="mt-6 text-ink/75 leading-relaxed">
-                Jag vet att "boka ett samtal" ofta betyder säljpitch. Så jobbar
-                inte jag. Första mötet handlar om att förstå er affär, inte om
-                att sälja in min.
+                Vi vet att "boka ett samtal" ofta betyder säljpitch. Så jobbar
+                inte vi. Första mötet handlar om att förstå er affär, inte om
+                att sälja in vår egen.
               </p>
               <IllustrationSamtal className="mt-10 w-full max-w-[240px]" />
             </div>
@@ -117,24 +117,24 @@ function Page() {
         </section>
 
         {/* Egen CTA i stället för BookingCTA — texten här får inte upprepa sidan den avslutar. */}
-        <section className="bg-ink text-paper">
+        <section className="bg-mist text-ink border-y border-line">
           <div className="mx-auto max-w-6xl px-6 py-20 md:py-24 grid md:grid-cols-12 gap-10 items-center">
             <div className="md:col-span-8">
               <div className="eyebrow mb-4 text-brand-green">Nästa steg</div>
-              <h2 className="display-heading text-3xl md:text-5xl text-paper">Nu vet ni hur det går till.</h2>
-              <p className="mt-5 text-paper/70 max-w-xl leading-relaxed">
-                Ett mejl med ett par rader räcker. Jag tar det därifrån.
+              <h2 className="display-heading text-3xl md:text-5xl text-ink">Nu vet ni hur det går till.</h2>
+              <p className="mt-5 text-ink/75 max-w-xl leading-relaxed">
+                Ett mejl med ett par rader räcker. Vi tar det därifrån.
               </p>
             </div>
             <div className="md:col-span-4 md:text-right">
               <Link
                 to="/boka"
-                className="inline-flex items-center gap-2 bg-brand-green text-paper px-6 py-4 text-sm font-semibold hover:bg-paper hover:text-ink transition-colors"
+                className="inline-flex items-center gap-2 bg-brand-green text-paper px-6 py-4 text-sm font-semibold hover:bg-ink hover:text-paper transition-colors"
               >
                 Boka ett samtal <ArrowUpRight className="h-4 w-4" strokeWidth={2.5} />
               </Link>
-              <div className="mt-3 text-xs text-paper/50">
-                Eller mejla direkt: <a href={`mailto:${CONTACT_EMAIL}`} className="underline hover:text-paper">{CONTACT_EMAIL}</a>
+              <div className="mt-3 text-xs text-subtle">
+                Eller mejla direkt: <a href={`mailto:${CONTACT_EMAIL}`} className="underline hover:text-ink">{CONTACT_EMAIL}</a>
               </div>
             </div>
           </div>
@@ -143,8 +143,8 @@ function Page() {
         <section className="border-b border-line">
           <div className="mx-auto max-w-6xl px-6 py-16 flex flex-wrap items-center justify-between gap-6">
             <Link to="/" hash="tjanster" className="group inline-flex items-center gap-3 text-sm font-semibold">
-              <span className="tracked text-xs text-subtle">Nyfikna på vad jag gör?</span>
-              <span className="border-b-2 border-brand-green pb-0.5 group-hover:text-brand-green">Se mina tjänster</span>
+              <span className="tracked text-xs text-subtle">Nyfikna på vad vi gör?</span>
+              <span className="border-b-2 border-brand-green pb-0.5 group-hover:text-brand-green">Se våra tjänster</span>
               <ArrowUpRight className="h-4 w-4 text-brand-green" strokeWidth={2.5} />
             </Link>
             <Link to="/" className="text-sm text-subtle hover:text-ink">← Tillbaka till startsidan</Link>

@@ -60,7 +60,7 @@ function ToolChip({
         className={`resan-chip ${variant === "chaos" ? "resan-chip--chaos" : variant === "calm" ? "resan-chip--calm" : ""} ${
           cut ? "resan-chip--cut" : ""
         } relative whitespace-nowrap px-3 py-1.5 md:px-4 md:py-2 text-xs md:text-sm font-semibold border shadow-sm ${
-          dark ? "bg-white/10 border-white/20 text-paper" : "bg-white border-line text-ink/80"
+          dark ? "bg-mist border-line text-ink" : "bg-white border-line text-ink/80"
         }`}
         style={{ ["--rot" as string]: `${chip.rot ?? 0}deg`, transitionDelay: `${delay}s`, animationDelay: `${delay}s` }}
       >
@@ -151,7 +151,7 @@ function ActKaos() {
   );
 }
 
-// ---- Akt 2: Jag reder ut ----
+// ---- Akt 2: Vi reder ut ----
 const redaChips: (Chip & { cut?: boolean })[] = [
   { label: "Analys", x: 50, y: 15 },
   { label: "CRM", x: 20, y: 30 },
@@ -169,9 +169,9 @@ function ActRedaUt() {
       <div className="mx-auto max-w-6xl px-6 py-20 md:py-28 grid md:grid-cols-12 gap-10 md:gap-12 items-center">
         <div className="md:col-span-5 md:order-2">
           <div className="eyebrow mb-4">02 · Med ABO Growth</div>
-          <h2 className="display-heading text-3xl md:text-5xl">Jag reder ut.</h2>
+          <h2 className="display-heading text-3xl md:text-5xl">Vi reder ut.</h2>
           <p className="mt-6 text-ink/75 leading-relaxed">
-            Jag kartlägger allt ni har, väljer bort det som inte bär och kopplar
+            Vi kartlägger allt ni har, väljer bort det som inte bär och kopplar
             ihop det som faktiskt ska prata med varandra. Strategin först,
             tekniken sedan.
           </p>
@@ -219,17 +219,17 @@ const ordningChips: Chip[] = [
 function ActOrdning() {
   const hub = { x: 50, y: 45 };
   return (
-    <section className="relative bg-ink text-paper overflow-hidden">
+    <section className="relative bg-paper text-ink overflow-hidden">
       <div className="ai-glow" aria-hidden="true" />
       <div className="relative mx-auto max-w-6xl px-6 py-20 md:py-28 grid md:grid-cols-12 gap-10 md:gap-12 items-center">
         <div className="md:col-span-5">
           <div className="eyebrow mb-4">03 · Resultatet</div>
-          <h2 className="display-heading text-3xl md:text-5xl text-paper">Ordning.</h2>
-          <p className="mt-6 text-paper/70 leading-relaxed">
+          <h2 className="display-heading text-3xl md:text-5xl text-ink">Ordning.</h2>
+          <p className="mt-6 text-ink/75 leading-relaxed">
             En systemflora som hänger ihop, lägre kostnad, och ett team som vet
             exakt hur allt används. Ni sköter affären, systemen sköter rutinerna.
           </p>
-          <div className="mt-8 flex flex-wrap gap-x-6 gap-y-2 text-sm text-paper/80">
+          <div className="mt-8 flex flex-wrap gap-x-6 gap-y-2 text-sm text-ink/80">
             {["Allt hänger ihop", "Lägre verktygskostnad", "Teamet ombord"].map((t) => (
               <span key={t} className="inline-flex items-center gap-2">
                 <Check className="h-4 w-4 text-brand-green" strokeWidth={2.5} /> {t}
@@ -238,7 +238,7 @@ function ActOrdning() {
           </div>
         </div>
         <div className="md:col-span-7">
-          <Scene className="relative h-80 md:h-[420px] rounded-lg bg-white/[0.04] border border-paper/15 overflow-hidden">
+          <Scene className="relative h-80 md:h-[420px] rounded-lg bg-white border border-line overflow-hidden">
             <svg className="absolute inset-0 h-full w-full" viewBox="0 0 100 100" preserveAspectRatio="none" fill="none">
               {ordningChips.map((c, i) => (
                 <line
@@ -267,7 +267,7 @@ function ActOrdning() {
                 <div key={i} className="relative">
                   <Figur w={30} tone="paper" />
                   <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-brand-green">
-                    <Check className="h-2.5 w-2.5 text-paper" strokeWidth={3} />
+                    <Check className="h-2.5 w-2.5 text-ink" strokeWidth={3} />
                   </span>
                 </div>
               ))}
@@ -287,30 +287,30 @@ function Page() {
         <PageHero
           eyebrow="Resan"
           title={<>Från kaos till <span className="text-brand-green">ordning</span>.</>}
-          intro="Så här kan en resa med mig se ut. Scrolla för att följa med, från spretig verktygsflora som kostar pengar till en struktur som hänger ihop."
+          intro="Så här kan en resa med oss se ut. Scrolla för att följa med, från spretig verktygsflora som kostar pengar till en struktur som hänger ihop."
         />
 
         <ActKaos />
         <ActRedaUt />
         <ActOrdning />
 
-        <section className="bg-ink text-paper border-t border-paper/10">
+        <section className="bg-mist text-ink border-y border-line">
           <div className="mx-auto max-w-6xl px-6 py-16 md:py-20 grid md:grid-cols-12 gap-10 items-center">
             <div className="md:col-span-8">
               <div className="eyebrow mb-4 text-brand-green">Nästa steg</div>
-              <h2 className="display-heading text-3xl md:text-5xl text-paper">Redo för samma resa?</h2>
-              <p className="mt-5 text-paper/70 max-w-xl leading-relaxed">
-                Boka ett kort första samtal, så börjar jag där ni står idag.
+              <h2 className="display-heading text-3xl md:text-5xl text-ink">Redo för samma resa?</h2>
+              <p className="mt-5 text-ink/75 max-w-xl leading-relaxed">
+                Boka ett kort första samtal, så börjar vi där ni står idag.
               </p>
             </div>
             <div className="md:col-span-4 md:text-right">
               <Link
                 to="/boka"
-                className="inline-flex items-center gap-2 bg-brand-green text-paper px-6 py-4 text-sm font-semibold hover:bg-paper hover:text-ink transition-colors"
+                className="inline-flex items-center gap-2 bg-brand-green text-paper px-6 py-4 text-sm font-semibold hover:bg-ink hover:text-paper transition-colors"
               >
                 Boka ett samtal <ArrowUpRight className="h-4 w-4" strokeWidth={2.5} />
               </Link>
-              <div className="mt-3 text-xs text-paper/50">Svar inom ett dygn.</div>
+              <div className="mt-3 text-xs text-subtle">Svar inom ett dygn.</div>
             </div>
           </div>
         </section>

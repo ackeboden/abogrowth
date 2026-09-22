@@ -214,7 +214,7 @@ export function Footer() {
         <div>
           <Logo inverted />
           <p className="mt-4 text-sm text-paper/60 max-w-xs">
-            Jag hjälper er få ordning i era digitala system och AI-verktyg.
+            Vi hjälper er få ordning i era digitala system och AI-verktyg.
             Struktur, effektivitet och en tydlig väg framåt, från Stockholm.
           </p>
         </div>
@@ -288,7 +288,7 @@ export function Footer() {
 
 export function BookingCTA({
   title = "Redo att få ordning?",
-  body = "Boka ett kort första samtal. Jag lyssnar, ställer frågor och föreslår ett upplägg.",
+  body = "Boka ett kort första samtal. Vi lyssnar, ställer frågor och föreslår ett upplägg.",
 }: { title?: string; body?: string }) {
   return (
     <section className="bg-mist text-ink border-y border-line">
@@ -301,7 +301,7 @@ export function BookingCTA({
         <div className="md:col-span-4 md:text-right">
           <Link
             to="/boka"
-            className="inline-flex items-center gap-2 bg-brand-green text-paper px-6 py-4 text-sm font-semibold hover:bg-ink hover:text-ink transition-colors"
+            className="inline-flex items-center gap-2 bg-brand-green text-paper px-6 py-4 text-sm font-semibold hover:bg-ink hover:text-paper transition-colors"
           >
             Boka ett samtal <ArrowUpRight className="h-4 w-4" strokeWidth={2.5} />
           </Link>

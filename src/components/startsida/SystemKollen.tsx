@@ -883,7 +883,7 @@ export function SystemKollen() {
     try {
       sessionStorage.setItem(
         "systemkollen-boka",
-        `Jag gjorde systemkollen: ${valda.map((v) => `${v.namn} (${kategoriNamn[v.kat]})`).join(", ")}. ` +
+        `Vi gjorde systemkollen: ${valda.map((v) => `${v.namn} (${kategoriNamn[v.kat]})`).join(", ")}. ` +
           (k > 0
             ? `Kartan visade ${k} ${k === 1 ? "möjlig koppling" : "möjliga kopplingar"}.`
             : "Kartan visade inga givna kopplingar."),
@@ -985,7 +985,7 @@ export function SystemKollen() {
   };
 
   return (
-    <section id="systemkollen" className="snap-start relative min-h-svh bg-paper text-ink overflow-hidden">
+    <section id="systemkollen" className="snap-start relative min-h-svh bg-white border-y border-line text-ink overflow-hidden">
       <div className="ai-glow" aria-hidden="true" />
       <div className="relative mx-auto max-w-6xl px-6 py-24 md:py-32">
         <Reveal>
@@ -996,7 +996,7 @@ export function SystemKollen() {
             </h2>
             <p className="mt-6 text-ink/75 leading-relaxed max-w-2xl">
               Skriv in systemen ni faktiskt använder och se er egen karta växa
-              fram. Sedan ordnar jag den: kartan som landar är mitt förslag på
+              fram. Sedan ordnar vi den: kartan som landar är vårt förslag på
               hur allt kan jobba ihop.
             </p>
           </div>
@@ -1267,7 +1267,7 @@ export function SystemKollen() {
                     setFas("formular");
                   }}
                   disabled={n < 2}
-                  className="inline-flex items-center gap-2 bg-brand-green text-paper px-6 py-3.5 text-sm font-semibold transition-colors hover:bg-ink hover:text-ink disabled:opacity-40 disabled:pointer-events-none"
+                  className="inline-flex items-center gap-2 bg-brand-green text-paper px-6 py-3.5 text-sm font-semibold transition-colors hover:bg-ink hover:text-paper disabled:opacity-40 disabled:pointer-events-none"
                 >
                   Skapa ordning <ArrowUpRight className="h-4 w-4" strokeWidth={2.5} />
                 </button>
@@ -1280,7 +1280,7 @@ export function SystemKollen() {
             {fas === "formular" && (
               <form onSubmit={skickaLead} className="max-w-xl border border-brand-green/40 bg-white p-5 md:p-6">
                 <p className="text-sm text-ink/75 leading-relaxed mb-5">
-                  Fyll i så ordnar jag er karta. Jag hör av mig med tankar om
+                  Fyll i så ordnar vi er karta. Vi hör av oss med tankar om
                   er systemflora, kostnadsfritt och utan förpliktelser.
                 </p>
                 <div className="grid gap-3 sm:grid-cols-2">
@@ -1320,7 +1320,7 @@ export function SystemKollen() {
                   <button
                     type="submit"
                     disabled={skickar}
-                    className="inline-flex items-center gap-2 bg-brand-green text-paper px-6 py-3 text-sm font-semibold transition-colors hover:bg-ink hover:text-ink disabled:opacity-50"
+                    className="inline-flex items-center gap-2 bg-brand-green text-paper px-6 py-3 text-sm font-semibold transition-colors hover:bg-ink hover:text-paper disabled:opacity-50"
                   >
                     {skickar ? "Ordnar ..." : "Ordna min karta"}
                     <ArrowUpRight className="h-4 w-4" strokeWidth={2.5} />
@@ -1353,15 +1353,15 @@ export function SystemKollen() {
                     </p>
                     <p className="mt-2 text-sm text-ink/70 leading-relaxed">
                       {k > 0
-                        ? `${mobil ? "Tryck" : "Håll muspekaren"} på punkterna längs linjerna så ser ni vad varje koppling gör. Jag hör av mig med mina tankar.`
-                        : "Era system saknar självklara kopplingar i min regelbok, vilket i sig säger något. Jag hör av mig med mina tankar."}
+                        ? `${mobil ? "Tryck" : "Håll muspekaren"} på punkterna längs linjerna så ser ni vad varje koppling gör. Vi hör av oss med våra tankar.`
+                        : "Era system saknar självklara kopplingar i vår regelbok, vilket i sig säger något. Vi hör av oss med våra tankar."}
                     </p>
                   </div>
                   <div className="jungle-late md:col-span-5 flex flex-wrap items-center gap-4 md:justify-end" style={{ transitionDelay: "1.05s" }}>
                     <Link
                       to="/boka"
                       onClick={sparaBokningsKontext}
-                      className="inline-flex items-center gap-2 bg-brand-green text-paper px-6 py-3.5 text-sm font-semibold hover:bg-ink hover:text-ink transition-colors"
+                      className="inline-flex items-center gap-2 bg-brand-green text-paper px-6 py-3.5 text-sm font-semibold hover:bg-ink hover:text-paper transition-colors"
                     >
                       Boka ett samtal <ArrowUpRight className="h-4 w-4" strokeWidth={2.5} />
                     </Link>
@@ -1415,15 +1415,15 @@ export function SystemKollen() {
                           </span>
                           <span className="blur-[5px] opacity-60">
                             {i % 2 === 0
-                              ? "Det här tipset går jag igenom i samtalet, tillsammans med resten av er karta."
-                              : "Även det här förslaget sparar jag till samtalet, det bygger på era system."}
+                              ? "Det här tipset går vi igenom i samtalet, tillsammans med resten av er karta."
+                              : "Även det här förslaget sparar vi till samtalet, det bygger på era system."}
                           </span>
                         </div>
                       ))}
                     </div>
                     {tips.length > 1 && (
                       <p className="mt-4 pt-4 border-t border-line text-sm text-ink/75 leading-relaxed">
-                        Jag ser{" "}
+                        Vi ser{" "}
                         <span className="font-semibold text-ink">
                           {tips.length - 1 === 1 ? "en sak till" : `${tips.length - 1} saker till`}
                         </span>{" "}
