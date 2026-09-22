@@ -18,56 +18,120 @@ type Kategori =
   | "mejl"
   | "komm"
   | "projekt"
+  | "dokument"
+  | "lagring"
   | "mf"
   | "ehandel"
-  | "lagring"
   | "analys"
+  | "support"
+  | "bokning"
+  | "hr"
+  | "affarssystem"
+  | "avtal"
+  | "automation"
+  | "it"
   | "ai"
   | "ovrigt";
 
+// Ordningen styr kategorichipsen i fritextfrågan: vanligast först.
 const kategoriNamn: Record<Kategori, string> = {
   ekonomi: "Ekonomi",
   crm: "CRM & sälj",
   mejl: "Mejl & kalender",
   komm: "Kommunikation",
   projekt: "Projekt",
+  dokument: "Dokument & anteckningar",
+  lagring: "Fillagring",
   mf: "Marknadsföring",
   ehandel: "E-handel & webb",
-  lagring: "Fillagring",
   analys: "Analys & kalkyl",
+  support: "Kundtjänst",
+  bokning: "Bokning & tidbok",
+  hr: "HR & lön",
+  affarssystem: "Affärssystem & lager",
+  avtal: "Avtal & signering",
+  automation: "Automation",
+  it: "IT & säkerhet",
   ai: "AI-verktyg",
   ovrigt: "Övrigt",
 };
 
-// Katalog över vanliga system i svenska småbolag. Namnen används i leads
-// och på kartan; håll stavningen som varumärkena själva skriver den.
-// regelgrupp: ersätter kategorin vid regelmatchning när systemet inte beter
-// sig som kategorins typfall (Klarna bokför inte, Canva skickar inga utskick).
-// overlapp: två valda system i samma overlapp-grupp gör samma jobb → bytestips.
+// Regelgrupper: finare indelning än kategorin när systemen inom en kategori
+// inte beter sig likadant (Klarna bokför inte, Hotjar mäter beteende och inte
+// trafik). Matchningen i kopplingsreglerna sker på regelgrupp när den finns.
 type RegelToken =
   | Kategori
   | "betalning"
+  | "kassa"
   | "webbanalys"
   | "beteende"
   | "webbplats"
   | "design"
   | "video"
-  | "bildai";
+  | "bildai"
+  | "lon"
+  | "schema"
+  | "tidrapport"
+  | "erp"
+  | "lager"
+  | "enkat"
+  | "seo"
+  | "socialt"
+  | "losenord"
+  | "mdm";
 
-type KatalogPost = { namn: string; kat: Kategori; regelgrupp?: RegelToken; overlapp?: string };
+// Katalog över vanliga system i svenska småbolag. Namnen används i leads
+// och på kartan; håll stavningen som varumärkena själva skriver den.
+// regelgrupp: ersätter kategorin vid regelmatchning när systemet inte beter
+// sig som kategorins typfall.
+// overlapp: två valda system i samma overlapp-grupp gör samma jobb → bytestips.
+// ingarI: verktyget ingår i ett paket som också finns i katalogen (Word i
+// Microsoft 365). Nämns i bytestipset när både paketet och verktyget är valda.
+// Bara en bråkdel visas som snabbval; resten hittas genom att söka.
+// sok: extra sökord för system som folk kallar något annat än varumärket
+// säger i dag (Office, G Suite, Azure AD). Visas aldrig, används bara i
+// sökningen så att besökaren hittar rätt utan att kunna det nya namnet.
+type KatalogPost = {
+  namn: string;
+  kat: Kategori;
+  regelgrupp?: RegelToken;
+  overlapp?: string;
+  ingarI?: string;
+  sok?: string[];
+};
+
+const M365 = "Microsoft 365";
+const GWS = "Google Workspace";
 
 const systemKatalog: KatalogPost[] = [
+  // Ekonomi: bokföring
   { namn: "Fortnox", kat: "ekonomi", overlapp: "bokforing" },
   { namn: "Visma eEkonomi", kat: "ekonomi", overlapp: "bokforing" },
   { namn: "Bokio", kat: "ekonomi", overlapp: "bokforing" },
   { namn: "Wint", kat: "ekonomi", overlapp: "bokforing" },
   { namn: "PE Accounting", kat: "ekonomi", overlapp: "bokforing" },
   { namn: "Björn Lundén", kat: "ekonomi", overlapp: "bokforing" },
+  { namn: "Briox", kat: "ekonomi", overlapp: "bokforing" },
+  { namn: "Dooer", kat: "ekonomi", overlapp: "bokforing" },
+  { namn: "SpeedLedger", kat: "ekonomi", overlapp: "bokforing" },
   { namn: "Billogram", kat: "ekonomi" },
+  // Ekonomi: betalning och kassa
   { namn: "Klarna", kat: "ekonomi", regelgrupp: "betalning" },
   { namn: "Stripe", kat: "ekonomi", regelgrupp: "betalning" },
-  { namn: "Zettle", kat: "ekonomi", regelgrupp: "betalning" },
+  { namn: "Zettle", kat: "ekonomi", regelgrupp: "betalning", sok: ["izettle"] },
   { namn: "Swish", kat: "ekonomi", regelgrupp: "betalning" },
+  { namn: "PayPal", kat: "ekonomi", regelgrupp: "betalning" },
+  { namn: "Qliro", kat: "ekonomi", regelgrupp: "betalning" },
+  { namn: "Walley", kat: "ekonomi", regelgrupp: "betalning" },
+  { namn: "Nets", kat: "ekonomi", regelgrupp: "betalning" },
+  { namn: "Payson", kat: "ekonomi", regelgrupp: "betalning" },
+  { namn: "Swedbank Pay", kat: "ekonomi", regelgrupp: "betalning" },
+  { namn: "Square", kat: "ekonomi", regelgrupp: "kassa", overlapp: "kassasystem" },
+  { namn: "Sitoo", kat: "ekonomi", regelgrupp: "kassa", overlapp: "kassasystem" },
+  { namn: "Caspeco", kat: "ekonomi", regelgrupp: "kassa", overlapp: "kassasystem" },
+  { namn: "Trivec", kat: "ekonomi", regelgrupp: "kassa", overlapp: "kassasystem" },
+  { namn: "Onslip", kat: "ekonomi", regelgrupp: "kassa", overlapp: "kassasystem" },
+  // CRM och sälj
   { namn: "HubSpot", kat: "crm", overlapp: "crm" },
   { namn: "Pipedrive", kat: "crm", overlapp: "crm" },
   { namn: "Salesforce", kat: "crm", overlapp: "crm" },
@@ -75,62 +139,225 @@ const systemKatalog: KatalogPost[] = [
   { namn: "Lime CRM", kat: "crm", overlapp: "crm" },
   { namn: "Zoho CRM", kat: "crm", overlapp: "crm" },
   { namn: "webCRM", kat: "crm", overlapp: "crm" },
-  { namn: "Microsoft 365", kat: "mejl", overlapp: "kontorspaket" },
-  { namn: "Google Workspace", kat: "mejl", overlapp: "kontorspaket" },
-  { namn: "Outlook", kat: "mejl", overlapp: "mejlklient" },
-  { namn: "Gmail", kat: "mejl", overlapp: "mejlklient" },
-  { namn: "Calendly", kat: "mejl" },
+  { namn: "SuperOffice", kat: "crm", overlapp: "crm" },
+  { namn: "Dynamics 365", kat: "crm", overlapp: "crm", sok: ["microsoft dynamics"] },
+  // Mejl och kalender
+  { namn: M365, kat: "mejl", overlapp: "kontorspaket", sok: ["office", "office 365", "o365", "m365", "microsoft office"] },
+  { namn: GWS, kat: "mejl", overlapp: "kontorspaket", sok: ["g suite", "gsuite", "google apps"] },
+  { namn: "Outlook", kat: "mejl", overlapp: "mejlklient", ingarI: M365 },
+  { namn: "Gmail", kat: "mejl", overlapp: "mejlklient", ingarI: GWS },
+  { namn: "Exchange", kat: "mejl", ingarI: M365 },
+  { namn: "Google Calendar", kat: "mejl", ingarI: GWS },
+  // Kommunikation
   { namn: "Slack", kat: "komm", overlapp: "chatt" },
-  { namn: "Teams", kat: "komm", overlapp: "chatt" },
+  { namn: "Teams", kat: "komm", overlapp: "chatt", ingarI: M365, sok: ["microsoft teams"] },
+  { namn: "Google Chat", kat: "komm", overlapp: "chatt", ingarI: GWS },
   { namn: "Discord", kat: "komm", overlapp: "chatt" },
   { namn: "Zoom", kat: "komm", regelgrupp: "video", overlapp: "video" },
-  { namn: "Google Meet", kat: "komm", regelgrupp: "video", overlapp: "video" },
+  { namn: "Google Meet", kat: "komm", regelgrupp: "video", overlapp: "video", ingarI: GWS },
+  { namn: "Whereby", kat: "komm", regelgrupp: "video", overlapp: "video" },
+  { namn: "Webex", kat: "komm", regelgrupp: "video", overlapp: "video" },
+  { namn: "Viva Engage", kat: "komm", ingarI: M365, sok: ["yammer"] },
+  { namn: "WhatsApp Business", kat: "komm" },
+  { namn: "Loom", kat: "komm" },
+  // Projekt och uppgifter
   { namn: "Monday", kat: "projekt", overlapp: "projektverktyg" },
   { namn: "Trello", kat: "projekt", overlapp: "projektverktyg" },
   { namn: "Asana", kat: "projekt", overlapp: "projektverktyg" },
   { namn: "ClickUp", kat: "projekt", overlapp: "projektverktyg" },
   { namn: "Jira", kat: "projekt", overlapp: "projektverktyg" },
   { namn: "Basecamp", kat: "projekt", overlapp: "projektverktyg" },
+  { namn: "Smartsheet", kat: "projekt", overlapp: "projektverktyg" },
+  { namn: "Wrike", kat: "projekt", overlapp: "projektverktyg" },
+  { namn: "Linear", kat: "projekt", overlapp: "projektverktyg" },
+  { namn: "Podio", kat: "projekt", overlapp: "projektverktyg" },
+  { namn: "Microsoft Planner", kat: "projekt", overlapp: "projektverktyg", ingarI: M365 },
+  { namn: "Microsoft To Do", kat: "projekt", overlapp: "uppgiftslista", ingarI: M365 },
+  { namn: "Google Tasks", kat: "projekt", overlapp: "uppgiftslista", ingarI: GWS },
   { namn: "Notion", kat: "projekt" },
+  { namn: "Airtable", kat: "projekt" },
+  { namn: "Harvest", kat: "projekt", regelgrupp: "tidrapport", overlapp: "tidrapportering" },
+  { namn: "Toggl", kat: "projekt", regelgrupp: "tidrapport", overlapp: "tidrapportering" },
+  { namn: "Clockify", kat: "projekt", regelgrupp: "tidrapport", overlapp: "tidrapportering" },
+  { namn: "Millnet", kat: "projekt", regelgrupp: "tidrapport", overlapp: "tidrapportering" },
+  // Dokument och anteckningar
+  { namn: "Word", kat: "dokument", overlapp: "ordbehandlare", ingarI: M365 },
+  { namn: "Google Docs", kat: "dokument", overlapp: "ordbehandlare", ingarI: GWS },
+  { namn: "PowerPoint", kat: "dokument", overlapp: "presentation", ingarI: M365 },
+  { namn: "Google Slides", kat: "dokument", overlapp: "presentation", ingarI: GWS },
+  { namn: "OneNote", kat: "dokument", overlapp: "anteckningar", ingarI: M365 },
+  { namn: "Google Keep", kat: "dokument", overlapp: "anteckningar", ingarI: GWS },
+  { namn: "Evernote", kat: "dokument", overlapp: "anteckningar" },
+  { namn: "Confluence", kat: "dokument", overlapp: "kunskapsbank" },
+  { namn: "Microsoft Loop", kat: "dokument", overlapp: "kunskapsbank", ingarI: M365 },
+  { namn: "Miro", kat: "dokument", overlapp: "whiteboard" },
+  { namn: "Microsoft Whiteboard", kat: "dokument", overlapp: "whiteboard", ingarI: M365 },
+  { namn: "Visio", kat: "dokument", ingarI: M365 },
+  { namn: "Sway", kat: "dokument", ingarI: M365 },
+  { namn: "Microsoft Stream", kat: "dokument", ingarI: M365 },
+  { namn: "Adobe Acrobat", kat: "dokument" },
+  // Fillagring
+  { namn: "Google Drive", kat: "lagring", overlapp: "fillagring", ingarI: GWS },
+  { namn: "OneDrive", kat: "lagring", overlapp: "fillagring", ingarI: M365 },
+  { namn: "Dropbox", kat: "lagring", overlapp: "fillagring" },
+  { namn: "Box", kat: "lagring", overlapp: "fillagring" },
+  { namn: "iCloud", kat: "lagring", overlapp: "fillagring" },
+  { namn: "SharePoint", kat: "lagring", ingarI: M365 },
+  // Marknadsföring: utskick
   { namn: "Mailchimp", kat: "mf", overlapp: "nyhetsbrev" },
   { namn: "Klaviyo", kat: "mf", overlapp: "nyhetsbrev" },
   { namn: "Rule", kat: "mf", overlapp: "nyhetsbrev" },
   { namn: "Get a Newsletter", kat: "mf", overlapp: "nyhetsbrev" },
-  { namn: "Meta Ads", kat: "mf" },
+  { namn: "ActiveCampaign", kat: "mf", overlapp: "nyhetsbrev" },
+  { namn: "Brevo", kat: "mf", overlapp: "nyhetsbrev" },
+  { namn: "Apsis", kat: "mf", overlapp: "nyhetsbrev" },
+  { namn: "Paloma", kat: "mf", overlapp: "nyhetsbrev" },
+  // Marknadsföring: annonsering och sociala kanaler
+  { namn: "Meta Ads", kat: "mf", sok: ["facebook ads", "instagram ads", "fb ads"] },
   { namn: "Google Ads", kat: "mf" },
   { namn: "LinkedIn Ads", kat: "mf" },
-  { namn: "Canva", kat: "mf", regelgrupp: "design" },
+  { namn: "TikTok Ads", kat: "mf" },
+  { namn: "Snapchat Ads", kat: "mf" },
+  { namn: "Buffer", kat: "mf", regelgrupp: "socialt", overlapp: "socialaverktyg" },
+  { namn: "Hootsuite", kat: "mf", regelgrupp: "socialt", overlapp: "socialaverktyg" },
+  { namn: "Later", kat: "mf", regelgrupp: "socialt", overlapp: "socialaverktyg" },
+  { namn: "Sprout Social", kat: "mf", regelgrupp: "socialt", overlapp: "socialaverktyg" },
+  { namn: "Meta Business Suite", kat: "mf", regelgrupp: "socialt", sok: ["facebook business"] },
+  { namn: "Trustpilot", kat: "mf" },
+  // Marknadsföring: design och produktion
+  { namn: "Canva", kat: "mf", regelgrupp: "design", overlapp: "designverktyg" },
+  { namn: "Figma", kat: "mf", regelgrupp: "design", overlapp: "designverktyg" },
+  { namn: "Adobe Creative Cloud", kat: "mf", regelgrupp: "design", overlapp: "designverktyg", sok: ["adobe cc"] },
+  { namn: "Photoshop", kat: "mf", regelgrupp: "design" },
+  { namn: "Illustrator", kat: "mf", regelgrupp: "design" },
+  { namn: "InDesign", kat: "mf", regelgrupp: "design" },
+  { namn: "Clipchamp", kat: "mf", regelgrupp: "design", ingarI: M365 },
+  { namn: "Publisher", kat: "mf", regelgrupp: "design", ingarI: M365 },
+  // Marknadsföring: enkäter och formulär
+  { namn: "Typeform", kat: "mf", regelgrupp: "enkat", overlapp: "enkatverktyg" },
+  { namn: "SurveyMonkey", kat: "mf", regelgrupp: "enkat", overlapp: "enkatverktyg" },
+  { namn: "Google Forms", kat: "mf", regelgrupp: "enkat", overlapp: "enkatverktyg", ingarI: GWS },
+  { namn: "Microsoft Forms", kat: "mf", regelgrupp: "enkat", overlapp: "enkatverktyg", ingarI: M365 },
+  // E-handel och webb
   { namn: "Shopify", kat: "ehandel", overlapp: "webbshop" },
   { namn: "WooCommerce", kat: "ehandel", overlapp: "webbshop" },
   { namn: "Quickbutik", kat: "ehandel", overlapp: "webbshop" },
+  { namn: "Magento", kat: "ehandel", overlapp: "webbshop" },
+  { namn: "PrestaShop", kat: "ehandel", overlapp: "webbshop" },
+  { namn: "Starweb", kat: "ehandel", overlapp: "webbshop" },
+  { namn: "Jetshop", kat: "ehandel", overlapp: "webbshop" },
+  { namn: "Askås", kat: "ehandel", overlapp: "webbshop" },
+  { namn: "Centra", kat: "ehandel", overlapp: "webbshop" },
   { namn: "Wix", kat: "ehandel", regelgrupp: "webbplats", overlapp: "sajtbyggare" },
   { namn: "Squarespace", kat: "ehandel", regelgrupp: "webbplats", overlapp: "sajtbyggare" },
   { namn: "WordPress", kat: "ehandel", regelgrupp: "webbplats", overlapp: "sajtbyggare" },
-  { namn: "Google Drive", kat: "lagring", overlapp: "fillagring" },
-  { namn: "OneDrive", kat: "lagring", overlapp: "fillagring" },
-  { namn: "Dropbox", kat: "lagring", overlapp: "fillagring" },
-  { namn: "SharePoint", kat: "lagring" },
-  { namn: "Google Analytics", kat: "analys", regelgrupp: "webbanalys", overlapp: "webbanalys" },
+  { namn: "Webflow", kat: "ehandel", regelgrupp: "webbplats", overlapp: "sajtbyggare" },
+  { namn: "Google Sites", kat: "ehandel", regelgrupp: "webbplats", overlapp: "sajtbyggare", ingarI: GWS },
+  // Analys och kalkyl
+  { namn: "Google Analytics", kat: "analys", regelgrupp: "webbanalys", overlapp: "webbanalys", sok: ["ga4", "analytics"] },
   { namn: "Matomo", kat: "analys", regelgrupp: "webbanalys", overlapp: "webbanalys" },
+  { namn: "Plausible", kat: "analys", regelgrupp: "webbanalys", overlapp: "webbanalys" },
+  { namn: "Google Tag Manager", kat: "analys", regelgrupp: "webbanalys" },
   { namn: "Hotjar", kat: "analys", regelgrupp: "beteende" },
+  { namn: "Mixpanel", kat: "analys", regelgrupp: "beteende" },
   { namn: "Looker Studio", kat: "analys", overlapp: "bi" },
   { namn: "Power BI", kat: "analys", overlapp: "bi" },
-  { namn: "Excel", kat: "analys", overlapp: "kalkyl" },
-  { namn: "Google Sheets", kat: "analys", overlapp: "kalkyl" },
+  { namn: "Tableau", kat: "analys", overlapp: "bi" },
+  { namn: "Qlik Sense", kat: "analys", overlapp: "bi" },
+  { namn: "Excel", kat: "analys", overlapp: "kalkyl", ingarI: M365 },
+  { namn: "Google Sheets", kat: "analys", overlapp: "kalkyl", ingarI: GWS },
+  { namn: "Microsoft Access", kat: "analys", ingarI: M365 },
+  { namn: "Semrush", kat: "analys", regelgrupp: "seo", overlapp: "seoverktyg" },
+  { namn: "Ahrefs", kat: "analys", regelgrupp: "seo", overlapp: "seoverktyg" },
+  { namn: "Google Search Console", kat: "analys", regelgrupp: "seo" },
+  // Kundtjänst
+  { namn: "Zendesk", kat: "support", overlapp: "supportverktyg" },
+  { namn: "Freshdesk", kat: "support", overlapp: "supportverktyg" },
+  { namn: "Intercom", kat: "support", overlapp: "supportverktyg" },
+  { namn: "Kundo", kat: "support", overlapp: "supportverktyg" },
+  { namn: "Front", kat: "support", overlapp: "supportverktyg" },
+  { namn: "Crisp", kat: "support", overlapp: "supportverktyg" },
+  { namn: "Tawk.to", kat: "support", overlapp: "supportverktyg" },
+  { namn: "HubSpot Service Hub", kat: "support", overlapp: "supportverktyg" },
+  // Bokning och tidbok
+  { namn: "Calendly", kat: "bokning", overlapp: "motesbokning" },
+  { namn: "Microsoft Bookings", kat: "bokning", overlapp: "motesbokning", ingarI: M365 },
+  { namn: "Bokadirekt", kat: "bokning", overlapp: "bokningssystem" },
+  { namn: "Timma", kat: "bokning", overlapp: "bokningssystem" },
+  { namn: "Boka.se", kat: "bokning", overlapp: "bokningssystem" },
+  // HR och lön
+  { namn: "Hailey HR", kat: "hr", overlapp: "hrsystem" },
+  { namn: "Sympa", kat: "hr", overlapp: "hrsystem" },
+  { namn: "Flex HRM", kat: "hr", overlapp: "hrsystem" },
+  { namn: "Personalkollen", kat: "hr", overlapp: "hrsystem" },
+  { namn: "Winningtemp", kat: "hr" },
+  { namn: "Teamtailor", kat: "hr", overlapp: "rekrytering" },
+  { namn: "Varbi", kat: "hr", overlapp: "rekrytering" },
+  { namn: "Visma Lön", kat: "hr", regelgrupp: "lon", overlapp: "lonesystem" },
+  { namn: "Fortnox Lön", kat: "hr", regelgrupp: "lon", overlapp: "lonesystem" },
+  { namn: "Hogia Lön", kat: "hr", regelgrupp: "lon", overlapp: "lonesystem" },
+  { namn: "Kontek Lön", kat: "hr", regelgrupp: "lon", overlapp: "lonesystem" },
+  { namn: "Crona Lön", kat: "hr", regelgrupp: "lon", overlapp: "lonesystem" },
+  { namn: "Planday", kat: "hr", regelgrupp: "schema", overlapp: "schemalaggning" },
+  { namn: "Quinyx", kat: "hr", regelgrupp: "schema", overlapp: "schemalaggning" },
+  // Affärssystem och lager
+  { namn: "Monitor ERP", kat: "affarssystem", regelgrupp: "erp", overlapp: "erpsystem" },
+  { namn: "Jeeves", kat: "affarssystem", regelgrupp: "erp", overlapp: "erpsystem" },
+  { namn: "Pyramid", kat: "affarssystem", regelgrupp: "erp", overlapp: "erpsystem" },
+  { namn: "Garp", kat: "affarssystem", regelgrupp: "erp", overlapp: "erpsystem" },
+  { namn: "Specter", kat: "affarssystem", regelgrupp: "erp", overlapp: "erpsystem" },
+  { namn: "SAP Business One", kat: "affarssystem", regelgrupp: "erp", overlapp: "erpsystem" },
+  { namn: "Business Central", kat: "affarssystem", regelgrupp: "erp", overlapp: "erpsystem", sok: ["navision", "dynamics business central"] },
+  { namn: "Visma Administration", kat: "affarssystem", regelgrupp: "erp", overlapp: "erpsystem" },
+  { namn: "Ongoing WMS", kat: "affarssystem", regelgrupp: "lager" },
+  { namn: "nShift", kat: "affarssystem", regelgrupp: "lager", overlapp: "frakt", sok: ["unifaun"] },
+  { namn: "Fraktjakt", kat: "affarssystem", regelgrupp: "lager", overlapp: "frakt" },
+  // Avtal och signering
+  { namn: "Scrive", kat: "avtal", overlapp: "signering" },
+  { namn: "Oneflow", kat: "avtal", overlapp: "signering" },
+  { namn: "DocuSign", kat: "avtal", overlapp: "signering" },
+  { namn: "Adobe Acrobat Sign", kat: "avtal", overlapp: "signering" },
+  { namn: "Assently", kat: "avtal", overlapp: "signering" },
+  { namn: "Verified", kat: "avtal", overlapp: "signering" },
+  // Automation och integration
+  { namn: "Zapier", kat: "automation", overlapp: "automationsverktyg" },
+  { namn: "Make", kat: "automation", overlapp: "automationsverktyg" },
+  { namn: "Power Automate", kat: "automation", overlapp: "automationsverktyg", ingarI: M365 },
+  { namn: "n8n", kat: "automation", overlapp: "automationsverktyg" },
+  { namn: "Workato", kat: "automation", overlapp: "automationsverktyg" },
+  // IT och säkerhet
+  { namn: "1Password", kat: "it", regelgrupp: "losenord", overlapp: "losenordshanterare" },
+  { namn: "Bitwarden", kat: "it", regelgrupp: "losenord", overlapp: "losenordshanterare" },
+  { namn: "LastPass", kat: "it", regelgrupp: "losenord", overlapp: "losenordshanterare" },
+  { namn: "Keeper", kat: "it", regelgrupp: "losenord", overlapp: "losenordshanterare" },
+  { namn: "Microsoft Intune", kat: "it", regelgrupp: "mdm", overlapp: "enhetshantering", ingarI: M365 },
+  { namn: "Jamf", kat: "it", regelgrupp: "mdm", overlapp: "enhetshantering" },
+  { namn: "Entra ID", kat: "it", ingarI: M365, sok: ["azure ad", "active directory", "aad"] },
+  { namn: "Microsoft Defender", kat: "it", ingarI: M365 },
+  { namn: "Bitdefender", kat: "it" },
+  // AI-verktyg
   { namn: "ChatGPT", kat: "ai", overlapp: "ai-assistent" },
   { namn: "Claude", kat: "ai", overlapp: "ai-assistent" },
-  { namn: "Copilot", kat: "ai", overlapp: "ai-assistent" },
+  { namn: "Copilot", kat: "ai", overlapp: "ai-assistent", sok: ["microsoft copilot", "m365 copilot"] },
   { namn: "Gemini", kat: "ai", overlapp: "ai-assistent" },
+  { namn: "Perplexity", kat: "ai", overlapp: "ai-assistent" },
+  { namn: "Jasper", kat: "ai" },
+  { namn: "Otter.ai", kat: "ai" },
+  { namn: "ElevenLabs", kat: "ai" },
   { namn: "Midjourney", kat: "ai", regelgrupp: "bildai" },
+  { namn: "DALL-E", kat: "ai", regelgrupp: "bildai" },
+  { namn: "Adobe Firefly", kat: "ai", regelgrupp: "bildai" },
+  { namn: "Runway", kat: "ai", regelgrupp: "bildai" },
 ];
 
-// Snabbval under sökfältet: de vanligaste hos målgruppen.
+// Snabbval under sökfältet: de vanligaste hos målgruppen. Resten av katalogen
+// nås genom sökfältet, annars blir listan en vägg av logotyper.
 const snabbval = [
   "Fortnox",
-  "Microsoft 365",
+  M365,
   "HubSpot",
   "Slack",
-  "Google Workspace",
+  GWS,
   "Shopify",
   "Mailchimp",
   "ChatGPT",
@@ -143,32 +370,69 @@ const snabbval = [
 // prefixas med systemens riktiga namn. Skriv bara regler som stämmer för
 // ALLA system bakom respektive token; specialfall får egen regelgrupp.
 const kopplingsregler: { par: [RegelToken, RegelToken]; text: string }[] = [
+  // Ekonomi
   { par: ["ekonomi", "crm"], text: "godkänd offert blir faktura automatiskt" },
   { par: ["ekonomi", "analys"], text: "nyckeltalen uppdaterar sig själva i rapporterna" },
   { par: ["ekonomi", "lagring"], text: "kvitton och underlag arkiveras automatiskt" },
   { par: ["ekonomi", "projekt"], text: "projektets timmar och utlägg blir fakturaunderlag" },
   { par: ["ekonomi", "komm"], text: "betald faktura ger en notis i kanalen" },
   { par: ["ekonomi", "ehandel"], text: "ordrar bokförs utan handpåläggning" },
+  { par: ["ekonomi", "dokument"], text: "underlagen följer med fakturan utan letande" },
+  { par: ["ekonomi", "hr"], text: "personalkostnaderna syns i samma siffror som resten" },
+  { par: ["ekonomi", "avtal"], text: "signerat avtal blir faktura direkt" },
+  { par: ["ekonomi", "bokning"], text: "bokningen blir kvitto eller faktura automatiskt" },
+  // CRM
   { par: ["crm", "mejl"], text: "mejl och möten loggas på rätt kund" },
   { par: ["crm", "mf"], text: "kundlistan styr utskick och annonsmålgrupper" },
   { par: ["crm", "projekt"], text: "vunnen affär blir ett projekt med uppgifter direkt" },
-  { par: ["crm", "analys"], text: "säljtratten blir mätbar i rapporterna" },
+  { par: ["crm", "analys"], text: "säljtratten blir mätbar" },
   { par: ["crm", "lagring"], text: "avtal och offerter sparas på rätt kund" },
   { par: ["crm", "komm"], text: "kunddialogen samlas på ett ställe" },
   { par: ["crm", "ehandel"], text: "kunderna i butiken blir kontakter i registret" },
+  { par: ["crm", "dokument"], text: "offertmallarna fylls med rätt kunduppgifter" },
+  { par: ["crm", "support"], text: "ärenden och kundhistorik hamnar i samma vy" },
+  { par: ["crm", "bokning"], text: "varje bokning blir en kontakt med historik" },
+  { par: ["crm", "avtal"], text: "signerat avtal uppdaterar affären automatiskt" },
+  // Marknadsföring
   { par: ["mf", "analys"], text: "kampanjresultaten mäts mot riktiga siffror" },
   { par: ["mf", "ehandel"], text: "köpdatan styr kampanjer och annonser" },
+  { par: ["mf", "dokument"], text: "budskapen återanvänds i stället för att skrivas om" },
+  // Mejl och kalender
   { par: ["mejl", "komm"], text: "mötesbokningar och påminnelser dyker upp i chatten" },
   { par: ["mejl", "projekt"], text: "deadlines hamnar i kalendern av sig själva" },
   { par: ["mejl", "lagring"], text: "bilagor arkiveras automatiskt i rätt mapp" },
+  { par: ["mejl", "dokument"], text: "utkast och bilagor följer med i mejlflödet" },
+  { par: ["mejl", "hr"], text: "onboarding och medarbetarsamtal bokas in automatiskt" },
+  { par: ["mejl", "bokning"], text: "bokningar och påminnelser hamnar i kalendern" },
+  { par: ["mejl", "it"], text: "konton och behörigheter styrs från ett ställe" },
+  // Projekt
   { par: ["projekt", "lagring"], text: "filerna ligger på rätt projekt" },
   { par: ["projekt", "komm"], text: "uppdateringar landar där teamet redan är" },
+  { par: ["projekt", "dokument"], text: "underlagen ligger på rätt uppgift" },
+  { par: ["projekt", "hr"], text: "bemanningen planeras mot vad teamet faktiskt hinner" },
+  // E-handel
   { par: ["ehandel", "analys"], text: "försäljningen syns i realtid i rapporterna" },
   { par: ["ehandel", "komm"], text: "nya ordrar pingar direkt i kanalen" },
+  { par: ["ehandel", "support"], text: "kundtjänst ser ordern utan att fråga efter ordernummer" },
+  { par: ["ehandel", "lager"], text: "lagersaldot i butiken stämmer med hyllan" },
+  // Analys, kommunikation och lagring
   { par: ["analys", "komm"], text: "veckans siffror postas automatiskt i kanalen" },
+  { par: ["analys", "dokument"], text: "siffrorna hamnar färdiga i rapporten" },
   { par: ["komm", "lagring"], text: "filer som delas i chatten sparas på rätt ställe" },
+  { par: ["komm", "support"], text: "nya ärenden pingar teamet direkt" },
+  { par: ["dokument", "lagring"], text: "dokumenten hamnar i rätt mapp automatiskt" },
+  { par: ["dokument", "komm"], text: "dokument delas och kommenteras där teamet redan är" },
+  { par: ["dokument", "avtal"], text: "mallen blir avtal och signeras utan omvägar" },
+  // Betalning och kassa
   { par: ["betalning", "ekonomi"], text: "betalningarna prickas av i bokföringen automatiskt" },
   { par: ["betalning", "ehandel"], text: "kassan och betalningen hänger ihop utan mellansteg" },
+  { par: ["betalning", "crm"], text: "ni ser vad varje kund faktiskt har betalat" },
+  { par: ["kassa", "ekonomi"], text: "dagskassan bokförs automatiskt" },
+  { par: ["kassa", "lager"], text: "lagret minskar vid varje köp i butiken" },
+  { par: ["kassa", "crm"], text: "köpen i butiken hamnar på rätt kund" },
+  { par: ["kassa", "analys"], text: "butiksförsäljningen syns i samma rapport som resten" },
+  { par: ["kassa", "bokning"], text: "bokning och betalning blir ett enda flöde" },
+  // Webbanalys och beteende
   { par: ["webbanalys", "mf"], text: "ni ser vilka kampanjer som ger trafik som konverterar" },
   { par: ["webbanalys", "ehandel"], text: "besök och köp kopplas ihop i samma vy" },
   { par: ["webbanalys", "webbplats"], text: "ni ser vad besökarna faktiskt gör på sajten" },
@@ -177,15 +441,93 @@ const kopplingsregler: { par: [RegelToken, RegelToken]; text: string }[] = [
   { par: ["beteende", "webbplats"], text: "ni ser var besökarna fastnar på sidorna" },
   { par: ["beteende", "mf"], text: "kampanjtrafiken följs hela vägen in på sidan" },
   { par: ["beteende", "webbanalys"], text: "siffrorna får en förklaring i hur besökarna beter sig" },
+  // Webbplats
   { par: ["webbplats", "crm"], text: "formulären på sajten skapar kontakter automatiskt" },
   { par: ["webbplats", "mf"], text: "kampanjerna leder till sidor som går att följa upp" },
+  { par: ["webbplats", "support"], text: "chatten på sajten blir ärenden i stället för tappade frågor" },
+  { par: ["webbplats", "bokning"], text: "besökaren bokar direkt på sajten" },
+  // Design och bild-AI
   { par: ["design", "ehandel"], text: "grafiken går rakt in i butik och produktsidor" },
   { par: ["design", "mf"], text: "designmallarna återanvänds i utskick och annonser" },
-  { par: ["video", "mejl"], text: "möteslänken hamnar rätt i varje kalenderbokning" },
-  { par: ["video", "crm"], text: "kundmöten loggas på rätt kontakt" },
+  { par: ["design", "dokument"], text: "grafiken återanvänds i dokument och presentationer" },
+  { par: ["design", "socialt"], text: "grafiken går direkt ut i flödet" },
   { par: ["bildai", "mf"], text: "AI:n tar fram bilder och grafik till inlägg och annonser" },
   { par: ["bildai", "ehandel"], text: "AI:n skapar produktbilder åt butiken" },
   { par: ["bildai", "design"], text: "AI-bilderna landar direkt i designflödet" },
+  // Video
+  { par: ["video", "mejl"], text: "möteslänken hamnar rätt i varje kalenderbokning" },
+  { par: ["video", "crm"], text: "kundmöten loggas på rätt kontakt" },
+  { par: ["video", "komm"], text: "mötet startar där samtalet redan pågår" },
+  { par: ["video", "bokning"], text: "varje bokat möte får sin länk automatiskt" },
+  // HR, lön, schema och tid
+  { par: ["hr", "lagring"], text: "anställningsavtal och intyg arkiveras rätt" },
+  { par: ["hr", "komm"], text: "nyanställda får rätt kanaler från dag ett" },
+  { par: ["hr", "avtal"], text: "anställningsavtal signeras och sparas i ett flöde" },
+  { par: ["hr", "it"], text: "nyanställda får konton och utrustning utan handpåläggning" },
+  { par: ["lon", "ekonomi"], text: "lönerna bokförs utan handpåläggning" },
+  { par: ["lon", "hr"], text: "anställningar och löneunderlag bygger på samma uppgifter" },
+  { par: ["lon", "tidrapport"], text: "arbetad tid blir lön utan omtagning" },
+  { par: ["lon", "schema"], text: "passen blir löneunderlag direkt" },
+  { par: ["schema", "tidrapport"], text: "schemat och rapporterad tid jämförs automatiskt" },
+  { par: ["schema", "komm"], text: "schemaändringar syns direkt där personalen är" },
+  { par: ["schema", "hr"], text: "bemanningen bygger på rätt personaluppgifter" },
+  { par: ["tidrapport", "ekonomi"], text: "timmarna blir fakturaunderlag utan efterarbete" },
+  { par: ["tidrapport", "projekt"], text: "tiden landar på rätt projekt" },
+  { par: ["tidrapport", "analys"], text: "ni ser vad varje uppdrag faktiskt kostar i tid" },
+  // Kundtjänst
+  { par: ["support", "mejl"], text: "kundmejlen blir ärenden i stället för lösa trådar" },
+  { par: ["support", "analys"], text: "ni ser vad kunderna hör av sig om" },
+  { par: ["support", "lagring"], text: "svar och underlag hämtas ur samma mapp" },
+  { par: ["support", "bokning"], text: "ombokningar sköts utan telefonkö" },
+  // Avtal
+  { par: ["avtal", "lagring"], text: "signerade avtal arkiveras på rätt ställe" },
+  { par: ["avtal", "projekt"], text: "signeringen startar projektet direkt" },
+  // Affärssystem och lager
+  { par: ["erp", "ekonomi"], text: "ordrar, inköp och bokföring bygger på samma siffror" },
+  { par: ["erp", "ehandel"], text: "butiken och affärssystemet delar artiklar och priser" },
+  { par: ["erp", "lager"], text: "lagersaldot uppdateras när ordern registreras" },
+  { par: ["erp", "crm"], text: "säljarna ser lager och leveranser direkt" },
+  { par: ["erp", "analys"], text: "nyckeltalen bygger på affärssystemets data" },
+  { par: ["erp", "projekt"], text: "order och produktion planeras i samma flöde" },
+  { par: ["lager", "ekonomi"], text: "leveranser och fraktkostnader bokförs rätt" },
+  { par: ["lager", "support"], text: "kundtjänst ser var paketet är" },
+  // Enkäter
+  { par: ["enkat", "crm"], text: "svaren landar på rätt kund" },
+  { par: ["enkat", "analys"], text: "kundsvaren blir mätbara över tid" },
+  { par: ["enkat", "mejl"], text: "utskick och svar hänger ihop" },
+  { par: ["enkat", "support"], text: "missnöjda svar blir ärenden direkt" },
+  { par: ["enkat", "hr"], text: "medarbetarsvaren samlas utan kalkylbladsrundor" },
+  // Sökoptimering och sociala kanaler
+  { par: ["seo", "webbplats"], text: "ni ser vilka sidor som drar in trafik" },
+  { par: ["seo", "ehandel"], text: "produktsidorna optimeras mot det folk söker på" },
+  { par: ["seo", "mf"], text: "annonser och organisk trafik planeras ihop" },
+  { par: ["seo", "analys"], text: "söktrafiken landar i samma rapport som resten" },
+  { par: ["socialt", "analys"], text: "räckvidd och klick mäts mot riktiga siffror" },
+  { par: ["socialt", "ehandel"], text: "inläggen leder rakt till produkten" },
+  { par: ["socialt", "mf"], text: "annonser och organiska inlägg planeras i samma kalender" },
+  { par: ["socialt", "crm"], text: "de som hör av sig i sociala kanaler blir kontakter" },
+  // IT och säkerhet
+  { par: ["it", "lagring"], text: "behörigheterna följer med filerna" },
+  { par: ["losenord", "it"], text: "inloggningarna samlas och delas säkert" },
+  { par: ["losenord", "komm"], text: "lösenord slutar skickas i chatten" },
+  { par: ["losenord", "hr"], text: "inloggningar delas ut och stängs av i takt med anställningar" },
+  { par: ["mdm", "it"], text: "datorer och telefoner hanteras från samma ställe" },
+  { par: ["mdm", "hr"], text: "utrustningen följer anställningen" },
+  // Automation: limmet mellan systemen
+  { par: ["automation", "ekonomi"], text: "underlagen skickas vidare utan handpåläggning" },
+  { par: ["automation", "crm"], text: "nya leads hamnar rätt utan att någon klistrar in dem" },
+  { par: ["automation", "mejl"], text: "mejl och kalender triggar nästa steg automatiskt" },
+  { par: ["automation", "projekt"], text: "uppgifter skapas när något faktiskt händer" },
+  { par: ["automation", "ehandel"], text: "ordern går vidare till rätt system direkt" },
+  { par: ["automation", "komm"], text: "teamet får notiser bara när det betyder något" },
+  { par: ["automation", "analys"], text: "siffrorna hämtas in utan manuell export" },
+  { par: ["automation", "lagring"], text: "filerna sorteras och sparas automatiskt" },
+  { par: ["automation", "support"], text: "ärenden sorteras och skickas till rätt person" },
+  { par: ["automation", "dokument"], text: "dokumenten skapas ur uppgifter ni redan har" },
+  { par: ["automation", "erp"], text: "ordrar och lagerhändelser förs vidare av sig själva" },
+  { par: ["automation", "hr"], text: "onboarding och intyg rullar igång av sig själva" },
+  { par: ["automation", "mf"], text: "utskicken startar av det kunderna gör" },
+  { par: ["automation", "bokning"], text: "bokningen sätter igång allt som ska hända efteråt" },
 ];
 
 // AI-assistenternas koppling till övriga system: etiketten väljs efter vad
@@ -196,24 +538,47 @@ const aiEtiketter: Record<Kategori, string> = {
   mejl: "AI:n sammanfattar mejltrådar och föreslår svar",
   komm: "AI:n sammanfattar möten och långa trådar",
   projekt: "AI:n bryter ner uppgifter och skriver statusrapporter",
+  dokument: "AI:n skriver utkast och sammanfattar långa dokument",
+  lagring: "AI:n hittar rätt dokument och sammanfattar innehållet",
   mf: "AI:n tar fram utkast till inlägg och annonstexter",
   ehandel: "AI:n skriver produkttexter och svarar på vanliga kundfrågor",
-  lagring: "AI:n hittar rätt dokument och sammanfattar innehållet",
   analys: "AI:n förklarar vad siffrorna faktiskt betyder",
+  support: "AI:n föreslår svar och sorterar ärenden efter allvar",
+  bokning: "AI:n svarar på bokningsfrågor och fyller luckorna i kalendern",
+  hr: "AI:n skriver annonser, mallar och underlag åt personalarbetet",
+  affarssystem: "AI:n hittar mönster i ordrar, inköp och lagernivåer",
+  avtal: "AI:n går igenom avtalen och lyfter det som avviker",
+  automation: "AI:n föreslår vilka flöden som är värda att automatisera",
+  it: "AI:n sammanfattar larmen och förklarar vad de betyder",
   ai: "AI:n avlastar rutinjobbet",
   ovrigt: "AI:n avlastar rutinjobbet i vardagen",
 };
 
-// Bytestips när två valda system gör samma jobb. Nyckel = overlapp-grupp,
-// "standard" är fallback.
 // Specialfallen (regelgrupper) beter sig inte som kategorins typfall och
 // behöver egna AI-texter: WordPress är en sajt utan butik, betalsystemen
 // bokför inte. Övriga faller tillbaka på kategoritexten ovan.
 const aiEtiketterGrupp: Partial<Record<RegelToken, string>> = {
   webbplats: "AI:n skriver utkast till texter och innehåll på sajten",
   betalning: "AI:n sammanfattar betalflödena och flaggar det som sticker ut",
+  kassa: "AI:n hittar mönster i försäljningen över dagen",
+  lon: "AI:n svarar på vanliga lönefrågor och sammanfattar underlagen",
+  schema: "AI:n föreslår bemanning utifrån hur trycket brukar se ut",
+  tidrapport: "AI:n sammanfattar nedlagd tid och skriver underlaget åt er",
+  erp: "AI:n hittar mönster i ordrar, inköp och lagernivåer",
+  lager: "AI:n förutser när det är dags att fylla på",
+  enkat: "AI:n sammanfattar fritextsvaren till läsbara slutsatser",
+  seo: "AI:n tar fram innehållsidéer ur söktrafiken",
+  socialt: "AI:n skriver inläggsutkast och förslag på publiceringsplan",
+  beteende: "AI:n pekar ut var besökarna tappar intresset",
 };
 
+// Verktyg där en AI-koppling inte tillför något: ett lösenordsvalv eller en
+// enhetshanterare blir inte bättre av en språkmodell, och en påhittad
+// koppling skulle bara göra kartan otrovärdig.
+const aiUtanKoppling: RegelToken[] = ["losenord", "mdm"];
+
+// Bytestips när två valda system gör samma jobb. Nyckel = overlapp-grupp,
+// "standard" är fallback.
 const overlappTexter: Record<string, string> = {
   standard: "{a} och {b} gör i stort sett samma jobb. Ett av dem brukar räcka.",
   kontorspaket:
@@ -224,6 +589,28 @@ const overlappTexter: Record<string, string> = {
     "{a} och {b} delar på samma konversationer. En kanal brukar ge färre missade meddelanden.",
   fillagring:
     "{a} och {b} betyder att filerna ligger på två ställen. En gemensam yta sparar mycket letande.",
+  projektverktyg:
+    "{a} och {b} håller reda på samma uppgifter. En tavla räcker för att alla ska veta vad som gäller.",
+  ordbehandlare:
+    "{a} och {b} gör samma jobb med dokumenten. Väljer ni en slipper ni formatstrul mellan versionerna.",
+  anteckningar:
+    "{a} och {b} samlar samma anteckningar. Att välja en gör att ni faktiskt hittar tillbaka.",
+  nyhetsbrev:
+    "{a} och {b} skickar samma sorts utskick. En lista räcker, och den blir lättare att hålla ren.",
+  supportverktyg:
+    "{a} och {b} tar emot samma ärenden. En inkorg brukar ge färre kunder som faller mellan stolarna.",
+  lonesystem:
+    "{a} och {b} är två lönesystem. Ett av dem räcker, det andra kostar ändå varje månad.",
+  erpsystem:
+    "{a} och {b} är två affärssystem. Att köra dem parallellt brukar sluta i dubbel inmatning.",
+  automationsverktyg:
+    "{a} och {b} bygger samma sorts flöden. Samlar ni dem i ett verktyg blir de lättare att underhålla.",
+  signering:
+    "{a} och {b} signerar samma avtal. En tjänst räcker, och då hamnar avtalen på ett ställe.",
+  losenordshanterare:
+    "{a} och {b} förvarar samma inloggningar. Ett valv gör behörigheterna lättare att hålla ordning på.",
+  tidrapportering:
+    "{a} och {b} mäter samma timmar. Ett av dem räcker som facit.",
   "ai-assistent":
     "{a} och {b} löser samma sak. Välj en som standard så samlas vanan och historiken på ett ställe.",
 };
@@ -247,6 +634,15 @@ type Tips = { typ: "byte" | "komplement"; text: string };
 function beraknaTips(valda: ValtSystem[]): Tips[] {
   const tips: Tips[] = [];
 
+  // Ingår verktyget i ett paket som också är valt? Då är det värt att veta
+  // vid ett bytesval: den ena sidan är redan betald.
+  const ingarIText = (v: ValtSystem) => {
+    const paket = katalogPost(v.namn)?.ingarI;
+    return paket && valda.some((x) => x.namn === paket)
+      ? ` ${v.namn} ingår dessutom i er ${paket}.`
+      : "";
+  };
+
   for (let i = 0; i < valda.length; i++) {
     for (let j = i + 1; j < valda.length; j++) {
       const ga = katalogPost(valda[i].namn)?.overlapp;
@@ -255,7 +651,10 @@ function beraknaTips(valda: ValtSystem[]): Tips[] {
         const mall = overlappTexter[ga] ?? overlappTexter.standard;
         tips.push({
           typ: "byte",
-          text: mall.replace("{a}", valda[i].namn).replace("{b}", valda[j].namn),
+          text:
+            mall.replace("{a}", valda[i].namn).replace("{b}", valda[j].namn) +
+            ingarIText(valda[i]) +
+            ingarIText(valda[j]),
         });
       }
     }
@@ -278,6 +677,18 @@ function beraknaTips(valda: ValtSystem[]): Tips[] {
     tips.push({
       typ: "komplement",
       text: `Ett CRM, till exempel Pipedrive eller HubSpot, skulle ge koll på affärerna innan de landar i ${namnMedToken("ekonomi")}.`,
+    });
+  }
+  if (toks.has("lon") && !toks.has("tidrapport") && !toks.has("schema")) {
+    tips.push({
+      typ: "komplement",
+      text: `Ett tidrapporteringsverktyg skulle göra arbetad tid till löneunderlag i ${namnMedToken("lon")} utan omtagning.`,
+    });
+  }
+  if (toks.has("erp") && !toks.has("analys") && !grupper.has("bi")) {
+    tips.push({
+      typ: "komplement",
+      text: `Ett rapportverktyg som Power BI eller Looker Studio skulle göra datan i ${namnMedToken("erp")} läsbar utan exportrundor.`,
     });
   }
   if (toks.has("ehandel") && !grupper.has("nyhetsbrev")) {
@@ -310,6 +721,18 @@ function beraknaTips(valda: ValtSystem[]): Tips[] {
     tips.push({
       typ: "komplement",
       text: `Ett projektverktyg som Trello eller Monday skulle ge trådarna i ${namnMedGrupp("chatt")} någonstans att bli uppgifter.`,
+    });
+  }
+  if (kats.has("support") && !kats.has("crm")) {
+    tips.push({
+      typ: "komplement",
+      text: `Ett CRM skulle ge ${namnMedToken("support")} kundhistoriken som i dag saknas när någon hör av sig.`,
+    });
+  }
+  if (valda.length >= 4 && !kats.has("automation") && !kats.has("ai")) {
+    tips.push({
+      typ: "komplement",
+      text: "Ett integrationsverktyg som Zapier eller Make skulle kunna koppla ihop flera av systemen utan utvecklare.",
     });
   }
   if (valda.length >= 3 && !kats.has("ai")) {
@@ -363,15 +786,23 @@ export function SystemKollen() {
   const pos = (i: number) => (ordnad ? orderedPos(i) : kaosPos(i));
 
   // Sökförslag: katalogträffar som inte redan är valda, max 6.
+  // Katalogen är lång, så träffar som BÖRJAR på söktexten går före träffar
+  // mitt inne i namnet: "word" ska ge Word före WordPress. Sorteringen är
+  // stabil i övrigt, så katalogordningen avgör inom varje grupp.
+  const sokLag = sok.trim().toLowerCase();
+  const traffPoang = (k: KatalogPost) =>
+    k.namn.toLowerCase().startsWith(sokLag) ? 2 : k.sok?.some((a) => a.startsWith(sokLag)) ? 1 : 0;
   const forslag =
-    sok.trim().length < 2
+    sokLag.length < 2
       ? []
       : systemKatalog
           .filter(
             (k) =>
-              k.namn.toLowerCase().includes(sok.trim().toLowerCase()) &&
+              (k.namn.toLowerCase().includes(sokLag) ||
+                k.sok?.some((a) => a.includes(sokLag))) &&
               !valda.some((v) => v.namn.toLowerCase() === k.namn.toLowerCase()),
           )
+          .sort((a, b) => traffPoang(b) - traffPoang(a))
           .slice(0, 6);
   // Exakt träff i katalogen ELLER bland redan valda: då göms fritextvalet
   // (annars visas en död "Lägg till"-knapp för system som redan ligger inne).
@@ -416,11 +847,16 @@ export function SystemKollen() {
       const tokA = regelToken(A);
       const tokB = regelToken(B);
       if (tokA === tokB) continue;
+      // Ingår det ena i det andra (Word i Microsoft 365) är det inte två
+      // system som pratar, utan ett. Överlappstipset nämner släktskapet
+      // i stället, så kartan inte skryter med kopplingar som är gratis.
+      if (katalogPost(A.namn)?.ingarI === B.namn || katalogPost(B.namn)?.ingarI === A.namn) continue;
       const prefix = `${A.namn} + ${B.namn}: `;
       if (tokA === "ai" || tokB === "ai") {
         const partner = tokA === "ai" ? B : A;
         const partnerTok = tokA === "ai" ? tokB : tokA;
         if (partner.kat === "ai") continue;
+        if (aiUtanKoppling.includes(partnerTok)) continue;
         lankar.push({
           a: i,
           b: j,
