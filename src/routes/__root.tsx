@@ -88,19 +88,25 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { property: "og:description", content: "Få koll på era digitala system och AI-verktyg. Struktur och ordning, från Stockholm." },
       { property: "og:type", content: "website" },
       { property: "og:locale", content: "sv_SE" },
-      { property: "og:image", content: "https://abogrowth.se/og.png?v=2" },
+      { property: "og:image", content: "https://abogrowth.se/og.png?v=3" },
       { property: "og:image:width", content: "1200" },
       { property: "og:image:height", content: "630" },
       { property: "og:image:alt", content: "ABO Growth: Ordning i era digitala system och AI" },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:image", content: "https://abogrowth.se/og.png?v=2" },
+      { name: "twitter:image", content: "https://abogrowth.se/og.png?v=3" },
     ],
     links: [
       {
         rel: "stylesheet",
         href: appCss,
       },
-      { rel: "icon", href: "/favicon.ico", type: "image/x-icon" },
+      // Ikonen ur grafiska profilen: monogrammet i Ink-varianten, eftersom
+      // den behöver kontrast mot ljusa webbläsarflikar. SVG i första hand,
+      // PNG i 32 och 16 px som profilen föreskriver för äldre klienter.
+      { rel: "icon", href: "/favicon.svg", type: "image/svg+xml" },
+      { rel: "icon", href: "/favicon-32.png", type: "image/png", sizes: "32x32" },
+      { rel: "icon", href: "/favicon-16.png", type: "image/png", sizes: "16x16" },
+      { rel: "apple-touch-icon", href: "/apple-touch-icon.png" },
     ],
   }),
   shellComponent: RootShell,

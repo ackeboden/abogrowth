@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100">
+  <!-- Ikonen ur grafiska profilen: monogrammet ensamt i rundad kvadrat.
+       Ink-varianten enligt profilen, eftersom faviconen behöver kontrast
+       mot ljusa webbläsarflikar. Måtten kommer ur profilens vektorer. -->
+  <rect width="100" height="100" rx="20.4" fill="#1A1D1F"/>
+  <path d="M 31.97 75.25 L 50.03 26.15 L 68.09 75.25" fill="none" stroke="#FAF9F7" stroke-width="11.56" stroke-linejoin="miter" stroke-miterlimit="10"/>
+  <path d="M 37.72 62.94 H 71.64 L 78.19 53.58 H 44.21 Z" fill="#1F8A5C"/>
+</svg>

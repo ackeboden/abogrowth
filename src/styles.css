@@ -1,7 +1,6 @@
 @import "tailwindcss" source(none);
 @source "../src";
 @import "tw-animate-css";
-@import "@fontsource-variable/inter";
 
 @custom-variant dark (&:is(.dark *));
 
@@ -40,8 +39,11 @@
   --color-line: var(--line);
   --color-subtle: var(--subtle);
 
-  --font-sans: "Inter Variable", system-ui, -apple-system, "Segoe UI", sans-serif;
-  --font-display: "Inter Variable", system-ui, -apple-system, "Segoe UI", sans-serif;
+  /* Grafiska profilen: Arial Regular i brödtext, Arial Bold i rubriker.
+     Samma typsnitt som rapporter, offerter och trackers, och inget
+     webbteckensnitt att ladda. Helvetica som fallback på Apple-enheter. */
+  --font-sans: Arial, "Helvetica Neue", Helvetica, sans-serif;
+  --font-display: Arial, "Helvetica Neue", Helvetica, sans-serif;
 }
 
 :root {
@@ -51,8 +53,10 @@
   --ink: #1A1D1F;
   --paper: #FAF9F7;
   /* Tredje ljusa nivån. Finns för att paper och vitt låg för nära varandra:
-     sektionerna flöt ihop. Rytmen på sidorna är vit → mist → mörk. */
-  --mist: #ECF1EE;
+     sektionerna flöt ihop. Rytmen på sidorna är vit → mist → mörk.
+     Samma värde som --line: profilens Ljusgrå är den enda tillåtna
+     delade ytan, och paletten ska hållas liten. */
+  --mist: #E7E5E2;
   --brand-green: #1F8A5C;
   --brand-blue: #5B7B9A;
   --line: #E7E5E2;
@@ -141,6 +145,13 @@
   font-weight: 700;
   letter-spacing: -0.01em;
   line-height: 1.05;
+}
+
+/* Grafiska profilen vill ha extra bokstavsavstånd i rubriker. Det gäller
+   sektionsrubrikerna (h2); de stora hero-rubrikerna (h1) behåller sitt
+   täta uttryck, annars spretar bokstavsanimationen i heron. */
+h2.display-heading {
+  letter-spacing: 0.035em;
 }
 
 @utility eyebrow {
