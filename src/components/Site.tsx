@@ -132,6 +132,7 @@ const TJANSTER = [
 
 const NAV_LINKS = [
   { label: "Resan", to: "/resan" },
+  { label: "Case", to: "/case" },
   { label: "Pris", to: "/pris" },
   { label: "Arbetssätt", to: "/", hash: "arbetssatt" },
   { label: "Om", to: "/om" },
@@ -189,7 +190,7 @@ export function Header() {
     <header className="sticky top-0 z-40 bg-paper/85 backdrop-blur border-b border-line">
       <div className="mx-auto max-w-6xl px-6 h-16 flex items-center justify-between">
         <Link to="/"><Logo /></Link>
-        <nav className="hidden md:flex items-center gap-8 text-sm">
+        <nav className="hidden md:flex items-center gap-6 lg:gap-8 text-sm">
           <div ref={tjRef} className="relative">
             <button
               type="button"

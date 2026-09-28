@@ -1,19 +1,21 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { ArrowUpRight } from "lucide-react";
-import { Header, Footer, BookingCTA, PageHero } from "@/components/Site";
-import { IllustrationDiagram } from "@/components/Illustrations";
+import { Header, Footer, BookingCTA, PageHero, Reveal } from "@/components/Site";
 
 export const Route = createFileRoute("/case")({
   head: () => ({
     meta: [
-      { title: "Case | ABO Growth" },
+      { title: "Case: Kassaboken | ABO Growth" },
       {
         name: "description",
         content:
-          "Utvalda case från ABO Growth. Verkliga uppdrag inom digitala system, AI och affärsutveckling.",
+          "Case Kassaboken: marknadsstrategi, årsplanering och löpande genomförande med sökordsstyrda blogginlägg, nyhetsbrev och annonser för ett digitalt bokföringsverktyg.",
       },
-      { property: "og:title", content: "Case | ABO Growth" },
-      { property: "og:description", content: "Utvalda uppdrag och resultat." },
+      { property: "og:title", content: "Case: Kassaboken | ABO Growth" },
+      {
+        property: "og:description",
+        content: "Från spridda kanaler till en samlad marknadsföring som arbetar året runt.",
+      },
       { property: "og:type", content: "website" },
       { property: "og:url", content: "https://abogrowth.se/case" },
       { name: "twitter:card", content: "summary_large_image" },
@@ -23,15 +25,50 @@ export const Route = createFileRoute("/case")({
   component: Page,
 });
 
-// Lägg till case här när de är klara. Bygg med samma struktur som exemplet nedan.
-const cases: {
-  slug: string;
-  client: string;
-  title: string;
-  summary: string;
-  result: string;
-  tags: string[];
-}[] = [];
+// Ett case per post, nyast först. Varje case renderas som ett samlat kort,
+// så nya case läggs bara till i listan. Skriv aldrig in siffror eller
+// resultat som kunden inte har godkänt.
+const caseLista = [
+  {
+    slug: "kassaboken",
+    klient: "Kassaboken",
+    logotyp: { src: "/kassaboken.webp", bredd: 875, hojd: 140 },
+    tagline: "Digital bokföring för enskilda näringsidkare och skogsägare",
+    webbplats: { url: "https://kassaboken.se", etikett: "kassaboken.se" },
+    ingress:
+      "Kassabokens mission är att spara tid och pengar åt småföretagare. Verktyget är inspirerat av den klassiska kassaboken, ger färdiga deklarationsbilagor och gör bokföringen både enkel och trygg.",
+    taggar: ["Marknadsstrategi", "Årsplanering", "SEO och innehåll", "Nyhetsbrev", "Annonsering", "Månadsrapport"],
+    steg: [
+      {
+        n: "01",
+        rubrik: "Utgångsläget",
+        text: "Produkten löser ett verkligt problem, men målgruppen finns i många kanaler och det saknades en konkret plan för hur Kassaboken skulle nå ut.",
+      },
+      {
+        n: "02",
+        rubrik: "Strategin",
+        text: "Vi identifierade målgruppen och tog fram en marknadsstrategi och en årsplanering med kanaler, budget och mål.",
+      },
+      {
+        n: "03",
+        rubrik: "Genomförandet",
+        text: "Vi ansvarar för genomförandet: blogginlägg utifrån en sökordskarta, nyhetsbrev och annonser i Kassabokens grafiska profil.",
+      },
+      {
+        n: "04",
+        rubrik: "Uppföljningen",
+        text: "Allt följs upp i en månadsrapport. Kassaboken ser vad som gjorts, vad det gav och vad som står näst på tur.",
+      },
+    ],
+    resultat:
+      "Idag har Kassaboken en samlad och kontinuerlig marknadsföring, och löpande innehåll på webbplatsen som arbetar för dem året runt.",
+    citat: {
+      text: "Alexander har gett vår marknadsföring en tydlig riktning. Vi vet alltid vad som görs och varför, och det gör att vi kan lägga vår tid på produkten och våra kunder.",
+      namn: "Nils Lundmark",
+      titel: "VD, Kassaboken",
+    },
+  },
+];
 
 function Page() {
   return (
@@ -41,33 +78,93 @@ function Page() {
         <PageHero
           eyebrow="Case"
           title={<>Uppdrag som <span className="text-brand-green-strong">visar hur vi jobbar</span>.</>}
-          intro="Här samlar vi case från riktiga uppdrag löpande. Vill ni höra hur vi skulle lägga upp arbetet hos er är det snabbaste att ta ett samtal."
+          intro="Riktiga uppdrag, från strategi till löpande genomförande. Vi fyller på här efter hand. Vill ni höra hur vi skulle lägga upp arbetet hos er är det snabbaste att ta ett samtal."
         />
 
         <section className="border-b border-line">
-          <div className="mx-auto max-w-6xl px-6 py-20 md:py-28">
-            {cases.length === 0 ? (
-              <EmptyState />
-            ) : (
-              <div className="grid gap-px bg-line md:grid-cols-2 border border-line">
-                {cases.map((c) => (
-                  <article key={c.slug} className="bg-paper p-5 md:p-10">
-                    <div className="tracked text-xs text-ink/65 mb-3">{c.client}</div>
-                    <h2 className="display-heading text-2xl mb-4">{c.title}</h2>
-                    <p className="text-sm text-ink/70 leading-relaxed mb-6">{c.summary}</p>
-                    <div className="pt-6 border-t border-line">
-                      <div className="tracked text-[11px] text-brand-green-strong mb-2">Resultat</div>
-                      <p className="text-sm font-semibold">{c.result}</p>
+          <div className="mx-auto max-w-6xl px-6 py-16 md:py-24 space-y-10 md:space-y-14">
+            {caseLista.map((c) => (
+              <Reveal key={c.slug}>
+                <article className="bg-white border border-line shadow-sm">
+                  {/* Kunden */}
+                  <div className="grid md:grid-cols-12 gap-6 md:gap-10 items-start p-6 md:p-10 border-b border-line">
+                    <div className="md:col-span-5">
+                      <h2 className="sr-only">{c.klient}</h2>
+                      <img
+                        src={c.logotyp.src}
+                        width={c.logotyp.bredd}
+                        height={c.logotyp.hojd}
+                        alt={c.klient}
+                        decoding="async"
+                        className="h-8 md:h-10 w-auto"
+                      />
+                      <p className="mt-4 text-sm text-ink/70 leading-relaxed">{c.tagline}</p>
+                      <a
+                        href={c.webbplats.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        aria-label={`Besök ${c.webbplats.etikett} (öppnas i ny flik)`}
+                        className="mt-5 inline-flex items-center gap-2 border border-ink/20 px-4 py-2.5 text-sm font-semibold hover:border-brand-green-strong hover:text-brand-green-strong transition-colors"
+                      >
+                        {c.webbplats.etikett}
+                        <ArrowUpRight className="h-4 w-4 text-brand-green-strong" strokeWidth={2.5} />
+                      </a>
                     </div>
-                    <div className="mt-6 flex flex-wrap gap-2">
-                      {c.tags.map((t) => (
-                        <span key={t} className="text-[11px] tracked-tight border border-line px-2.5 py-1 text-ink/65">{t}</span>
-                      ))}
+                    <div className="md:col-span-7">
+                      <p className="text-ink/80 leading-relaxed">{c.ingress}</p>
+                      <div className="mt-6 flex flex-wrap gap-2">
+                        {c.taggar.map((t) => (
+                          <span
+                            key={t}
+                            className="text-[11px] font-semibold tracked-tight border border-brand-green/35 bg-brand-green/10 px-2.5 py-1.5 text-brand-green-deep"
+                          >
+                            {t}
+                          </span>
+                        ))}
+                      </div>
                     </div>
-                  </article>
-                ))}
-              </div>
-            )}
+                  </div>
+
+                  {/* Uppdraget steg för steg */}
+                  <div className="grid sm:grid-cols-2 divide-y sm:divide-y-0 divide-line border-b border-line">
+                    {c.steg.map((s, i) => (
+                      <div
+                        key={s.n}
+                        className={`relative p-6 md:p-8 ${i % 2 === 1 ? "sm:border-l border-line" : ""} ${
+                          i > 1 ? "sm:border-t sm:border-line" : ""
+                        }`}
+                      >
+                        <div className="flex items-center gap-2.5 mb-3">
+                          <span
+                            aria-hidden="true"
+                            className={`h-4 w-1 ${i === 0 ? "bg-brand-blue" : "bg-brand-green"}`}
+                          />
+                          <span className="tracked text-[11px] text-ink/60">{s.n}</span>
+                        </div>
+                        <h3 className="display-heading text-base mb-2">{s.rubrik}</h3>
+                        <p className="text-sm text-ink/70 leading-relaxed">{s.text}</p>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Resultat och kundens egna ord */}
+                  <div className="grid md:grid-cols-12">
+                    <div className="md:col-span-7 p-6 md:p-10">
+                      <div className="tracked text-[11px] text-brand-green-strong mb-3">Resultat</div>
+                      <p className="text-ink/85 leading-relaxed">{c.resultat}</p>
+                    </div>
+                    <figure className="md:col-span-5 p-6 md:p-10 bg-ink text-paper">
+                      <blockquote className="text-sm md:text-base leading-relaxed text-paper/90">
+                        {c.citat.text}
+                      </blockquote>
+                      <figcaption className="mt-5 text-xs text-paper/65">
+                        <span className="font-semibold text-paper">{c.citat.namn}</span>, {c.citat.titel}
+                      </figcaption>
+                    </figure>
+                  </div>
+                </article>
+              </Reveal>
+            ))}
           </div>
         </section>
 
@@ -77,30 +174,6 @@ function Page() {
         />
       </main>
       <Footer />
-    </div>
-  );
-}
-
-function EmptyState() {
-  return (
-    <div className="border-2 border-dashed border-line bg-white p-8 md:p-20 text-center">
-      <IllustrationDiagram className="mx-auto mb-6 w-full max-w-[200px]" />
-      <div className="eyebrow mb-4">Publicerade case</div>
-      <h2 className="display-heading text-2xl md:text-3xl max-w-xl mx-auto">
-        Inga case publicerade än.
-      </h2>
-      <p className="mt-5 text-sm text-ink/65 max-w-md mx-auto leading-relaxed">
-        Vi lägger upp uppdrag här när kunderna gett klartecken. Under tiden visar
-        arbetssättet på startsidan hur ett uppdrag drivs, steg för steg.
-      </p>
-      <Link
-        to="/"
-        hash="arbetssatt"
-        className="mt-8 group inline-flex items-center gap-2 bg-ink text-paper px-6 py-3.5 text-sm font-semibold hover:bg-brand-green transition-colors"
-      >
-        Se hur vi jobbar
-        <ArrowUpRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" strokeWidth={2.5} />
-      </Link>
     </div>
   );
 }
