@@ -184,7 +184,7 @@ function Page() {
         <section className="border-b border-line">
           <div className="mx-auto max-w-6xl px-6 py-20 md:py-28">
             <Reveal className="max-w-2xl">
-              <div className="eyebrow mb-5">Min hållning</div>
+              <div className="eyebrow mb-5">Vår hållning</div>
               <h2 className="display-heading text-3xl md:text-4xl">
                 Verktyg ska <span className="text-brand-green-strong">tjäna affären</span>, inte tvärtom.
               </h2>

@@ -107,7 +107,7 @@ function Page() {
               </p>
               <p>
                 <strong className="block text-ink font-semibold mb-1">Strategin först, tekniken sedan.</strong>
-                Jag ligger långt fram i den tekniska utvecklingen men jag testar
+                Jag ligger långt fram i den tekniska utvecklingen, men jag testar
                 och utvärderar varje system och AI-verktyg själv innan det når
                 era leveranser. Det som inte gör mätbar nytta rekommenderar jag
                 aldrig. Ni ska inte betala för verktyg för verktygens skull.

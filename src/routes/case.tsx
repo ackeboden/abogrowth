@@ -46,6 +46,7 @@ const caseLista: Case[] = [
   {
     slug: "forcap",
     klient: "Forcap",
+    logotyp: { src: "/forcap.webp", bredd: 610, hojd: 140 },
     tagline: "Skogsrådgivning och skogsförvaltning för skogsägare",
     webbplats: { url: "https://forcap.se", etikett: "forcap.se" },
     ingress:

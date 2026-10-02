@@ -38,7 +38,7 @@ const steps = [
   {
     n: "03",
     t: "Första samtalet: 30 minuter",
-    b: "Video eller telefon, ni väljer. Vi lyssnar på var ni står, ställer frågor om mål och flaskhalsar och är ärlig om vi kan hjälpa till, och om vi inte kan.",
+    b: "Video eller telefon, ni väljer. Vi lyssnar på var ni står, ställer frågor om mål och flaskhalsar och är ärliga om vi kan hjälpa till, och om vi inte kan.",
   },
   {
     n: "04",
@@ -92,7 +92,7 @@ function Page() {
         <section className="border-b border-line bg-white">
           <div className="mx-auto max-w-6xl px-6 py-20 md:py-28 grid md:grid-cols-12 gap-12 items-start">
             <div className="md:col-span-5">
-              <div className="eyebrow mb-5">Mitt löfte</div>
+              <div className="eyebrow mb-5">Vårt löfte</div>
               <h2 className="display-heading text-3xl md:text-4xl">
                 Det ni <span className="text-brand-green-strong">inte</span> behöver oroa er för.
               </h2>
