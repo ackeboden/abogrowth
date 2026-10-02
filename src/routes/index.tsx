@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import { Header, Footer, CONTACT_EMAIL } from "@/components/Site";
 import { Hero } from "@/components/startsida/Hero";
 import { SystemKollen } from "@/components/startsida/SystemKollen";
+import { Recensioner } from "@/components/startsida/Recensioner";
 import { Services, Varde, Process, Faq, Contact, faqItems } from "@/components/startsida/Sektioner";
 
 export const Route = createFileRoute("/")({
@@ -65,6 +66,7 @@ function Index() {
       <main>
         <Hero />
         <SystemKollen />
+        <Recensioner />
         <Services />
         <Varde />
         <Process />
@@ -115,6 +117,7 @@ function FramstegsLinje() {
 const sidNavMal = [
   { id: "top", namn: "Hem" },
   { id: "systemkollen", namn: "Systemkollen" },
+  { id: "case", namn: "Case" },
   { id: "tjanster", namn: "Tjänster" },
   { id: "varde", namn: "Värdet" },
   { id: "arbetssatt", namn: "Arbetssätt" },
