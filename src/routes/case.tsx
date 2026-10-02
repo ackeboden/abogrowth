@@ -5,16 +5,16 @@ import { Header, Footer, BookingCTA, PageHero, Reveal } from "@/components/Site"
 export const Route = createFileRoute("/case")({
   head: () => ({
     meta: [
-      { title: "Case: Kassaboken | ABO Growth" },
+      { title: "Case | ABO Growth" },
       {
         name: "description",
         content:
-          "Case Kassaboken: marknadsstrategi, årsplanering och löpande genomförande med sökordsstyrda blogginlägg, nyhetsbrev och annonser för ett digitalt bokföringsverktyg.",
+          "Case från ABO Growth: Forcap och Kassaboken. Målgruppsanalys, mätning, sökordsstyrt innehåll, annonsering och löpande uppföljning i månadsrapport.",
       },
-      { property: "og:title", content: "Case: Kassaboken | ABO Growth" },
+      { property: "og:title", content: "Case | ABO Growth" },
       {
         property: "og:description",
-        content: "Från spridda kanaler till en samlad marknadsföring som arbetar året runt.",
+        content: "Riktiga uppdrag, från strategi till löpande genomförande.",
       },
       { property: "og:type", content: "website" },
       { property: "og:url", content: "https://abogrowth.se/case" },
@@ -25,10 +25,70 @@ export const Route = createFileRoute("/case")({
   component: Page,
 });
 
+type Case = {
+  slug: string;
+  klient: string;
+  // Logotypen är frivillig. Saknas den skrivs kundens namn ut som rubrik.
+  logotyp?: { src: string; bredd: number; hojd: number };
+  tagline: string;
+  webbplats: { url: string; etikett: string };
+  ingress: string;
+  taggar: string[];
+  steg: { n: string; rubrik: string; text: string }[];
+  resultat: string;
+  citat: { text: string; namn: string; titel: string };
+};
+
 // Ett case per post, nyast först. Varje case renderas som ett samlat kort,
 // så nya case läggs bara till i listan. Skriv aldrig in siffror eller
 // resultat som kunden inte har godkänt.
-const caseLista = [
+const caseLista: Case[] = [
+  {
+    slug: "forcap",
+    klient: "Forcap",
+    tagline: "Skogsrådgivning och skogsförvaltning för skogsägare",
+    webbplats: { url: "https://forcap.se", etikett: "forcap.se" },
+    ingress:
+      "Forcap är ett rådgivningsföretag i Skellefteå som hjälper skogsägare med skogsförvaltning, strategisk rådgivning och skogsskötsel.",
+    taggar: [
+      "Målgruppsanalys",
+      "Mätning och spårning",
+      "SEO och innehåll",
+      "Google Ads",
+      "Meta och LinkedIn",
+      "Nyhetsbrev",
+      "Månadsrapport",
+    ],
+    steg: [
+      {
+        n: "01",
+        rubrik: "Utgångsläget",
+        text: "Kunskapen och kundrelationerna fanns redan, men Forcap hade aldrig annonserat digitalt och webbplatsen saknade både mätning och en tydlig strategi.",
+      },
+      {
+        n: "02",
+        rubrik: "Grunden",
+        text: "Vi gjorde en målgruppsanalys för att identifiera rätt personer och rätt kanaler. Sedan satte vi upp Google Tag Manager, Google Analytics och samtyckeshantering, så att varje insats går att följa upp.",
+      },
+      {
+        n: "03",
+        rubrik: "Webbplatsen och kampanjerna",
+        text: "Vi tog fram en sökordskarta och ny text till webbplatsen, där varje sida har ett tydligt huvudsökord. Sommaren 2026 lanserade vi Forcaps första Google Ads-kampanj och en Meta-kampanj med annonser i flera format.",
+      },
+      {
+        n: "04",
+        rubrik: "Det löpande arbetet",
+        text: "Vi skriver blogginlägg och nyhetsbrev, publicerar inlägg på LinkedIn och Meta, driver annonser under kampanjperioderna och följer upp allt i en månadsrapport.",
+      },
+    ],
+    resultat:
+      "Idag har Forcap en marknadsföring som går att mäta, en plan med tydliga kampanjperioder och innehåll på webbplatsen som hjälper skogsägare att hitta dem när de söker svar.",
+    citat: {
+      text: "Alexander har med stort engagemang hjälpt oss att få igång vår marknadsföring. Bra kommunikation och tydlig uppföljning har varit genomgående. Alexander kommer löpande med många goda idéer och tips kring hur vi kan utveckla och forma vår annonsering. Nu har vi även en marknadsföring som går att mäta.",
+      namn: "Lina Karlsson",
+      titel: "VD-assistent, Forcap AB",
+    },
+  },
   {
     slug: "kassaboken",
     klient: "Kassaboken",
@@ -89,15 +149,21 @@ function Page() {
                   {/* Kunden */}
                   <div className="grid md:grid-cols-12 gap-6 md:gap-10 items-start p-6 md:p-10 border-b border-line">
                     <div className="md:col-span-5">
-                      <h2 className="sr-only">{c.klient}</h2>
-                      <img
-                        src={c.logotyp.src}
-                        width={c.logotyp.bredd}
-                        height={c.logotyp.hojd}
-                        alt={c.klient}
-                        decoding="async"
-                        className="h-8 md:h-10 w-auto"
-                      />
+                      {c.logotyp ? (
+                        <>
+                          <h2 className="sr-only">{c.klient}</h2>
+                          <img
+                            src={c.logotyp.src}
+                            width={c.logotyp.bredd}
+                            height={c.logotyp.hojd}
+                            alt={c.klient}
+                            decoding="async"
+                            className="h-8 md:h-10 w-auto"
+                          />
+                        </>
+                      ) : (
+                        <h2 className="display-heading text-2xl md:text-3xl">{c.klient}</h2>
+                      )}
                       <p className="mt-4 text-sm text-ink/70 leading-relaxed">{c.tagline}</p>
                       <a
                         href={c.webbplats.url}
